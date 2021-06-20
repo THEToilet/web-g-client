@@ -1,5 +1,8 @@
-import React, {useState} from 'react';
+import {useEffect, useState} from 'react';
+import GoogleMapReact from "google-map-react";
+import Marker from "google-map-react";
 
+/*
 type GeoLocationCoordinates = {
     accuracy: number;
     altitude: number; // 高度
@@ -7,38 +10,43 @@ type GeoLocationCoordinates = {
     heading: number;
     latitude: number;
     longitude: number;
-    speed: string;
+    speed: number;
 }
+ */
 
+const APIKEY = "";
 
 function App() {
-    const [geoLocation, setGeoLocation] = useState<GeolocationCoordinates>({
-        accuracy: 0,
-        altitude: 0, // 高度
-        altitudeAccuracy: 0,
-        heading: 0,
-        latitude: 0,
-        longitude: 0,
-        speed: 0,
+    const [geoLocation, setGeoLocation] = useState<GoogleMapReact.Coords>({
+        lat: 35.70225890, lng: 139.77447330
+    });
+    const [isPush, setIsPush] = useState<boolean>(false)
 
-    })
-    const getCurrentPosition = () => {
+    useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
-            console.log(position.coords)
             setGeoLocation({
-                altitude: position.coords.altitude,
-                altitudeAccuracy: position.coords.altitudeAccuracy,
-                heading: position.coords.heading,
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                speed: position.coords.speed,
-                accuracy: position.coords.accuracy
-            })
+                lat: Number(position.coords.latitude),
+                lng: Number(position.coords.longitude),
+            });
         })
+    }, [isPush])
+
+    const handleClick = () => {
+       console.log("unko")
+        setIsPush(!isPush)
     }
+
     return (
-        <div className="App"> {console.log(getCurrentPosition())}
-        </div>);
+        <div className="App" style={{height: '100vh', width: '100%'}}>
+            <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={geoLocation} defaultZoom={20}>
+                <Marker defaultCenter={geoLocation}/>
+            </GoogleMapReact>
+            <button onClick={handleClick}>
+                Click me
+            </button>
+            {console.log(geoLocation)}
+        </div>
+    );
 }
 
 export default App;
