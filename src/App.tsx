@@ -20,10 +20,16 @@ function App() {
     const [geoLocation, setGeoLocation] = useState<GoogleMapReact.Coords>({
         lat: 35.70225890, lng: 139.77447330
     });
+    const [defaultGeoLocation, setDefaultGeoLocation] = useState<GoogleMapReact.Coords>({
+        lat: 35.70225890, lng: 139.77447330
+    });
     const [isPush, setIsPush] = useState<boolean>(false)
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
+            console.log(position)
+            console.log(Number.isNaN(Number(geoLocation.lat)))
+            console.log(Number.isNaN(geoLocation.lng))
             setGeoLocation({
                 lat: Number(position.coords.latitude),
                 lng: Number(position.coords.longitude),
@@ -32,14 +38,14 @@ function App() {
     }, [isPush])
 
     const handleClick = () => {
-       console.log("unko")
+        console.log("unko")
         setIsPush(!isPush)
     }
 
     return (
-        <div className="App" style={{height: '100vh', width: '100%'}}>
-            <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={geoLocation} defaultZoom={20}>
-                <Marker defaultCenter={geoLocation}/>
+        <div className="App" style={{height: '80vh', width: '100%'}}>
+            <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultGeoLocation} defaultZoom={10}>
+                <Marker center={geoLocation}/>
             </GoogleMapReact>
             <button onClick={handleClick}>
                 Click me
