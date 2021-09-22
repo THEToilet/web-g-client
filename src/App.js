@@ -1,18 +1,18 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import GoogleMapReact from "google-map-react";
+import {useGeoLocationStatus} from "./hooks/GeoLocation"
+import TextField from '@mui/material/TextField';
+import HeaderBar from "./components/HeaderBar"
 
 const APIKEY = "";
 const socket = new WebSocket("ws://127.0.0.1:8080/signaling")
 
 function App() {
-
-    const [geoLocation, setGeoLocation] = useState({
-        //lat: 35.70225890, lng: 139.77447330
-        lat: 0, lng: 0
-    });
-
     const [isPush, setIsPush] = useState(false)
     const [isRegister, setIsRegister] = useState(false)
+    const [messageString, setMessageString] = useState("")
+    const geoLocation = useGeoLocationStatus()
+
 
     useEffect( () => {
         socket.addEventListener('open', onOpen)
@@ -24,6 +24,7 @@ function App() {
 
     let onOpen = () => {
         socket.send("Hello")
+        setMessageString( messageString + "socket is open" + "\n" )
         socket.send(JSON.stringify({
             type: 'send',
             message : 'unko'
@@ -31,6 +32,7 @@ function App() {
     }
     let onMessage = (event) => {
         console.log(event.data)
+        setMessageString( messageString + event.data + "\n" )
     }
     let onClose = (event) => {
         console.log(event)
@@ -39,43 +41,34 @@ function App() {
         console.log(error)
     }
 
-    useEffect(() => {
-            navigator.geolocation.getCurrentPosition(position => {
-                console.log(position)
-                //console.log(Number.isNaN(Number(geoLocation.lat)))
-                //console.log(Number.isNaN(geoLocation.lng))
-                setGeoLocation({
-                    lat: Number(position.coords.latitude),
-                    lng: Number(position.coords.longitude),
-                });
-            })
-        console.log("ddd")
-        console.log(geoLocation)
-    }, [isPush])
 
     useEffect(() => {
         console.log("component is render")
     })
 
     useEffect(() => {
-       setInterval(() => {
+       const hello = setInterval(() => {
                 console.log("hello")
         }, 1000)
+        return clearInterval(hello)
     }, [])
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
         console.log("unko")
         setIsPush(!isPush)
         socket.send(JSON.stringify({
             type: 'register',
-            user : {
-
-            },
             userInfo : {
-
+                userID: '',
+                publicIP: '127.0.0.1',
+                publicPort: 8080,
+                privateIP: '127.0.0.1',
+                privatePort: 8080,
+                latitude: geoLocation.lat,
+                longitude: geoLocation.lng,
             }
         }))
-    }
+    },[isPush])
 
     const handleApiLoaded = ({map, maps}) => {
         const bounds= new maps.LatLngBounds();
@@ -95,28 +88,30 @@ function App() {
         zoom: 10
     }
 
-    const handleClickRegister = () => {
+    const handleClickRegister = useCallback(() => {
         console.log("unko")
+        setMessageString( messageString + "Register is click no value is" + isRegister + "\n" )
         setIsRegister(!isRegister)
-    }
+    },[isRegister])
 
     return (
         <div className="App" style={{height: '80vh', width: '100%'}}>
+            <HeaderBar/>
+            <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultGeoLocation.position} defaultZoom={defaultGeoLocation.zoom} onGoogleApiLoaded={handleApiLoaded}/>
 
-            {//<GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultProps.center} defaultZoom={defaultProps.zoom} onGoogleApiLoaded={handleApiLoaded} onClick={setLatLng}>
-            }
-            <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultGeoLocation.position} defaultZoom={defaultGeoLocation.zoom} onGoogleApiLoaded={handleApiLoaded}>
-            </GoogleMapReact>
             <button onClick={handleClick}>
                 Click me
             </button>
             <button onClick={handleClickRegister}>
                 register
             </button>
+
             <h2>
-                {geoLocation.lat + ","}{geoLocation.lng}
+                {geoLocation.lat + " , "}{geoLocation.lng}
             </h2>
+            <TextField label={"SearchDistance"} defaultValue={"100"}/>
             {isRegister ? <p>registered</p> : <p>is not registered</p>}
+            <textarea rows={10} cols={10} defaultValue={messageString} />
         </div>
     );
 }
