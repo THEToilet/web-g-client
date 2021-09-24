@@ -3,6 +3,7 @@ import GoogleMapReact from "google-map-react";
 import {useGeoLocationStatus} from "./hooks/GeoLocation"
 import TextField from '@mui/material/TextField';
 import HeaderBar from "./components/HeaderBar"
+import {type} from "os";
 
 const APIKEY = "";
 const socket = new WebSocket("ws://127.0.0.1:8080/signaling")
@@ -12,7 +13,6 @@ function App() {
     const [isRegister, setIsRegister] = useState(false)
     const [messageString, setMessageString] = useState("")
     const geoLocation = useGeoLocationStatus()
-
 
     useEffect( () => {
         socket.addEventListener('open', onOpen)
@@ -40,7 +40,6 @@ function App() {
     let onError = (error) => {
         console.log(error)
     }
-
 
     useEffect(() => {
         console.log("component is render")
@@ -105,7 +104,6 @@ function App() {
             <button onClick={handleClickRegister}>
                 register
             </button>
-
             <h2>
                 {geoLocation.lat + " , "}{geoLocation.lng}
             </h2>
