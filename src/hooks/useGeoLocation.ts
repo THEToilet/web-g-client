@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export const useGeoLocationStatus = () => {
+const useGeoLocationStatus = () => {
     const [geoLocation, setGeoLocation] = useState({
         lat: 0, lng: 0
     });
@@ -21,3 +21,5 @@ export const useGeoLocationStatus = () => {
 
     return geoLocation
 }
+
+export default useGeoLocationStatus

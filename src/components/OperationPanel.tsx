@@ -1,7 +1,7 @@
 const OperationPanel = () => {
-   return (
-       <></>
-   )
+    return (
+        <></>
+    )
 }
 
 export default OperationPanel

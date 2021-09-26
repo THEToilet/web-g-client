@@ -1,31 +1,28 @@
-import {useEffect, useState} from "react";
+import GoogleMapReact from "google-map-react";
+const APIKEY = "";
+const GeoLocation = (geoLocation: any) => {
 
-
-/*
-function usrGeoLocationStatus() {
-    //lat: 35.70225890, lng: 139.77447330
-    const [geoLocation, setGeoLocation] = useState({
-        lat: 0, lng: 0
-    });
-
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(position => {
-            console.log(position)
-            //console.log(Number.isNaN(Number(geoLocation.lat)))
-            //console.log(Number.isNaN(geoLocation.lng))
-            setGeoLocation({
-                lat: Number(position.coords.latitude),
-                lng: Number(position.coords.longitude),
-            });
+    const handleApiLoaded = (map: any, maps: any | null) => {
+        const bounds = new maps.LatLngBounds();
+        const marker = new maps.Marker({
+            map,
+            position: geoLocation
         })
-        console.log("ddd")
-        console.log(geoLocation)
-    }, [])
+        bounds.extend(marker.position)
+        map.fitBounds(bounds)
+    }
 
-    return geoLocation
+    const defaultGeoLocation = {
+        position: {
+            lat: 35.70225890,
+            lng: 139.77447330
+        },
+        zoom: 10
+    }
+    return (
+        <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultGeoLocation.position}
+                        defaultZoom={defaultGeoLocation.zoom} onGoogleApiLoaded={handleApiLoaded}/>
+    )
+
 }
-
-export default usrGeoLocationStatus();
-
-
- */
+export default GeoLocation
