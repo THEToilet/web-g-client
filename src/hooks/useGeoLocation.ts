@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
+import {GeoLocation} from '../types/domain'
 
 const useGeoLocationStatus = () => {
-    const [geoLocation, setGeoLocation] = useState({
+    const [geoLocation, setGeoLocation] = useState<GeoLocation>({
         lat: 0, lng: 0
     });
 
@@ -14,6 +15,12 @@ const useGeoLocationStatus = () => {
                 lat: Number(position.coords.latitude),
                 lng: Number(position.coords.longitude),
             });
+        },data =>{
+            setGeoLocation({
+                lat: 34.673542,
+                lng: 135.433338
+            });
+
         })
         console.log("ddd")
         console.log(geoLocation)

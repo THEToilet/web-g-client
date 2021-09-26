@@ -15,3 +15,6 @@ export type ActionType =
 
 export type SignalingType =
     | 'REGISTER' | 'UPDATE' | 'STATIC_SEARCH' | 'DYNAMIC_SEARCH' | 'DELETE' | 'SEND';
+
+export type GeoLocation =
+    { lat: number, lng: number };

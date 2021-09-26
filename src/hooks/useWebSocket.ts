@@ -33,7 +33,7 @@ const useWebSocket = () => {
 
     const sendMessage = (message : String) => {
         console.log(message)
-        socketRef.current.send("dd")
+        setInterval(() => socketRef.current.send(String(message)), 1000);
     }
 
     // 詰まりポイント as const
