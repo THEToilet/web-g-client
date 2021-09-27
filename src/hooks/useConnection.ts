@@ -1,4 +1,3 @@
-import {InitialState} from "../reducers/connectionStatus";
 import {useEffect, useState} from "react";
 import {ActionType, SignalingType} from "../types/domain";
 import {GeoLocation} from '../types/domain'
