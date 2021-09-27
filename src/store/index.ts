@@ -1,9 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {useSelector as rawUseSelector, TypedUseSelectorHook} from "react-redux";
-import rootReducer from "../reducers";
+import rootReducer from "../slices";
 
 export const store = configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
+    // chrome extensions
+    devTools: process.env.NODE_ENV !== 'production',
 })
 
 // https://future-architect.github.io/articles/20200501/
