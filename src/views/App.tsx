@@ -12,14 +12,14 @@ import axios from 'axios'
 function App() {
     const geoLocation = useGeoLocationStatus()
     const [message, sendMessage] = useWebSocket()
-    useConnection(message, sendMessage, geoLocation)
+    useConnection(message, sendMessage)
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8080/stun').then(res => console.log(res))
     }, [])
 
     return (
-        <div className="App" style={{textAlign: "center"}}>
+        <div className="App" style={{}}>
             <HelmetProvider>
                 <Helmet>
                     <meta charSet="utf-8"/>
@@ -27,7 +27,7 @@ function App() {
                     <link rel="" href="https://web-g"/>
                 </Helmet>
                 <HeaderBar/>
-                <Maps g={geoLocation}/>
+                <Maps/>
                 <h2>
                     {geoLocation.lat + " , "}{geoLocation.lng}
                 </h2>

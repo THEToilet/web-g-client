@@ -1,12 +1,11 @@
 import {useEffect, useState} from "react";
-import {GeoLocation} from '../types/domain'
 
 import {setIsRegister, setSurroundingUserList, setUserID} from '../slices/gSignalingStatus'
 import {getGSignalingStatus} from '../selector'
 import {useDispatch, useSelector} from "react-redux";
 import {JudgeStatus, RegisterResponse, SearchResponse, Status} from "../types/API";
 
-const useConnection = (message: string, sendMessage: (message: String) => void, geoLocation: GeoLocation) => {
+const useConnection = (message: string, sendMessage: (message: String) => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
@@ -73,8 +72,8 @@ const useConnection = (message: string, sendMessage: (message: String) => void, 
                 publicPort: 8080,
                 privateIP: '127.0.0.1',
                 privatePort: 8080,
-                latitude: geoLocation.lat,
-                longitude: geoLocation.lng,
+                latitude: userInfo.geoLocation.lat,
+                longitude: userInfo.geoLocation.lng,
             }
         }))
     }
@@ -88,8 +87,8 @@ const useConnection = (message: string, sendMessage: (message: String) => void, 
                 publicPort: 8080,
                 privateIP: '127.0.0.1',
                 privatePort: 8080,
-                latitude: geoLocation.lat,
-                longitude: geoLocation.lng,
+                latitude: userInfo.geoLocation.lat,
+                longitude: userInfo.geoLocation.lng,
             },
             searchType: 'static',
             searchDistance: 100,
