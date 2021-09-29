@@ -1,14 +1,14 @@
-import {Addr, UserInfo} from "../domain";
+import {Addr} from "../domain";
 
 export type Status = {
-    type: string;
     code: string;
     message: string;
+    type: string;
 }
 
 export type SearchResponse = {
     status: Status
-    searchedUserList: UserInfo[]
+    searchedUserList: BackEndUserInfo[]
 }
 
 export type RegisterResponse = {
@@ -18,4 +18,18 @@ export type RegisterResponse = {
 
 export type StunResponse = {
     addr: Addr
+}
+
+export type JudgeStatus = {
+    status: Status
+}
+
+export type BackEndUserInfo = {
+    userID: string;
+    publicIP: string
+    publicPort: number
+    privateIP: string
+    privatePort: number
+    latitude: number
+    longitude: number
 }

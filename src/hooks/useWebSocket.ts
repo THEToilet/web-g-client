@@ -27,9 +27,6 @@ const useWebSocket = () => {
 
     let onOpen = () => {
         dispatch(connected())
-        socketRef.current.send("Hello")
-        console.log("dddddddddddddddddddddddd")
-        console.log(socketRef.current)
     }
 
     let onMessage = (event: any) => {
@@ -42,8 +39,8 @@ const useWebSocket = () => {
     }
 
     const sendMessage = (message: String) => {
-        console.log(message)
-        console.log(wsConnectionType)
+        //console.log(message)
+        //console.log(wsConnectionType)
         setTimeout(() => {
             socketRef.current.send(String(message))
         }, 1000)

@@ -21,7 +21,6 @@ const Mark = styled.div`
 
 `;
 
-
 /*<div><Pin style={{backgroundColor:color}} title={name}/><Pulse/></div>*/
 const Marker = (props: any) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -34,7 +33,7 @@ const Marker = (props: any) => {
             <Mark style={{backgroundColor: color, cursor: 'pointer'}}
                   title={name}/>
             {isOpen ? (
-                <Balloon lat={props.lat} lng={props.lng} />
+                <Balloon lat={props.lat} lng={props.lng} userInfo={props.userInfo}/>
             ) : null }
         </div>
     )

@@ -21,8 +21,6 @@ const OperationPanel = () => {
         }
     };
 
-    console.log(searchType)
-
     return (
         <>
             <FormControl sx={{m: 1, minWidth: 80}}>

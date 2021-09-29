@@ -1,10 +1,17 @@
 import {useEffect, useState} from "react";
 import {GeoLocation} from '../types/domain'
 
+import {getGSignalingStatus} from '../selector'
+import {setUserInfoGeoLocation} from '../slices/gSignalingStatus'
+import {useDispatch, useSelector} from "react-redux";
+
 const useGeoLocationStatus = () => {
     const [geoLocation, setGeoLocation] = useState<GeoLocation>({
         lat: 0, lng: 0
     });
+
+    const {userInfo} = useSelector(getGSignalingStatus)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
@@ -15,16 +22,16 @@ const useGeoLocationStatus = () => {
                 lat: Number(position.coords.latitude),
                 lng: Number(position.coords.longitude),
             });
-        },data =>{
+        }, data => {
             setGeoLocation({
                 lat: 34.673542,
                 lng: 135.433338
             });
 
         })
-        console.log("ddd")
         console.log(geoLocation)
-    }, [])
+        dispatch(setUserInfoGeoLocation(geoLocation))
+    }, [dispatch, geoLocation])
 
     return geoLocation
 }

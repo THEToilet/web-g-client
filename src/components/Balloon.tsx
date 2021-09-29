@@ -41,7 +41,7 @@ const BalloonText = styled.div`
 const Balloon = (props: any) => {
     return (
         <BalloonWindow className={"scrollWindow"}>
-            <BalloonText>hello!</BalloonText>
+            <BalloonText>{props.userInfo.userID}</BalloonText>
         </BalloonWindow>
     );
 };

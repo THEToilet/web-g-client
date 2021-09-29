@@ -1,12 +1,14 @@
+import {BackEndUserInfo} from "../API";
+
 export type UserInfo = {
-    private : Addr;
-    public : Addr;
+    private: Addr;
+    public: Addr;
     geoLocation: GeoLocation;
 };
 
 export type Addr = {
-    ip : string;
-    port : number;
+    ip: string;
+    port: number;
 }
 
 export type ActionType =
@@ -49,14 +51,16 @@ export type GSettingStatus = {
 
 export type GSignalingState = {
     userInfo: UserInfo;
-    surroundingUserList: UserInfo[];
+    // TODO: フロントの型に変換する
+    surroundingUserList: BackEndUserInfo[];
     isRegister: boolean;
+    userID: string;
 }
 
 type ConnectionType =
     | 'NAT'
     | 'G_LOC_ON'
-    | 'WEB_RTC' ;
+    | 'WEB_RTC';
 
 export type ConnectionState = {
     connectionType: ConnectionType
