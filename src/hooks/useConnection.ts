@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 import {setIsRegister, setSurroundingUserList, setUserID} from '../slices/gSignalingStatus'
-import {getGSignalingStatus} from '../selector'
+import {getGSetting, getGSignalingStatus} from '../selector'
 import {useDispatch, useSelector} from "react-redux";
 import {JudgeStatus, RegisterResponse, SearchResponse, Status} from "../types/API";
 
@@ -9,6 +9,7 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
+    const {searchDistance} = useSelector(getGSetting)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -91,7 +92,7 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
                 longitude: userInfo.geoLocation.lng,
             },
             searchType: 'static',
-            searchDistance: 100,
+            searchDistance: searchDistance,
         }))
     }
     /*

@@ -10,7 +10,7 @@ import OperationPanel from "../components/OperationPanel"
 import axios from 'axios'
 
 function App() {
-    const geoLocation = useGeoLocationStatus()
+    useGeoLocationStatus()
     const [message, sendMessage] = useWebSocket()
     useConnection(message, sendMessage)
 
@@ -19,7 +19,7 @@ function App() {
     }, [])
 
     return (
-        <div className="App" style={{}}>
+        <div className="App" style={{textAlign: "center"}}>
             <HelmetProvider>
                 <Helmet>
                     <meta charSet="utf-8"/>
@@ -28,9 +28,6 @@ function App() {
                 </Helmet>
                 <HeaderBar/>
                 <Maps/>
-                <h2>
-                    {geoLocation.lat + " , "}{geoLocation.lng}
-                </h2>
                 <OperationPanel/>
             </HelmetProvider>
         </div>

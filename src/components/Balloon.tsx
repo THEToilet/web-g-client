@@ -12,7 +12,7 @@ const BalloonWindow = styled.div`
   left: 0px;
   transform: translate(-50%);
   border-radius: 10px;
-  
+
   :after {
     content: "";
     position: absolute;
@@ -38,10 +38,12 @@ const BalloonText = styled.div`
   font-size: 12pt
 `;
 
+// TODO : 型変える
+
 const Balloon = (props: any) => {
     return (
         <BalloonWindow className={"scrollWindow"}>
-            <BalloonText>{"userID: " + props.userInfo.userID + "\npublicIP: " + props.userInfo.publicIP}</BalloonText>
+            <BalloonText>{"userID: " + props.userInfo.userID + "\nlat: " + props.userInfo.latitude + "\nlng: " + props.userInfo.longitude}</BalloonText>
         </BalloonWindow>
     );
 };

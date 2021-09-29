@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 
 import {getGSetting} from '../selector'
+import {getGSignalingStatus} from '../selector'
 import {setDynamicSearch, setSearchDistance, setStaticSearch} from '../slices/gSetting'
 import TextField from "@mui/material/TextField";
 import InputLabel from '@mui/material/InputLabel';
@@ -8,9 +9,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
+import {ChangeEvent, useRef} from "react";
 
 const OperationPanel = () => {
+    const searchDistanceFiledRef = useRef<HTMLInputElement>()
+
     const {searchDistance, searchType} = useSelector(getGSetting)
+    const {userInfo, surroundingUserList} = useSelector(getGSignalingStatus)
     const dispatch = useDispatch()
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -21,12 +26,23 @@ const OperationPanel = () => {
         }
     };
 
+    const handleSearchDistanceChange = (e: any) => {
+        if (searchDistanceFiledRef.current) {
+            console.log(searchDistanceFiledRef.current?.value)
+            dispatch(setSearchDistance(Number(searchDistanceFiledRef.current?.value)))
+        }
+    }
+
     return (
-        <>
+        <div style={{}}>
+            <div>{userInfo.geoLocation.lat + " , " + userInfo.geoLocation.lng}</div>
+            <div>{"surroundingUserList size :" + surroundingUserList.length}</div>
+            {/*          <Stack spacing={2} direction="row">*/}
             <FormControl sx={{m: 1, minWidth: 80}}>
-                <TextField label={"SearchDistance"} defaultValue={searchDistance}/>
+                <TextField inputRef={searchDistanceFiledRef} id={'search-distance'} label={"SearchDistance"}
+                           defaultValue={searchDistance}/>
             </FormControl>
-            <Button variant='contained'>Primary</Button>
+            <Button variant='contained' onClick={handleSearchDistanceChange}>SetDistance</Button>
             <FormControl sx={{m: 1, minWidth: 200}}>
                 <InputLabel id="demo-simple-select-autowidth-label">SearchType</InputLabel>
                 <Select
@@ -41,7 +57,8 @@ const OperationPanel = () => {
                     <MenuItem value='dynamic'>Dynamic Search</MenuItem>
                 </Select>
             </FormControl>
-        </>
+            {/*</Stack>*/}
+        </div>
     )
 }
 export default OperationPanel
