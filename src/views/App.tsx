@@ -8,6 +8,7 @@ import Maps from "../components/Maps";
 import useConnection from "../hooks/useConnection";
 import OperationPanel from "../components/OperationPanel"
 import axios from 'axios'
+import Video from "../components/Video";
 
 function App() {
     useGeoLocationStatus()
@@ -29,6 +30,7 @@ function App() {
                 <HeaderBar/>
                 <Maps/>
                 <OperationPanel/>
+                <Video/>
             </HelmetProvider>
         </div>
     );
