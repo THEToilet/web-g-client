@@ -41,9 +41,8 @@ const useWebSocket = () => {
     const sendMessage = (message: String) => {
         //console.log(message)
         //console.log(wsConnectionType)
-        setTimeout(() => {
-            socketRef.current.send(String(message))
-        }, 1000)
+        //socketRef.current.send(String(message))
+        // error出る
     }
 
     // 詰まりポイント as const

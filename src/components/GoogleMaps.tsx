@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 
 const APIKEY = "";
-const Maps = () => {
+const GoogleMaps = () => {
     const {surroundingUserList, userInfo} = useSelector(getGSignalingStatus)
     const {searchDistance} = useSelector(getGSetting)
 
@@ -67,4 +67,4 @@ const Maps = () => {
         </div>
     )
 }
-export default Maps
+export default GoogleMaps

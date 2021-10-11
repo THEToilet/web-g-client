@@ -4,20 +4,17 @@ import {useEffect} from "react";
 import useGeoLocationStatus from "../hooks/useGeoLocation"
 import useWebSocket from "../hooks/useWebSocket"
 import HeaderBar from "../components/HeaderBar"
-import Maps from "../components/Maps";
+import GoogleMaps from "../components/GoogleMaps";
 import useConnection from "../hooks/useConnection";
 import OperationPanel from "../components/OperationPanel"
 import axios from 'axios'
 import Video from "../components/Video";
+import OpenStreetMaps from "../components/OpenStreetMaps";
 
 function App() {
     useGeoLocationStatus()
     const [message, sendMessage] = useWebSocket()
     useConnection(message, sendMessage)
-
-    useEffect(() => {
-        axios.get('http://127.0.0.1:8080/stun').then(res => console.log(res))
-    }, [])
 
     return (
         <div className="App" style={{textAlign: "center"}}>
@@ -28,7 +25,8 @@ function App() {
                     <link rel="" href="https://web-g"/>
                 </Helmet>
                 <HeaderBar/>
-                <Maps/>
+                <GoogleMaps/>
+                <OpenStreetMaps/>
                 <OperationPanel/>
                 <Video/>
             </HelmetProvider>

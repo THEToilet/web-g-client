@@ -66,3 +66,8 @@ export type ConnectionState = {
     connectionType: ConnectionType
 }
 
+export type P2PState = {
+    isOffer: boolean,
+    rtcPeerConnection: RTCPeerConnection,
+}
+

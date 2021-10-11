@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import {GeoLocation} from '../types/domain'
-
 import {setUserInfoGeoLocation} from '../slices/gSignalingStatus'
 import {useDispatch} from "react-redux";
 
@@ -13,7 +12,7 @@ const useGeoLocationStatus = () => {
 
     const getGeoLocation = () => {
         navigator.geolocation.getCurrentPosition(position => {
-            //console.log(position)
+            // console.log(position)
             setGeoLocation({
                 lat: Number(position.coords.latitude),
                 lng: Number(position.coords.longitude),

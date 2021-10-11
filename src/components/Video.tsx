@@ -1,5 +1,6 @@
 import {useRef, useState} from "react";
 import useUserMedia from "../hooks/useUserMedia";
+import useRTConnection from "../hooks/useRTConnection";
 
 const Video = () => {
     const [isPlay, setIsPlay] = useState<Boolean>(false);
@@ -21,6 +22,7 @@ const Video = () => {
     }
 
     useUserMedia(localVideoRef)
+    useRTConnection(remoteVideoRef)
     return (
         <>
             <video ref={localVideoRef} autoPlay={true} style={{width: '320px', height: '240px', border: '1px solid black'}}/>
