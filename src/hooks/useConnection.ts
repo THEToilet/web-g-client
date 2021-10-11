@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {setIsRegister, setSurroundingUserList, setUserID} from '../slices/gSignalingStatus'
 import {getGSetting, getGSignalingStatus} from '../selector'
 import {useDispatch, useSelector} from "react-redux";
-import {JudgeStatus, RegisterResponse, SearchResponse, Status} from "../types/API";
+import {JudgeMessageType, JudgeStatus, RegisterResponse, SearchResponse, Status} from "../types/API";
 
 const useConnection = (message: string, sendMessage: (message: String) => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
@@ -12,33 +12,61 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
     const {searchDistance} = useSelector(getGSetting)
     const dispatch = useDispatch()
 
-    useEffect(() => {
+    const messageHandler = (rawMessage : string) => {
+        // この方式じゃなくてonMessageのほうがいいかも
         console.log("-----message-------")
-        console.log(message)
-        if (message === "") {
+        console.log(rawMessage)
+        if (rawMessage === "") {
+            console.error("message is empty")
             return
         }
         try {
-            const status = JSON.parse(message) as Status
-            if(typeof status === 'undefined'){
-                console.log('undefined')
+            const messageType = JSON.parse(rawMessage) as JudgeMessageType
+            if (typeof messageType === 'undefined') {
+                console.error("message is undefined")
                 return;
             }
-            const judgeStatus = JSON.parse(message) as JudgeStatus
 
-            switch (judgeStatus.status.type) {
+            // TEST
+            sendPong()
+            switch (messageType.type) {
+                case 'ping':
+                    console.log('ping')
+                    sendPong()
+                    break
                 case 'register':
-                    const registerResponse: RegisterResponse = JSON.parse(message) as RegisterResponse
-                    console.log("registered")
+                    console.log('registered')
+                    const registerResponse: RegisterResponse = JSON.parse(rawMessage) as RegisterResponse
                     dispatch(setIsRegister())
                     dispatch(setUserID(registerResponse.userID))
-                    console.log(registerResponse)
+                    break
+                case 'update':
+                    console.log('update')
                     break
                 case 'search':
-                    console.log("search")
-                    const searchResponse: SearchResponse = JSON.parse(message) as SearchResponse
+                    // 検索方式にかかわらず返ってくるのは近隣のユーザリスト
+                    console.log('search')
+                    const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
                     dispatch(setSurroundingUserList(searchResponse.searchedUserList))
-                    console.log(searchResponse)
+                    break
+                case 'delete':
+                    console.log('delete')
+                    break
+                case 'offer':
+                    console.log('offer')
+                    // setOffer(message)
+                    break
+                case 'answer':
+                    console.log('answer')
+                    // setAnswer(message)
+                    break
+                case 'candidate':
+                    console.log('candidate')
+                    // handleICECandidate(message)
+                    break
+                case 'close':
+                    console.log('close')
+                    // closeProcess()
                     break
                 default:
                     break
@@ -46,33 +74,25 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
         } catch (e) {
             console.log(e)
         }
-    }, [message, dispatch])
 
+    }
+
+    const sendPong = () => {
+        sendMessage(JSON.stringify({
+            type: 'pong'
+        }))
+    }
 
     const sendRegister = () => {
         sendMessage(JSON.stringify({
-            type: 'register',
-            userInfo: {
-                userID: '',
-                publicIP: '127.0.0.1',
-                publicPort: 8080,
-                privateIP: '127.0.0.1',
-                privatePort: 8080,
-                latitude: userInfo.geoLocation.lat,
-                longitude: userInfo.geoLocation.lng,
-            }
+            type: 'register'
         }))
     }
 
     const sendUpdate = () => {
         sendMessage(JSON.stringify({
             type: 'update',
-            userInfo: {
-                userID: '',
-                publicIP: '127.0.0.1',
-                publicPort: 8080,
-                privateIP: '127.0.0.1',
-                privatePort: 8080,
+            geoLocation: {
                 latitude: userInfo.geoLocation.lat,
                 longitude: userInfo.geoLocation.lng,
             }
@@ -82,33 +102,14 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
     const sendStaticSearch = () => {
         sendMessage(JSON.stringify({
             type: 'search',
-            userInfo: {
-                userID: '',
-                publicIP: '127.0.0.1',
-                publicPort: 8080,
-                privateIP: '127.0.0.1',
-                privatePort: 8080,
-                latitude: userInfo.geoLocation.lat,
-                longitude: userInfo.geoLocation.lng,
-            },
             searchType: 'static',
             searchDistance: searchDistance,
         }))
     }
-    /*
 
     const sendDynamicSearch = () => {
         sendMessage(JSON.stringify({
             type: 'search',
-            userInfo: {
-                userID: '',
-                publicIP: '127.0.0.1',
-                publicPort: 8080,
-                privateIP: '127.0.0.1',
-                privatePort: 8080,
-                latitude: geoLocation.lat,
-                longitude: geoLocation.lng,
-            },
             searchType: 'dynamic',
             searchDistance: 100,
         }))
@@ -117,15 +118,6 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
     const sendDelete = () => {
         sendMessage(JSON.stringify({
             type: 'delete',
-            userInfo: {
-                userID: '',
-                publicIP: '127.0.0.1',
-                publicPort: 8080,
-                privateIP: '127.0.0.1',
-                privatePort: 8080,
-                latitude: geoLocation.lat,
-                longitude: geoLocation.lng,
-            }
         }))
     }
 
@@ -135,8 +127,6 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
             message: 'ssss',
         }))
     }
-
-     */
 
     useEffect(() => {
         const timeoutUpdate = setInterval(() => {

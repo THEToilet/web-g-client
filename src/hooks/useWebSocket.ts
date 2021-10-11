@@ -32,17 +32,30 @@ const useWebSocket = () => {
     let onMessage = (event: any) => {
         console.log(event.data)
         setMessage(event.data)
+        // ここは直にhandleMessageに入れる
     }
     let onError = (error: any) => {
         console.log(error)
         dispatch(reconnecting())
     }
 
-    const sendMessage = (message: String) => {
-        //console.log(message)
-        //console.log(wsConnectionType)
-        //socketRef.current.send(String(message))
-        // error出る
+    // https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
+    const sendMessage = async (message: String) => {
+        console.log(message)
+        waitForConnection(() => {
+            socketRef.current.send(String(message))
+        }, 1000)
+    }
+
+    const waitForConnection = (callback: any, interval: number) => {
+        // WebSocketが接続するまで待つ
+        if (socketRef.current.readyState === 1) {
+            callback()
+        } else {
+            setTimeout(() => {
+                waitForConnection(callback, interval)
+            }, interval)
+        }
     }
 
     // 詰まりポイント as const

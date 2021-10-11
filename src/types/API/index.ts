@@ -1,9 +1,9 @@
 import {Addr} from "../domain";
 
 export type Status = {
+    type: string;
     code: string;
     message: string;
-    type: string;
 }
 
 export type SearchResponse = {
@@ -22,6 +22,10 @@ export type StunResponse = {
 
 export type JudgeStatus = {
     status: Status
+}
+
+export type JudgeMessageType = {
+    type : string
 }
 
 export type BackEndUserInfo = {
