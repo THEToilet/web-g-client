@@ -47,6 +47,8 @@ const useWebSocket = () => {
         }, 1000)
     }
 
+
+    // TODO clearTimeoutは必要か調べる
     const waitForConnection = (callback: any, interval: number) => {
         // WebSocketが接続するまで待つ
         if (socketRef.current.readyState === 1) {

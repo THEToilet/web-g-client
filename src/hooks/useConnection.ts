@@ -127,6 +127,30 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
             message: 'ssss',
         }))
     }
+    const sendOffer = () => {
+        sendMessage(JSON.stringify({
+            type: 'offer',
+            message: 'ssss',
+        }))
+    }
+    const sendAnswer = () => {
+        sendMessage(JSON.stringify({
+            type: 'answer',
+            message: 'ssss',
+        }))
+    }
+    const sendClose = () => {
+        sendMessage(JSON.stringify({
+            type: 'close',
+            message: 'ssss',
+        }))
+    }
+    const sendCandidate = () => {
+        sendMessage(JSON.stringify({
+            type: 'candidate',
+            message: 'ssss',
+        }))
+    }
 
     useEffect(() => {
         const timeoutUpdate = setInterval(() => {
