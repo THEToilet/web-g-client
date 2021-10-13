@@ -1,5 +1,5 @@
 import {Helmet, HelmetProvider} from 'react-helmet-async'
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 import useGeoLocationStatus from "../hooks/useGeoLocation"
 import useWebSocket from "../hooks/useWebSocket"
@@ -15,6 +15,11 @@ function App() {
     useGeoLocationStatus()
     const [message, sendMessage] = useWebSocket()
     useConnection(message, sendMessage)
+    const [isMapGoogle, setIsMapGoogle] = useState<boolean>(true)
+
+    const changeMap = () => {
+        setIsMapGoogle(!isMapGoogle)
+    }
 
     return (
         <div className="App" style={{textAlign: "center"}}>
@@ -25,8 +30,8 @@ function App() {
                     <link rel="" href="https://web-g"/>
                 </Helmet>
                 <HeaderBar/>
-                <GoogleMaps/>
-                <OpenStreetMaps/>
+                {isMapGoogle ? (<GoogleMaps/>) : (<OpenStreetMaps/>)}
+                <button  onClick={changeMap}>Change map</button>
                 <OperationPanel/>
                 <Video/>
             </HelmetProvider>

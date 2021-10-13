@@ -1,9 +1,9 @@
 import {Addr} from "../domain";
 
 export type Status = {
-    type: string;
     code: string;
     message: string;
+    type: string;
 }
 
 export type SearchResponse = {

@@ -2,7 +2,7 @@
 // https://www.ipride.co.jp/blog/3425
 
 import {LatLng} from "leaflet";
-import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
+import {Circle, MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import styled from "styled-components";
 
@@ -17,29 +17,24 @@ let DefaultIcon = Leaflet.icon({
 });
 Leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-const LeafletContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-`
-
 const OpenStreetMaps = () => {
     //const position = new LatLng(51.505, -0.09)
-    const position = new LatLng(34.673542, 135.43333)
+    // ラジアンから経度緯度へ
+    //const position = new LatLng(35.943250 * Math.PI / 180, 139.621090 * Math.PI / 180)
+    const position = new LatLng(35.943250, 139.621090)
     return (
-        <LeafletContainer>
-            <MapContainer center={position} zoom={13} style={{height: '80vh'}}>
-                <TileLayer
-                    attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={position}>
-                    <Popup>
-                        aaaaaa
-                    </Popup>
-                </Marker>
-
-            </MapContainer>
-        </LeafletContainer>
+        <MapContainer center={position} zoom={15} style={{height: '80vh'}}>
+            <TileLayer
+                attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Circle center={position} radius={100}/>
+            <Marker position={position}>
+                <Popup>
+                    aaaaaa
+                </Popup>
+            </Marker>
+        </MapContainer>
     )
 }
 export default OpenStreetMaps

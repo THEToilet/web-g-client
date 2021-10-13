@@ -45,7 +45,7 @@ const GoogleMaps = () => {
 
     // https://github.com/google-map-react/google-map-react/issues/184
     return (
-        <div style={{height: '70vh', width: "100%"}}>
+        <div style={{height: '80vh', width: "100%"}}>
             {!isRefreshingMap && (
                 <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultGeoLocation.position}
                                 defaultZoom={defaultGeoLocation.zoom} onGoogleApiLoaded={({map, maps}) =>

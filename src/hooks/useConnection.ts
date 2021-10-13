@@ -4,17 +4,19 @@ import {setIsRegister, setSurroundingUserList, setUserID} from '../slices/gSigna
 import {getGSetting, getGSignalingStatus} from '../selector'
 import {useDispatch, useSelector} from "react-redux";
 import {JudgeMessageType, JudgeStatus, RegisterResponse, SearchResponse, Status} from "../types/API";
+import useWebSocket from "./useWebSocket";
 
-const useConnection = (message: string, sendMessage: (message: String) => void) => {
+const useConnection = (rawMessage: string, sendMessage: (message: String) => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
     const {searchDistance} = useSelector(getGSetting)
     const dispatch = useDispatch()
 
-    const messageHandler = (rawMessage : string) => {
+
+    useEffect(() => {
         // この方式じゃなくてonMessageのほうがいいかも
-        console.log("-----message-------")
+        console.log("-----rawMessage-------")
         console.log(rawMessage)
         if (rawMessage === "") {
             console.error("message is empty")
@@ -26,9 +28,6 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
                 console.error("message is undefined")
                 return;
             }
-
-            // TEST
-            sendPong()
             switch (messageType.type) {
                 case 'ping':
                     console.log('ping')
@@ -75,7 +74,7 @@ const useConnection = (message: string, sendMessage: (message: String) => void) 
             console.log(e)
         }
 
-    }
+    }, [dispatch, rawMessage])
 
     const sendPong = () => {
         sendMessage(JSON.stringify({

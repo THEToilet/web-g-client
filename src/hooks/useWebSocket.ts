@@ -30,7 +30,7 @@ const useWebSocket = () => {
     }
 
     let onMessage = (event: any) => {
-        console.log(event.data)
+        //console.log(event.data)
         setMessage(event.data)
         // ここは直にhandleMessageに入れる
     }
