@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
 
-import {setIsRegister, setSurroundingUserList, setUserID} from '../slices/gSignalingStatus'
-import {getGSetting, getGSignalingStatus} from '../selector'
+import {setIsRegister, setSurroundingUserList, setUserID} from '../store/slices/gSignalingStatus'
+import {getGSetting, getGSignalingStatus} from '../store/selector'
 import {useDispatch, useSelector} from "react-redux";
-import {JudgeMessageType, JudgeStatus, RegisterResponse, SearchResponse, Status} from "../types/API";
-import useWebSocket from "./useWebSocket";
+import {JudgeMessageType, RegisterResponse, SearchResponse} from "../types/api";
+import {WSMessages} from "../handler/wsMessages";
 
 const useConnection = (rawMessage: string, sendMessage: (message: String) => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
@@ -12,7 +12,7 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
     const {searchDistance} = useSelector(getGSetting)
     const dispatch = useDispatch()
-
+    const wsMessage = new WSMessages(sendMessage)
 
     useEffect(() => {
         // この方式じゃなくてonMessageのほうがいいかも
@@ -31,7 +31,7 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
             switch (messageType.type) {
                 case 'ping':
                     console.log('ping')
-                    sendPong()
+                    wsMessage.sendPong()
                     break
                 case 'register':
                     console.log('registered')
@@ -46,7 +46,7 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
                     // 検索方式にかかわらず返ってくるのは近隣のユーザリスト
                     console.log('search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
-                    dispatch(setSurroundingUserList(searchResponse.searchedUserList))
+                    dispatch(setSurroundingUserList(searchResponse.surroundingUserList))
                     break
                 case 'delete':
                     console.log('delete')
@@ -76,105 +76,31 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
 
     }, [dispatch, rawMessage])
 
-    const sendPong = () => {
-        sendMessage(JSON.stringify({
-            type: 'pong'
-        }))
-    }
-
-    const sendRegister = () => {
-        sendMessage(JSON.stringify({
-            type: 'register'
-        }))
-    }
-
-    const sendUpdate = () => {
-        sendMessage(JSON.stringify({
-            type: 'update',
-            geoLocation: {
-                latitude: userInfo.geoLocation.lat,
-                longitude: userInfo.geoLocation.lng,
-            }
-        }))
-    }
-
-    const sendStaticSearch = () => {
-        sendMessage(JSON.stringify({
-            type: 'search',
-            searchType: 'static',
-            searchDistance: searchDistance,
-        }))
-    }
-
-    const sendDynamicSearch = () => {
-        sendMessage(JSON.stringify({
-            type: 'search',
-            searchType: 'dynamic',
-            searchDistance: 100,
-        }))
-    }
-
-    const sendDelete = () => {
-        sendMessage(JSON.stringify({
-            type: 'delete',
-        }))
-    }
-
-    const sendSend = () => {
-        sendMessage(JSON.stringify({
-            type: 'send',
-            message: 'ssss',
-        }))
-    }
-    const sendOffer = () => {
-        sendMessage(JSON.stringify({
-            type: 'offer',
-            message: 'ssss',
-        }))
-    }
-    const sendAnswer = () => {
-        sendMessage(JSON.stringify({
-            type: 'answer',
-            message: 'ssss',
-        }))
-    }
-    const sendClose = () => {
-        sendMessage(JSON.stringify({
-            type: 'close',
-            message: 'ssss',
-        }))
-    }
-    const sendCandidate = () => {
-        sendMessage(JSON.stringify({
-            type: 'candidate',
-            message: 'ssss',
-        }))
-    }
 
     useEffect(() => {
         const timeoutUpdate = setInterval(() => {
             if (isRegister) {
-                sendUpdate()
+                wsMessage.sendUpdate(userInfo)
             }
         }, 2000);
         const timeoutSearch = setInterval(() => {
             if (isRegister) {
-                sendStaticSearch()
+                wsMessage.sendStaticSearch(searchDistance)
             }
         }, 2000);
         return () => {
             clearTimeout(timeoutUpdate);
             clearTimeout(timeoutSearch);
         };
-    }, [isRegister, sendStaticSearch, sendUpdate])
+    }, [isRegister])
 
 
     useEffect(() => {
         if (!isRegister && !isSendRegisterOnce) {
-            sendRegister()
+            wsMessage.sendRegister(userInfo)
             setIsRegisterOnce(true)
         }
-    }, [isRegister, isSendRegisterOnce, sendRegister])
+    }, [isRegister, isSendRegisterOnce])
 }
 
 export default useConnection

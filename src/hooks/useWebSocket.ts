@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 
-import {connected, connecting, reconnected, reconnecting} from '../slices/wsConnectionStatus'
-import {getWSConnection} from '../selector'
+import {connected, connecting, reconnected, reconnecting} from '../store/slices/wsConnectionStatus'
+import {getWSConnection} from '../store/selector'
 import {useDispatch, useSelector} from "react-redux";
 
 const useWebSocket = () => {

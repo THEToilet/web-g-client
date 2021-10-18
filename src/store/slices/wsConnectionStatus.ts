@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
-import {WebSocketConnectionState} from '../types/domain'
+import {WebSocketConnectionState} from '../type'
 
 export const initialState: WebSocketConnectionState = {
     wsConnectionType : 'CONNECTING'

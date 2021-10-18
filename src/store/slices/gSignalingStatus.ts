@@ -1,21 +1,13 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {Addr, GSignalingState} from '../types/domain'
-import {GeoLocation} from '../types/domain'
-import {BackEndUserInfo} from "../types/API";
+import {GSignalingState} from '../type'
+import {GeoLocation, UserInfo} from '../../types/domain'
 
 export const initialState: GSignalingState = {
     userInfo: {
-        public: {
-            ip: '',
-            port: 0,
-        },
-        private: {
-            ip: '',
-            port: 0,
-        },
+        userID : '',
         geoLocation: {
-            lat: 0,
-            lng: 0,
+            latitude: 0,
+            longitude: 0,
         },
     },
     surroundingUserList: [],
@@ -32,15 +24,7 @@ const gSignalingStatusSlice = createSlice({
             state.userInfo.geoLocation = payload
         },
 
-        setUserInfoPrivateAddr: (state, {payload}: PayloadAction<Addr>) => {
-            state.userInfo.private = payload
-        },
-
-        setUserInfoPublicAddr: (state, {payload}: PayloadAction<Addr>) => {
-            state.userInfo.public = payload
-        },
-
-        setSurroundingUserList: (state, {payload}: PayloadAction<BackEndUserInfo[]>) => {
+        setSurroundingUserList: (state, {payload}: PayloadAction<UserInfo[]>) => {
             state.surroundingUserList = payload
         },
 
@@ -55,8 +39,6 @@ const gSignalingStatusSlice = createSlice({
 })
 export const {
     setUserInfoGeoLocation,
-    setUserInfoPrivateAddr,
-    setUserInfoPublicAddr,
     setSurroundingUserList,
     setIsRegister,
     setUserID

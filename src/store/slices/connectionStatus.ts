@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
-import {ConnectionState} from '../types/domain'
+import {ConnectionState} from '../type'
 
 export const initialState: ConnectionState = {
     connectionType : 'NAT'

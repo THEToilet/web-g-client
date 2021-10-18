@@ -1,37 +1,37 @@
 import {useEffect, useState} from "react";
 import {GeoLocation} from '../types/domain'
-import {setUserInfoGeoLocation} from '../slices/gSignalingStatus'
+import {setUserInfoGeoLocation} from '../store/slices/gSignalingStatus'
 import {useDispatch} from "react-redux";
 
 const useGeoLocationStatus = () => {
     const [geoLocation, setGeoLocation] = useState<GeoLocation>({
-        lat: 0, lng: 0
+        latitude: 0, longitude: 0
     });
 
     const dispatch = useDispatch()
 
     const getGeoLocation = () => {
         navigator.geolocation.getCurrentPosition(position => {
-            // console.log(position)
             setGeoLocation({
-                lat: Number(position.coords.latitude),
-                lng: Number(position.coords.longitude),
+                latitude: Number(position.coords.latitude),
+                longitude: Number(position.coords.longitude),
             });
         }, () => {
+            // 位置情報が得られなかったときはデフォルト値を入れる
             setGeoLocation({
-                lat: 34.673542,
-                lng: 135.433338
+                latitude: 34.673542,
+                longitude: 135.433338
             });
-
+            setUserInfoGeoLocation(geoLocation)
         })
-        //console.log(geoLocation)
         dispatch(setUserInfoGeoLocation(geoLocation))
     }
 
+    // 二秒ごとに位置情報を取得
     useEffect(() => {
         getGeoLocation()
         const regularG = setTimeout(getGeoLocation
-            , 5000)
+            , 2000)
         return () => {
             clearTimeout(regularG)
         }
@@ -39,6 +39,4 @@ const useGeoLocationStatus = () => {
 
     return geoLocation
 }
-
-
 export default useGeoLocationStatus

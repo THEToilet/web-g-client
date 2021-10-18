@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 
-import {getGSetting} from '../selector'
-import {getGSignalingStatus} from '../selector'
-import {setDynamicSearch, setSearchDistance, setStaticSearch} from '../slices/gSetting'
+import {getGSetting} from '../store/selector'
+import {getGSignalingStatus} from '../store/selector'
+import {setDynamicSearch, setSearchDistance, setStaticSearch} from '../store/slices/gSetting'
 import TextField from "@mui/material/TextField";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -35,7 +35,7 @@ const OperationPanel = () => {
 
     return (
         <div style={{}}>
-            <div>{userInfo.geoLocation.lat + " , " + userInfo.geoLocation.lng}</div>
+            <div>{userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}</div>
             <div>{"surroundingUserList size :" + surroundingUserList.length}</div>
             {/*          <Stack spacing={2} direction="row">*/}
             <FormControl sx={{m: 1, minWidth: 80}}>

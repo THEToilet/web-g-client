@@ -1,10 +1,10 @@
 import GoogleMapReact from "google-map-react";
 import Marker from "./Marker";
 
-import {getGSetting, getGSignalingStatus} from '../selector'
+import {getGSetting, getGSignalingStatus} from '../store/selector'
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import Button from "@mui/material/Button";
+import {UserInfo} from "../types/domain";
 
 const APIKEY = "";
 const GoogleMaps = () => {
@@ -15,8 +15,8 @@ const GoogleMaps = () => {
 
     const defaultGeoLocation = {
         position: {
-            lat: userInfo.geoLocation.lat,
-            lng: userInfo.geoLocation.lng,
+            lat: userInfo.geoLocation.latitude,
+            lng: userInfo.geoLocation.longitude,
         },
         zoom: 15
     }
@@ -32,16 +32,10 @@ const GoogleMaps = () => {
         refreshMap().catch((e) => console.log(e))
     }, [searchDistance])
 
-    const Markers = surroundingUserList.map((userInfo) => {
-        return <Marker key={userInfo.userID} lat={userInfo.latitude} lng={userInfo.longitude} color="yellow"
+    const Markers = surroundingUserList.map((userInfo : UserInfo) => {
+        return <Marker key={userInfo.userID} lat={userInfo.geoLocation.latitude} lng={userInfo.geoLocation.longitude} color="yellow"
                        userInfo={userInfo}/>
     })
-
-    {/*<Marker lat={35.9432136} lng={139.621288} text="My Marker" color="red"/>*/
-    }
-    {/*<Marker lat={35.943207099999995} lng={139.6211672} text="My Marker" color="blue"/>*/
-    }
-    // TODO: userInfoを流し込むようにする 今だと型が合わなくてエラーでる
 
     // https://github.com/google-map-react/google-map-react/issues/184
     return (
@@ -60,7 +54,7 @@ const GoogleMaps = () => {
                         radius: searchDistance,
                     })}>
                     {Markers}
-                    <Marker lat={userInfo.geoLocation.lat} lng={userInfo.geoLocation.lng} text="My Marker"
+                    <Marker lat={userInfo.geoLocation.latitude} lng={userInfo.geoLocation.longitude} text="My Marker"
                             color="green"/>
                 </GoogleMapReact>
             )}

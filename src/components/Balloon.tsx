@@ -40,6 +40,18 @@ const BalloonText = styled.div`
 
 // TODO : 型変える
 
+/*
+type ContainerProps = {}
+type Props = {} & ContainerProps
+
+const Component: React.FC<Props> = props => (
+    <BalloonWindow className={"scrollWindow"}>
+        <BalloonText>{"userID: " + props.userInfo.userID + "\nlat: " + props.userInfo.latitude + "\nlng: " + props.userInfo.longitude}</BalloonText>
+    </BalloonWindow>
+)
+ */
+
+
 const Balloon = (props: any) => {
     return (
         <BalloonWindow className={"scrollWindow"}>

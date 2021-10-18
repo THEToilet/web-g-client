@@ -7,7 +7,6 @@ import HeaderBar from "../components/HeaderBar"
 import GoogleMaps from "../components/GoogleMaps";
 import useConnection from "../hooks/useConnection";
 import OperationPanel from "../components/OperationPanel"
-import axios from 'axios'
 import Video from "../components/Video";
 import OpenStreetMaps from "../components/OpenStreetMaps";
 

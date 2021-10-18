@@ -1,6 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {useSelector as rawUseSelector, TypedUseSelectorHook} from "react-redux";
-import rootReducer from "../slices";
+import rootReducer from "./slices";
 
 export const store = configureStore({
     reducer: rootReducer,
