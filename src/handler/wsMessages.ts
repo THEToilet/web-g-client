@@ -1,4 +1,4 @@
-import {UserInfo} from "../types/domain";
+import {GeoLocation, UserInfo} from "../types/domain";
 import {DeleteRequest, PongRequest, RegisterRequest, SearchRequest, SendRequest, UpdateRequest} from "../types/api";
 
 export class WSMessages {
@@ -26,28 +26,27 @@ export class WSMessages {
     sendUpdate(userInfo: UserInfo) {
         const message: UpdateRequest = {
             type: 'update',
-            geoLocation: {
-                latitude: userInfo.geoLocation.latitude,
-                longitude: userInfo.geoLocation.longitude,
-            },
+            userInfo: userInfo,
         }
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendStaticSearch(searchDistance: number) {
+    sendStaticSearch(geoLocation: GeoLocation, searchDistance: number) {
         const message: SearchRequest = {
             type: 'search',
             searchType: 'static',
             searchDistance: searchDistance,
+            geoLocation: geoLocation,
         }
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendDynamicSearch(searchDistance: number) {
+    sendDynamicSearch(geoLocation: GeoLocation, searchDistance: number) {
         const message: SearchRequest = {
             type: 'search',
             searchType: 'dynamic',
             searchDistance: searchDistance,
+            geoLocation: geoLocation,
         }
         this.sendMessage(JSON.stringify(message))
     }

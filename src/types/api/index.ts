@@ -44,13 +44,14 @@ export type RegisterRequest = {
 
 export type UpdateRequest = {
     type: string
-    geoLocation: GeoLocation
+    userInfo: UserInfo
 }
 
 export type SearchRequest = {
     type: string
     searchType: string
     searchDistance: number
+    geoLocation : GeoLocation
 }
 
 export type DeleteRequest = {

@@ -43,7 +43,7 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
                     console.log('update')
                     break
                 case 'search':
-                    // 検索方式にかかわらず返ってくるのは近隣のユーザリスト
+                    // NOTE: 検索方式にかかわらず返ってくるのは近隣のユーザリスト
                     console.log('search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
                     dispatch(setSurroundingUserList(searchResponse.surroundingUserList))
@@ -85,7 +85,7 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
         }, 2000);
         const timeoutSearch = setInterval(() => {
             if (isRegister) {
-                wsMessage.sendStaticSearch(searchDistance)
+                wsMessage.sendStaticSearch(userInfo.geoLocation, searchDistance)
             }
         }, 2000);
         return () => {

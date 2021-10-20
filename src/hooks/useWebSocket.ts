@@ -1,57 +1,72 @@
 import {useEffect, useRef, useState} from "react";
 
-import {connected, connecting, reconnected, reconnecting} from '../store/slices/wsConnectionStatus'
-import {getWSConnection} from '../store/selector'
-import {useDispatch, useSelector} from "react-redux";
-
 const useWebSocket = () => {
 
     const [message, setMessage] = useState<string>("")
     const socketRef = useRef<WebSocket>(null!)
 
-    const {wsConnectionType} = useSelector(getWSConnection)
-    const dispatch = useDispatch()
+    let connectInterval: NodeJS.Timeout
+    let timeout: number = 100
 
-    useEffect(() => {
+    const onOpen = () => {
+        clearTimeout(connectInterval)
+    }
+
+    const onMessage = (event: any) => {
+        setMessage(event.data)
+    }
+
+    const onError = (error: any) => {
+        console.error("WebSocket error: ", error)
+        socketRef.current.close()
+    }
+
+    // NOTE: 指数関数的バックオフ？らしい
+    // REFERENCE: https://dev.to/finallynero/using-websockets-in-react-4fkp
+    const onClose = (e: any) => {
+        console.log(
+            'WebSocket is closed :',
+            e
+        );
+        timeout = timeout + timeout;
+        // NOTE: 再接続処理
+        connectInterval = setTimeout(check, Math.min(10000, timeout));
+    }
+
+    const check = () => {
+        if (!socketRef.current || socketRef.current.readyState === WebSocket.CLOSED) {
+            connect()
+        }
+    }
+
+    const connect = () => {
         console.log("connecting....")
-        dispatch(connecting())
         socketRef.current = new WebSocket("ws://127.0.0.1:8080/signaling")
         socketRef.current.addEventListener('open', onOpen)
         socketRef.current.addEventListener('message', onMessage)
         socketRef.current.addEventListener('error', onError)
-        return () => {
-            socketRef.current.close()
-            dispatch(reconnecting())
-        }
+        socketRef.current.addEventListener('close', onClose)
+    }
+
+    useEffect(() => {
+        connect()
     }, [])
 
-    let onOpen = () => {
-        dispatch(connected())
-    }
-
-    let onMessage = (event: any) => {
-        //console.log(event.data)
-        setMessage(event.data)
-        // ここは直にhandleMessageに入れる
-    }
-    let onError = (error: any) => {
-        console.log(error)
-        dispatch(reconnecting())
-    }
-
-    // https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
+    // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
     const sendMessage = async (message: String) => {
-        console.log(message)
         waitForConnection(() => {
-            socketRef.current.send(String(message))
+            try {
+                socketRef.current.send(String(message))
+            } catch (e) {
+                console.error(e)
+            }
         }, 1000)
     }
 
-
     // TODO clearTimeoutは必要か調べる
     const waitForConnection = (callback: any, interval: number) => {
-        // WebSocketが接続するまで待つ
-        if (socketRef.current.readyState === 1) {
+        // NOTE: WebSocketが接続するまで待つ
+        if (socketRef.current.readyState === WebSocket.OPEN) {
             callback()
         } else {
             setTimeout(() => {
@@ -60,7 +75,7 @@ const useWebSocket = () => {
         }
     }
 
-    // 詰まりポイント as const
+    // NOTE: TypeScriptでは as const　をつける
     return [message, sendMessage] as const;
 }
 
