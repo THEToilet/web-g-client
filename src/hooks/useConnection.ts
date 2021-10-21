@@ -3,21 +3,29 @@ import {useEffect, useState} from "react";
 import {setIsRegister, setSurroundingUserList, setUserID} from '../store/slices/gSignalingStatus'
 import {getGSetting, getGSignalingStatus} from '../store/selector'
 import {useDispatch, useSelector} from "react-redux";
-import {JudgeMessageType, RegisterResponse, SearchResponse} from "../types/api";
+import {
+    AnswerMessage,
+    DeleteResponse,
+    IceCandidateRequest,
+    JudgeMessageType, OfferMessage,
+    RegisterResponse,
+    SearchResponse,
+    UpdateResponse
+} from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
 
-const useConnection = (rawMessage: string, sendMessage: (message: String) => void) => {
+const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: RTCSessionDescription) => Promise<void>, setAnswer: (sdp: RTCSessionDescription) => Promise<void>, disconnect: () => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
     const {searchDistance} = useSelector(getGSetting)
     const dispatch = useDispatch()
-    const wsMessage = new WSMessages(sendMessage)
 
     useEffect(() => {
-        // この方式じゃなくてonMessageのほうがいいかも
-        console.log("-----rawMessage-------")
+        /*
+        console.log(new Date(), " : -----rawMessage-------")
         console.log(rawMessage)
+         */
         if (rawMessage === "") {
             console.error("message is empty")
             return
@@ -30,42 +38,57 @@ const useConnection = (rawMessage: string, sendMessage: (message: String) => voi
             }
             switch (messageType.type) {
                 case 'ping':
-                    console.log('ping')
+                    console.log(new Date(), ': ping')
                     wsMessage.sendPong()
                     break
                 case 'register':
-                    console.log('registered')
+                    console.log(new Date(), ': registered')
                     const registerResponse: RegisterResponse = JSON.parse(rawMessage) as RegisterResponse
                     dispatch(setIsRegister())
                     dispatch(setUserID(registerResponse.userID))
                     break
                 case 'update':
-                    console.log('update')
+                    console.log(new Date(), ': update')
+                    const updateResponse: UpdateResponse = JSON.parse(rawMessage) as UpdateResponse
                     break
                 case 'search':
                     // NOTE: 検索方式にかかわらず返ってくるのは近隣のユーザリスト
-                    console.log('search')
+                    console.log(new Date(), ': search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
                     dispatch(setSurroundingUserList(searchResponse.surroundingUserList))
                     break
                 case 'delete':
-                    console.log('delete')
+                    console.log(new Date(), ': delete')
+                    const deleteResponse: DeleteResponse = JSON.parse(rawMessage) as DeleteResponse
                     break
                 case 'offer':
-                    console.log('offer')
-                    // setOffer(message)
+                    console.log(new Date(), ': offer')
+                    const offerMessage: OfferMessage = JSON.parse(rawMessage) as OfferMessage
+                    setOffer(new RTCSessionDescription(JSON.parse(offerMessage.sdp))).catch(
+                        e => {
+                            console.error(e)
+                        }
+                    )
                     break
                 case 'answer':
-                    console.log('answer')
-                    // setAnswer(message)
+                    console.log(new Date(), ': answer')
+                    const answerMessage: AnswerMessage = JSON.parse(rawMessage) as AnswerMessage
+                    setAnswer(new RTCSessionDescription(JSON.parse(answerMessage.sdp))).catch(
+                        e => {
+                            console.error(e)
+                        }
+                    )
                     break
                 case 'candidate':
-                    console.log('candidate')
-                    // handleICECandidate(message)
+                    console.log(new Date(), ': candidate')
+                    const iceCandidate: IceCandidateRequest = JSON.parse(rawMessage) as IceCandidateRequest
+                    console.log(iceCandidate.ice)
+                    const i = new RTCIceCandidate(JSON.parse(iceCandidate.ice))
+                    setICECandidate(i)
                     break
                 case 'close':
-                    console.log('close')
-                    // closeProcess()
+                    console.log(new Date(), ': close')
+                    disconnect()
                     break
                 default:
                     break

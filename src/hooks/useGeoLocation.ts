@@ -11,13 +11,14 @@ const useGeoLocationStatus = () => {
     const dispatch = useDispatch()
 
     const getGeoLocation = () => {
+        console.log(new Date(), ' : getGeoLocation')
         navigator.geolocation.getCurrentPosition(position => {
             setGeoLocation({
                 latitude: Number(position.coords.latitude),
                 longitude: Number(position.coords.longitude),
             });
         }, () => {
-            // 位置情報が得られなかったときはデフォルト値を入れる
+            // NOTE: 位置情報が得られなかったときはデフォルト値を入れる
             setGeoLocation({
                 latitude: 34.673542,
                 longitude: 135.433338
@@ -27,6 +28,7 @@ const useGeoLocationStatus = () => {
         dispatch(setUserInfoGeoLocation(geoLocation))
     }
 
+    // TODO: 本来の仕様通りのものにする
     // 二秒ごとに位置情報を取得
     useEffect(() => {
         getGeoLocation()

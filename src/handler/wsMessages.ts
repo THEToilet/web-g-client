@@ -1,5 +1,14 @@
 import {GeoLocation, UserInfo} from "../types/domain";
-import {DeleteRequest, PongRequest, RegisterRequest, SearchRequest, SendRequest, UpdateRequest} from "../types/api";
+import {
+    AnswerResponse, CloseRequest,
+    DeleteRequest, IceCandidateRequest,
+    OfferRequest,
+    PongRequest,
+    RegisterRequest,
+    SearchRequest,
+    SendRequest,
+    UpdateRequest
+} from "../types/api";
 
 export class WSMessages {
     constructor(private readonly sendMessage: any) {
@@ -66,32 +75,34 @@ export class WSMessages {
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendOffer() {
-        this.sendMessage(JSON.stringify({
+    sendOffer(sdp: string) {
+        const message: OfferRequest = {
             type: 'offer',
-            message: 'ssss',
-        }))
+            sdp: sdp,
+        }
+        this.sendMessage(JSON.stringify(message))
     }
 
-    sendAnswer() {
-        this.sendMessage(JSON.stringify({
+    sendAnswer(sdp: string) {
+        const message: AnswerResponse = {
             type: 'answer',
-            message: 'ssss',
-        }))
+            sdp: sdp,
+        }
+        this.sendMessage(JSON.stringify(message))
     }
 
     sendClose() {
-        this.sendMessage(JSON.stringify({
+        const message: CloseRequest = {
             type: 'close',
-            message: 'ssss',
-        }))
+        }
+        this.sendMessage(JSON.stringify(message))
     }
 
-    sendCandidate() {
-        this.sendMessage(JSON.stringify({
-            type: 'candidate',
-            message: 'ssss',
-        }))
+    sendCandidate(ice: string) {
+        const message: IceCandidateRequest = {
+            type: 'ice',
+            ice: ice,
+        }
+        this.sendMessage(JSON.stringify(message))
     }
-
 }

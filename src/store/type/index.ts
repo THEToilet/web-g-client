@@ -1,4 +1,5 @@
 import {UserInfo} from "../../types/domain";
+import {WSMessages} from "../../handler/wsMessages";
 
 export type ActionType =
     | 'NAT'
@@ -51,4 +52,9 @@ export type ConnectionState = {
 export type P2PState = {
     isOffer: boolean,
     rtcPeerConnection: RTCPeerConnection,
+}
+
+export type VideoRef = {
+    remoteVideo: HTMLVideoElement,
+    localVideo: HTMLVideoElement,
 }

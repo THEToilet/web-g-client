@@ -1,11 +1,7 @@
-import {useRef, useState} from "react";
-import useUserMedia from "../hooks/useUserMedia";
-import useRTConnection from "../hooks/useRTConnection";
+import React, {useRef, useState} from "react";
 
-const Video = () => {
+const Video = (props : any) => {
     const [isPlay, setIsPlay] = useState<Boolean>(false);
-    const localVideoRef = useRef<HTMLVideoElement>(null)
-    const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
     // playとsetを分ける
     const playVideo = async (element: any, stream: any) => {
@@ -21,12 +17,12 @@ const Video = () => {
         element.pause()
     }
 
-    useUserMedia(localVideoRef)
-    useRTConnection(remoteVideoRef)
     return (
         <>
-            <video ref={localVideoRef} autoPlay={true} style={{width: '320px', height: '240px', border: '1px solid black'}}/>
-            <video ref={remoteVideoRef} autoPlay={true} style={{width: '320px', height: '240px', border: '1px solid black'}}/>
+            <video ref={props.localVideoRef} autoPlay={true}
+                   style={{width: '320px', height: '240px', border: '1px solid black'}}/>
+            <video ref={props.remoteVideoRef} autoPlay={true}
+                   style={{width: '320px', height: '240px', border: '1px solid black'}}/>
         </>
     )
 }

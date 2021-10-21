@@ -4,7 +4,7 @@ import rootReducer from "./slices";
 
 export const store = configureStore({
     reducer: rootReducer,
-    // chrome extensions
+    // NOTE: Chromeの拡張機能のReduxToolKitを使えるようにする
     devTools: process.env.NODE_ENV !== 'production',
 })
 

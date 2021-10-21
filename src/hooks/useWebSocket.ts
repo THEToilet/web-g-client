@@ -21,13 +21,15 @@ const useWebSocket = () => {
         socketRef.current.close()
     }
 
-    // NOTE: 指数関数的バックオフ？らしい
+    // NOTE: 指数関数的バックオフらしい
     // REFERENCE: https://dev.to/finallynero/using-websockets-in-react-4fkp
     const onClose = (e: any) => {
         console.log(
             'WebSocket is closed :',
             e
         );
+        // NOTE: 呼び出されるたびにタイムアウト時間を増やす
+        // TODO: ここは指数関数的に増やす
         timeout = timeout + timeout;
         // NOTE: 再接続処理
         connectInterval = setTimeout(check, Math.min(10000, timeout));
@@ -64,8 +66,8 @@ const useWebSocket = () => {
     }
 
     // TODO clearTimeoutは必要か調べる
+    // NOTE: WebSocketのコネクションが確立するまで待つ
     const waitForConnection = (callback: any, interval: number) => {
-        // NOTE: WebSocketが接続するまで待つ
         if (socketRef.current.readyState === WebSocket.OPEN) {
             callback()
         } else {

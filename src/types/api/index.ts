@@ -51,7 +51,7 @@ export type SearchRequest = {
     type: string
     searchType: string
     searchDistance: number
-    geoLocation : GeoLocation
+    geoLocation: GeoLocation
 }
 
 export type DeleteRequest = {
@@ -62,4 +62,30 @@ export type SendRequest = {
     type: string
     message: string
 }
+
+// -----------P2P-----------
+// request
+export type IceCandidateRequest = {
+    type: string
+    ice: string
+}
+
+export type CloseRequest = {
+    type: string
+}
+
+// response
+export type IceCandidateResponse = {
+    type: string
+    ice: string
+}
+export type OfferMessage = {
+    type: string
+    sdp: string
+}
+export type AnswerMessage = {
+    type: string
+    sdp: string
+}
+
 //--------------------------
