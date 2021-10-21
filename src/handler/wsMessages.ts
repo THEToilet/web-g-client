@@ -1,8 +1,8 @@
 import {GeoLocation, UserInfo} from "../types/domain";
 import {
-    AnswerResponse, CloseRequest,
-    DeleteRequest, IceCandidateRequest,
-    OfferRequest,
+    AnswerMessage,
+    CloseRequest,
+    DeleteRequest, IceCandidateRequest, OfferMessage,
     PongRequest,
     RegisterRequest,
     SearchRequest,
@@ -76,7 +76,7 @@ export class WSMessages {
     }
 
     sendOffer(sdp: string) {
-        const message: OfferRequest = {
+        const message: OfferMessage = {
             type: 'offer',
             sdp: sdp,
         }
@@ -84,7 +84,7 @@ export class WSMessages {
     }
 
     sendAnswer(sdp: string) {
-        const message: AnswerResponse = {
+        const message: AnswerMessage = {
             type: 'answer',
             sdp: sdp,
         }

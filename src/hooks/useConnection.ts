@@ -50,6 +50,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 case 'update':
                     console.log(new Date(), ': update')
                     const updateResponse: UpdateResponse = JSON.parse(rawMessage) as UpdateResponse
+                    console.log(new Date(), updateResponse)
                     break
                 case 'search':
                     // NOTE: 検索方式にかかわらず返ってくるのは近隣のユーザリスト
@@ -60,6 +61,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 case 'delete':
                     console.log(new Date(), ': delete')
                     const deleteResponse: DeleteResponse = JSON.parse(rawMessage) as DeleteResponse
+                    console.log(new Date(), deleteResponse)
                     break
                 case 'offer':
                     console.log(new Date(), ': offer')

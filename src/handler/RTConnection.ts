@@ -22,16 +22,12 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
 
         // NOTE: Vanilla ICE
         rtcPeerConnection.current.onicecandidate = ({candidate}) => {
-            // Candidate受信
             if (candidate) {
                 console.log(candidate)
                 // Trickle ICEはここで送信
             } else {
                 // NOTE: 空のICE Candidateは収集終了の知らせ
-                // SDP送信
-                const message = JSON.stringify({type: 'candidate', ice: candidate})
-                wsMessage.sendCandidate("")
-                // sendMessage
+                wsMessage.sendCandidate(String(candidate))
             }
         }
 
@@ -62,7 +58,7 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
         )
     }
 
-    // 相手からのOfferをsetする自分はAnswer側
+    // 相手からのOffer要請を登録する自分はAnswer側
     const setOffer = async (sdp: RTCSessionDescription) => {
         makeRTCPeerConnection(false)
         await rtcPeerConnection.current.setRemoteDescription(sdp).catch(
@@ -79,7 +75,7 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
         wsMessage.sendAnswer(String(rtcPeerConnection.current.localDescription))
     }
 
-    // 相手からのAnswerをsetする自分はOffer側
+    // MEMO: 相手からのAnswer要請を登録する自分はOffer側
     const setAnswer = async (sdp: RTCSessionDescription) => {
         await rtcPeerConnection.current.setRemoteDescription(sdp)
     }

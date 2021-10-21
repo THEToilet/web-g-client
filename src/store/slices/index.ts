@@ -1,11 +1,10 @@
 import {Reducer, combineReducers} from "redux";
-import {WebSocketConnectionState} from '../type'
 import WSConnectionStatus from './wsConnectionStatus'
+import GSignalingStatus from './gSignalingStatus'
 import GSetting from './gSetting'
 import {GSettingStatus} from '../type'
-import GSignalingStatus from './gSignalingStatus'
 import {GSignalingState} from '../type'
-import {ConnectionState} from '../type'
+import {WebSocketConnectionState} from '../type'
 
 export type RootState = {
     wsConnectionState: WebSocketConnectionState

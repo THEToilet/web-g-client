@@ -52,7 +52,7 @@ const useWebSocket = () => {
 
     useEffect(() => {
         connect()
-    }, [])
+    }, [connect])
 
     // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
     const sendMessage = async (message: String) => {
