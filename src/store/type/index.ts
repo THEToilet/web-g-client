@@ -30,3 +30,7 @@ export type GSignalingState = {
     isRegister: boolean;
     userID: string;
 }
+
+export type P2PState = {
+    destinationUserID: string
+}

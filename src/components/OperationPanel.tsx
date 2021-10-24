@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
-import {ChangeEvent, useRef} from "react";
+import {useRef} from "react";
 
 const OperationPanel = () => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
@@ -26,7 +26,7 @@ const OperationPanel = () => {
         }
     };
 
-    const handleSearchDistanceChange = (e: any) => {
+    const handleSearchDistanceChange = () => {
         if (searchDistanceFiledRef.current) {
             console.log(searchDistanceFiledRef.current?.value)
             dispatch(setSearchDistance(Number(searchDistanceFiledRef.current?.value)))
@@ -37,7 +37,6 @@ const OperationPanel = () => {
         <div style={{}}>
             <div>{userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}</div>
             <div>{"surroundingUserList size :" + surroundingUserList.length}</div>
-            {/*          <Stack spacing={2} direction="row">*/}
             <FormControl sx={{m: 1, minWidth: 80}}>
                 <TextField inputRef={searchDistanceFiledRef} id={'search-distance'} label={"SearchDistance"}
                            defaultValue={searchDistance}/>
@@ -51,13 +50,12 @@ const OperationPanel = () => {
                     value={'static'}
                     onChange={handleChange}
                     autoWidth
-                    label="SearchType"
+                    label={searchType}
                 >
                     <MenuItem value='static'>Static Search</MenuItem>
                     <MenuItem value='dynamic'>Dynamic Search</MenuItem>
                 </Select>
             </FormControl>
-            {/*</Stack>*/}
         </div>
     )
 }

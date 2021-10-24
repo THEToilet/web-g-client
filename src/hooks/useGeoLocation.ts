@@ -11,7 +11,7 @@ const useGeoLocationStatus = () => {
     const dispatch = useDispatch()
 
     const getGeoLocation = () => {
-        console.log(new Date(), ' : getGeoLocation')
+        //console.log(new Date(), ' : getGeoLocation')
         navigator.geolocation.getCurrentPosition(position => {
             setGeoLocation({
                 latitude: Number(position.coords.latitude),
@@ -23,7 +23,7 @@ const useGeoLocationStatus = () => {
                 latitude: 34.673542,
                 longitude: 135.433338
             });
-            setUserInfoGeoLocation(geoLocation)
+            //setUserInfoGeoLocation(geoLocation)
         })
         dispatch(setUserInfoGeoLocation(geoLocation))
     }

@@ -68,24 +68,29 @@ export type SendRequest = {
 export type IceCandidateRequest = {
     type: string
     ice: string
+    destination: string
 }
 
 export type CloseRequest = {
     type: string
+    destination: string
 }
 
 // response
 export type IceCandidateResponse = {
     type: string
     ice: string
+    destination: string
 }
 export type OfferMessage = {
     type: string
     sdp: string
+    destination: string
 }
 export type AnswerMessage = {
     type: string
     sdp: string
+    destination: string
 }
 
 //--------------------------

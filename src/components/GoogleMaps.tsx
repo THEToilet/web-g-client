@@ -7,16 +7,17 @@ import {useEffect, useState} from "react";
 import {UserInfo} from "../types/domain";
 
 const APIKEY = "";
-const GoogleMaps = () => {
-    const {surroundingUserList, userInfo} = useSelector(getGSignalingStatus)
+// TODO: connectように型を付ける
+const GoogleMaps = (props: any) => {
+    const {surroundingUserList, userInfo: {geoLocation}} = useSelector(getGSignalingStatus)
     const {searchDistance} = useSelector(getGSetting)
 
     const [isRefreshingMap, setIsRefreshingMap] = useState<boolean>(false)
 
     const defaultGeoLocation = {
         position: {
-            lat: userInfo.geoLocation.latitude,
-            lng: userInfo.geoLocation.longitude,
+            lat: geoLocation.latitude,
+            lng: geoLocation.longitude,
         },
         zoom: 15
     }
@@ -32,8 +33,9 @@ const GoogleMaps = () => {
         refreshMap().catch((e) => console.log(e))
     }, [searchDistance])
 
-    const Markers = surroundingUserList.map((userInfo : UserInfo) => {
-        return <Marker key={userInfo.userID} lat={userInfo.geoLocation.latitude} lng={userInfo.geoLocation.longitude} color="yellow"
+    const Markers = surroundingUserList.map((userInfo: UserInfo) => {
+        return <Marker key={userInfo.userID} lat={userInfo.geoLocation.latitude} lng={userInfo.geoLocation.longitude}
+                       color="yellow"
                        userInfo={userInfo}/>
     })
 
@@ -44,17 +46,17 @@ const GoogleMaps = () => {
                 <GoogleMapReact bootstrapURLKeys={{key: APIKEY}} defaultCenter={defaultGeoLocation.position}
                                 defaultZoom={defaultGeoLocation.zoom} onGoogleApiLoaded={({map, maps}) =>
                     new maps.Circle({
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: '#FF0000',
-                        fillOpacity: 0.3,
+                        "strokeColor": '#FF0000',
+                        "strokeOpacity": 0.8,
+                        "strokeWeight": 2,
+                        "fillColor": '#FF0000',
+                        "fillOpacity": 0.3,
                         map,
-                        center: userInfo.geoLocation,
-                        radius: searchDistance,
+                        "center": {lat: geoLocation.latitude, lng: geoLocation.longitude},
+                        "radius": searchDistance,
                     })}>
                     {Markers}
-                    <Marker lat={userInfo.geoLocation.latitude} lng={userInfo.geoLocation.longitude} text="My Marker"
+                    <Marker lat={geoLocation.latitude} lng={geoLocation.longitude} text="My Marker"
                             color="green"/>
                 </GoogleMapReact>
             )}

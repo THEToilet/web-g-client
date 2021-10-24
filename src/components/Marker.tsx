@@ -27,14 +27,14 @@ const Marker = (props: any) => {
     const changeState = () => {
         setIsOpen(!isOpen);
     };
-    const {color, name, id} = props
+    const {color, name} = props
     return (
         <div onClick={changeState}>
             <Mark style={{backgroundColor: color, cursor: 'pointer'}}
                   title={name}/>
             {isOpen ? (
                 <Balloon lat={props.lat} lng={props.lng} userInfo={props.userInfo}/>
-            ) : null }
+            ) : null}
         </div>
     )
 }

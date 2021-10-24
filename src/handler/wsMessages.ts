@@ -75,33 +75,37 @@ export class WSMessages {
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendOffer(sdp: string) {
+    sendOffer(sdp: string, destinationUserID: string) {
         const message: OfferMessage = {
             type: 'offer',
             sdp: sdp,
+            destination: destinationUserID
         }
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendAnswer(sdp: string) {
+    sendAnswer(sdp: string, destinationUserID: string) {
         const message: AnswerMessage = {
             type: 'answer',
             sdp: sdp,
+            destination: destinationUserID
         }
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendClose() {
+    sendClose(destinationUserID: string) {
         const message: CloseRequest = {
             type: 'close',
+            destination: destinationUserID
         }
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendCandidate(ice: string) {
+    sendCandidate(ice: string, destinationUserID: string) {
         const message: IceCandidateRequest = {
             type: 'ice',
             ice: ice,
+            destination: destinationUserID
         }
         this.sendMessage(JSON.stringify(message))
     }

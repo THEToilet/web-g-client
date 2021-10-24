@@ -1,5 +1,5 @@
 import {Helmet, HelmetProvider} from 'react-helmet-async'
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 
 import useGeoLocationStatus from "../hooks/useGeoLocation"
 import useWebSocket from "../hooks/useWebSocket"
@@ -25,10 +25,17 @@ function App() {
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect] = RTConnection(remoteVideoRef, wsMessage)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
+
+    // TODO:　後で場所変更させる
     const [isMapGoogle, setIsMapGoogle] = useState<boolean>(true)
+    const [destination, setDestination] = useState<string>('setDestination')
 
     const changeMap = () => {
         setIsMapGoogle(!isMapGoogle)
+    }
+
+    const handleChange = (event : any) => {
+        setDestination(event.target.value)
     }
 
     return (
@@ -40,8 +47,11 @@ function App() {
                     <link rel="" href="https://web-g"/>
                 </Helmet>
                 <HeaderBar/>
-                {isMapGoogle ? (<GoogleMaps/>) : (<OpenStreetMaps/>)}
+                {isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)}
                 <button onClick={changeMap}>Change map</button>
+                <button onClick={async () => connect(destination)}>Connect</button>
+                {console.log(destination)}
+                <textarea value={destination} onChange={handleChange}/>
                 <OperationPanel/>
                 <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
             </HelmetProvider>

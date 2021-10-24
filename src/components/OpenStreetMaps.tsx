@@ -4,13 +4,12 @@
 import {LatLng} from "leaflet";
 import {Circle, MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import styled from "styled-components";
 
 import Leaflet from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
-// marker setting
+// NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
     iconUrl: icon,
     shadowUrl: iconShadow,

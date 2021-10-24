@@ -52,17 +52,19 @@ const useWebSocket = () => {
 
     useEffect(() => {
         connect()
-    }, [connect])
+        // NOTE: 依存配列にconnectを入れるとレンダーするたびにscoketが作られるので注意
+    }, [])
 
     // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
     const sendMessage = async (message: String) => {
         waitForConnection(() => {
             try {
                 socketRef.current.send(String(message))
+                console.log(new Date(), 'message : ', message)
             } catch (e) {
                 console.error(e)
             }
-        }, 1000)
+        }, 100)
     }
 
     // TODO clearTimeoutは必要か調べる

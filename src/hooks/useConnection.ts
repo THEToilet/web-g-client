@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
 
 import {setIsRegister, setSurroundingUserList, setUserID} from '../store/slices/gSignalingStatus'
+import {setDestinationUserID} from '../store/slices/p2pStatus'
 import {getGSetting, getGSignalingStatus} from '../store/selector'
 import {useDispatch, useSelector} from "react-redux";
 import {
-    AnswerMessage,
+    AnswerMessage, CloseRequest,
     DeleteResponse,
     IceCandidateRequest,
     JudgeMessageType, OfferMessage,
@@ -14,7 +15,7 @@ import {
 } from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
 
-const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: RTCSessionDescription) => Promise<void>, setAnswer: (sdp: RTCSessionDescription) => Promise<void>, disconnect: () => void) => {
+const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination : string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
@@ -22,10 +23,8 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
     const dispatch = useDispatch()
 
     useEffect(() => {
-        /*
         console.log(new Date(), " : -----rawMessage-------")
         console.log(rawMessage)
-         */
         if (rawMessage === "") {
             console.error("message is empty")
             return
@@ -66,7 +65,8 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 case 'offer':
                     console.log(new Date(), ': offer')
                     const offerMessage: OfferMessage = JSON.parse(rawMessage) as OfferMessage
-                    setOffer(new RTCSessionDescription(JSON.parse(offerMessage.sdp))).catch(
+                    dispatch(setDestinationUserID(offerMessage.destination))
+                    setOffer(offerMessage.sdp, offerMessage.destination).catch(
                         e => {
                             console.error(e)
                         }
@@ -75,7 +75,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 case 'answer':
                     console.log(new Date(), ': answer')
                     const answerMessage: AnswerMessage = JSON.parse(rawMessage) as AnswerMessage
-                    setAnswer(new RTCSessionDescription(JSON.parse(answerMessage.sdp))).catch(
+                    setAnswer(answerMessage.sdp).catch(
                         e => {
                             console.error(e)
                         }
@@ -90,6 +90,8 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     break
                 case 'close':
                     console.log(new Date(), ': close')
+                    const closeRequest: CloseRequest = JSON.parse(rawMessage) as CloseRequest
+                    console.log(closeRequest.destination)
                     disconnect()
                     break
                 default:
