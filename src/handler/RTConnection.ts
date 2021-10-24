@@ -28,18 +28,20 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
 
         // NOTE: Vanilla ICE
         rtcPeerConnection.current.onicecandidate = ({candidate}) => {
+            console.log(new Date(), 'candidate', 'woooooooooooooooooooooo')
             if (candidate) {
                 console.log(candidate)
                 // Trickle ICEはここで送信
             } else {
                 // NOTE: 空のICE Candidateは収集終了の知らせ
-                wsMessage.sendCandidate(String(candidate), destinationUserID)
+                wsMessage.sendCandidate(candidate!.toJSON().candidate!, destinationUserID)
             }
         }
 
         rtcPeerConnection.current.onnegotiationneeded = async () => {
             console.log("negotiationneeded")
             try {
+                /*
                 if (isOffer) {
                     const offer = await rtcPeerConnection.current.createOffer()
                     await rtcPeerConnection.current.setLocalDescription(offer)
@@ -47,6 +49,7 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
                     console.log(new Date(), 'isOffer')
                     wsMessage.sendOffer("", "")
                 }
+                 */
             } catch (error) {
                 console.log(error)
             }
@@ -67,7 +70,7 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
     }
 
     // NOTE: 相手からのOffer要請を登録する自分はAnswer側
-    const setOffer = async (sdp: string, destination : string) => {
+    const setOffer = async (sdp: string, destination: string) => {
         makeRTCPeerConnection(false)
         await rtcPeerConnection.current.setRemoteDescription({type: 'offer', sdp: sdp}).catch(
             e => {
@@ -77,7 +80,7 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
         await sendAnswer(destination)
     }
 
-    const sendAnswer = async (destination : string) => {
+    const sendAnswer = async (destination: string) => {
         const answer = await rtcPeerConnection.current.createAnswer()
         await rtcPeerConnection.current.setLocalDescription(answer)
         // NOTE: undefined許容型
@@ -95,6 +98,7 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
         await rtcPeerConnection.current.setLocalDescription(offer)
         // NOTE: Send SDP
         wsMessage.sendOffer(offer.sdp!, userID)
+        console.log(new Date(), '-----------------------------------connect-----------------')
     }
 
     const disconnect = () => {
