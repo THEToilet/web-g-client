@@ -8,6 +8,7 @@ const Video = (props: any) => {
         element.srcObject = stream
         try {
             await element.play()
+            setIsPlay(!isPlay)
         } catch (error) {
             console.log(error)
         }
@@ -15,6 +16,7 @@ const Video = (props: any) => {
 
     const pauseVideo = (element: any) => {
         element.pause()
+        setIsPlay(!isPlay)
     }
 
     return (
@@ -23,7 +25,7 @@ const Video = (props: any) => {
                    style={{width: '320px', height: '240px', border: '1px solid black'}}/>
             <video ref={props.remoteVideoRef} autoPlay={true}
                    style={{width: '320px', height: '240px', border: '1px solid black'}}/>
-            <button onClick={pauseVideo}></button>
+            {isPlay ? (<button onClick={pauseVideo}>pauseVideo</button>) : (<button onClick={() => playVideo}>playVideo</button>)}
         </>
     )
 }

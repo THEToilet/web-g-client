@@ -68,7 +68,6 @@ export type SendRequest = {
 export type IceCandidateRequest = {
     type: string
     ice: string
-    destination: string
 }
 
 export type CloseRequest = {
@@ -80,7 +79,6 @@ export type CloseRequest = {
 export type IceCandidateResponse = {
     type: string
     ice: string
-    destination: string
 }
 export type OfferMessage = {
     type: string
