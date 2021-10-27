@@ -85,12 +85,10 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': ice')
                     const iceCandidate: IceCandidateRequest = JSON.parse(rawMessage) as IceCandidateRequest
                     console.log(iceCandidate.ice)
-                    console.log('|||||||||||||||||||||||||||||||||||||||||||||||||||||||')
                     // REFERENCE: https://mebee.info/2020/10/30/post-20771/
                     const t : RTCIceCandidate = JSON.parse(JSON.stringify(iceCandidate.ice)) as RTCIceCandidate
                     console.log(t)
                     const ice = new RTCIceCandidate(t)
-                    //const ice = new RTCIceCandidate(JSON.parse(iceCandidate.ice))
                     setICECandidate(ice)
                     break
                 case 'close':
@@ -114,12 +112,12 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
             if (isRegister) {
                 wsMessage.sendUpdate(userInfo)
             }
-        }, 2000);
+        }, 5000);
         const timeoutSearch = setInterval(() => {
             if (isRegister) {
                 wsMessage.sendStaticSearch(userInfo.geoLocation, searchDistance)
             }
-        }, 2000);
+        }, 5000);
         return () => {
             clearTimeout(timeoutUpdate);
             clearTimeout(timeoutSearch);

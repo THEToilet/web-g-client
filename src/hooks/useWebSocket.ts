@@ -5,11 +5,21 @@ const useWebSocket = () => {
     const [message, setMessage] = useState<string>("")
     const socketRef = useRef<WebSocket>(null!)
 
-    let connectInterval: NodeJS.Timeout
+    const connectionIntervalRef = useRef<NodeJS.Timeout>()
+    const waitForIntervalRef = useRef<NodeJS.Timeout>()
+
     let timeout: number = 100
 
+    useEffect(() => {
+            return () => {
+                clearTimeout(waitForIntervalRef.current!)
+                clearTimeout(connectionIntervalRef.current!)
+            }
+        }, []
+    )
+
     const onOpen = () => {
-        clearTimeout(connectInterval)
+        clearTimeout(connectionIntervalRef.current!)
     }
 
     const onMessage = (event: any) => {
@@ -32,7 +42,7 @@ const useWebSocket = () => {
         // TODO: ここは指数関数的に増やす
         timeout = timeout + timeout;
         // NOTE: 再接続処理
-        connectInterval = setTimeout(check, Math.min(10000, timeout));
+        connectionIntervalRef.current = setTimeout(check, Math.min(10000, timeout));
     }
 
     const check = () => {
@@ -64,16 +74,16 @@ const useWebSocket = () => {
             } catch (e) {
                 console.error(e)
             }
-        }, 100)
+        }, 500)
     }
 
-    // TODO clearTimeoutは必要か調べる
+    // TODO: clearTimeoutは必要か調べる
     // NOTE: WebSocketのコネクションが確立するまで待つ
     const waitForConnection = (callback: any, interval: number) => {
         if (socketRef.current.readyState === WebSocket.OPEN) {
             callback()
         } else {
-            setTimeout(() => {
+            waitForIntervalRef.current! = setTimeout(() => {
                 waitForConnection(callback, interval)
             }, interval)
         }

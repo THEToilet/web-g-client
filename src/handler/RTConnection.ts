@@ -15,7 +15,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
     // NOTE: 相手のMediaStreamTrackの受信
     const onTrack = async (e: any) => {
-        console.log(new Date(), 'ontrack-------------------------------------------------------------------------------------', e)
+        console.log(new Date(), 'ontrack', e)
         console.log(remoteVideoRef)
         remoteVideoRef.current!.srcObject = e.streams[0]
         await remoteVideoRef.current?.play()
@@ -23,12 +23,12 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
     // NOTE: Vanilla ICE
     const onIcecandidate = (candidate: any) => {
-        console.log(new Date(), 'candidate', 'woooooooooooooooooooooo')
+        console.log(new Date(), 'candidate')
         if (candidate && candidate.candidate) {
             console.log(candidate)
             //wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp)
             wsMessage.sendCandidate(candidate.candidate)
-            console.log(new Date(), 'hello-----------', candidate.candidate)
+            console.log(new Date(), candidate.candidate)
             // Trickle ICEはここで送信
         } else {
             // NOTE: 空のICE Candidateは収集終了の知らせ
@@ -86,6 +86,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         localStream.current!.getTracks().forEach(
             track => rtcPeerConnection.current.addTrack(track, localStream.current!)
         )
+
         // NOTE: DataChannel
         // TODO: datachannelOptionについて調べる
         rtcDataChannel.current = rtcPeerConnection.current.createDataChannel('message-data-channel')
