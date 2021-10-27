@@ -17,13 +17,16 @@ function App() {
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
+    const localMessageRef = useRef<HTMLTextAreaElement>(null)
+    const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
+
     const stream = useUserMedia(localVideoRef)
     useGeoLocationStatus()
     // NOTE: WebSocket接続
     const [message, sendMessage] = useWebSocket()
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect,sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
 
     // TODO:　後で場所変更させる
@@ -53,6 +56,9 @@ function App() {
                 <textarea value={destination} onChange={handleChange}/>
                 <OperationPanel/>
                 <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
+                <textarea readOnly={true} ref={remoteMessageRef}/>
+                <textarea ref={localMessageRef}/>
+                <button onClick={sendDataChanelMessage}>SendDataChannel</button>
             </HelmetProvider>
         </div>
     );

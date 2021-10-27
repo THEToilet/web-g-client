@@ -15,7 +15,7 @@ const OperationPanel = () => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
 
     const {searchDistance, searchType} = useSelector(getGSetting)
-    const {userInfo, surroundingUserList} = useSelector(getGSignalingStatus)
+    const {userInfo, surroundingUserList, userID} = useSelector(getGSignalingStatus)
     const dispatch = useDispatch()
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -37,6 +37,7 @@ const OperationPanel = () => {
         <div style={{}}>
             <div>{userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}</div>
             <div>{"surroundingUserList size :" + surroundingUserList.length}</div>
+            <div>{"userID : " + userID}</div>
             <FormControl sx={{m: 1, minWidth: 80}}>
                 <TextField inputRef={searchDistanceFiledRef} id={'search-distance'} label={"SearchDistance"}
                            defaultValue={searchDistance}/>

@@ -2,35 +2,26 @@
 // REFERENCE: https://qiita.com/yusuke84/items/43a20e3b6c78ae9a8f6c
 // REFERENCE: https://www.w3.org/TR/webrtc/#simple-peer-to-peer-example
 
-import React, {useEffect, useRef} from "react";
+import React, {useRef} from "react";
 import {WSMessages} from "./wsMessages";
 import {useSelector} from "react-redux";
 import {getP2PStatus} from "../store/selector";
 
-const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages) => {
+const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>) => {
     const rtcPeerConnection = useRef<RTCPeerConnection>(null!)
+    const rtcDataChannel = useRef<RTCDataChannel>(null!)
 
     const {destinationUserID} = useSelector(getP2PStatus)
 
     // NOTE: 相手のMediaStreamTrackの受信
-    //rtcPeerConnection.current.ontrack = ({track, streams}) => {
-    //const onTrack = (track: any, streams: any) => {
     const onTrack = async (e: any) => {
         console.log(new Date(), 'ontrack-------------------------------------------------------------------------------------', e)
         console.log(remoteVideoRef)
-        /*
-        e.onunmute().onunmute = async () => {
-            if (remoteVideoRef.current!.srcObject) return;
-            remoteVideoRef.current!.srcObject = e.streams[0]
-            await remoteVideoRef.current!.play()
-        }
-         */
         remoteVideoRef.current!.srcObject = e.streams[0]
         await remoteVideoRef.current?.play()
     }
 
     // NOTE: Vanilla ICE
-    //rtcPeerConnection.current.onicecandidate = ({candidate}) => {
     const onIcecandidate = (candidate: any) => {
         console.log(new Date(), 'candidate', 'woooooooooooooooooooooo')
         if (candidate && candidate.candidate) {
@@ -41,12 +32,11 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
             // Trickle ICEはここで送信
         } else {
             // NOTE: 空のICE Candidateは収集終了の知らせ
-            //wsMessage.sendCandidate(candidate!.toJSON().candidate!, destinationUserID)
+            // Vanilla ICE
             //wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp, destinationUserID)
         }
     }
 
-    //rtcPeerConnection.current.onnegotiationneeded = async () => {
     const onNegotiationneeded = async () => {
         console.log("negotiationneeded")
         try {
@@ -55,22 +45,54 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         }
     }
 
-    //rtcPeerConnection.current.oniceconnectionstatechange = () => {
     const onIceConnectionstatechange = () => {
         console.log(new Date(), 'ice status has changed', rtcPeerConnection.current.iceConnectionState)
     }
 
+    const onDataChannel = (evt : any) => {
+        evt.channel.addEventListener('open', onOpen)
+        evt.channel.addEventListener('message', onMessage)
+        evt.channel.addEventListener('close', onClose)
+        evt.channel.addEventListener('error', onError)
+        rtcDataChannel.current = evt.channel
+    }
+
+    // NOTE: --------dataChannel--------------------
+    const onOpen = () => {
+    }
+
+    const onMessage = (e: any) => {
+        remoteMessageRef.current!.value = ' < ' + e.data + '\n' + remoteMessageRef.current!.value
+    }
+
+    const onClose = () => {
+    }
+
+
+    const onError = (e: any) => {
+        console.error(e)
+    }
+
     const makeRTCPeerConnection = () => {
-        const pcConfig = {"iceServers": []}
+        // TODO: TURNを考える
+        const pcConfig = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]}
         rtcPeerConnection.current = new RTCPeerConnection(pcConfig)
         console.log(new Date(), 'make')
         rtcPeerConnection.current.addEventListener('track', onTrack)
         rtcPeerConnection.current.addEventListener('icecandidate', onIcecandidate)
         rtcPeerConnection.current.addEventListener('negotiationneeded', onNegotiationneeded)
         rtcPeerConnection.current.addEventListener('iceconnectionstatechange', onIceConnectionstatechange)
+        rtcPeerConnection.current.addEventListener('datachannel', onDataChannel)
         localStream.current!.getTracks().forEach(
             track => rtcPeerConnection.current.addTrack(track, localStream.current!)
         )
+        // NOTE: DataChannel
+        // TODO: datachannelOptionについて調べる
+        rtcDataChannel.current = rtcPeerConnection.current.createDataChannel('message-data-channel')
+        rtcDataChannel.current.addEventListener('open', onOpen)
+        rtcDataChannel.current.addEventListener('message', onMessage)
+        rtcDataChannel.current.addEventListener('close', onClose)
+        rtcDataChannel.current.addEventListener('error', onError)
     }
 
     const setICECandidate = (iceCandidate: RTCIceCandidate) => {
@@ -121,7 +143,19 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         wsMessage.sendClose(destinationUserID)
     }
 
-    return [setICECandidate, setOffer, setAnswer, connect, disconnect] as const
+    const sendDateChanelMessage = () => {
+        if (!rtcPeerConnection.current || rtcPeerConnection.current.connectionState !== 'connected') {
+            console.error('rtcPeerConnection is null')
+            return
+        }
+        const message = localMessageRef.current!.value;
+        localMessageRef.current!.value = ''
+
+        remoteMessageRef.current!.value = ' > ' + message + '\n' + remoteMessageRef.current!.value
+        rtcDataChannel.current.send(message)
+    }
+
+    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage] as const
 }
 
 export default RTConnection
