@@ -15,7 +15,7 @@ import {
 } from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
 
-const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination : string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void) => {
+const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
@@ -81,12 +81,17 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                         }
                     )
                     break
-                case 'candidate':
-                    console.log(new Date(), ': candidate')
+                case 'ice':
+                    console.log(new Date(), ': ice')
                     const iceCandidate: IceCandidateRequest = JSON.parse(rawMessage) as IceCandidateRequest
                     console.log(iceCandidate.ice)
-                    const i = new RTCIceCandidate(JSON.parse(iceCandidate.ice))
-                    setICECandidate(i)
+                    console.log('|||||||||||||||||||||||||||||||||||||||||||||||||||||||')
+                    // REFERENCE: https://mebee.info/2020/10/30/post-20771/
+                    const t : RTCIceCandidate = JSON.parse(JSON.stringify(iceCandidate.ice)) as RTCIceCandidate
+                    console.log(t)
+                    const ice = new RTCIceCandidate(t)
+                    //const ice = new RTCIceCandidate(JSON.parse(iceCandidate.ice))
+                    setICECandidate(ice)
                     break
                 case 'close':
                     console.log(new Date(), ': close')

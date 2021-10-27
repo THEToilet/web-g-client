@@ -17,6 +17,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     //const onTrack = (track: any, streams: any) => {
     const onTrack = async (e: any) => {
         console.log(new Date(), 'ontrack-------------------------------------------------------------------------------------', e)
+        console.log(remoteVideoRef)
         /*
         e.onunmute().onunmute = async () => {
             if (remoteVideoRef.current!.srcObject) return;
@@ -32,9 +33,11 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     //rtcPeerConnection.current.onicecandidate = ({candidate}) => {
     const onIcecandidate = (candidate: any) => {
         console.log(new Date(), 'candidate', 'woooooooooooooooooooooo')
-        if (candidate) {
+        if (candidate && candidate.candidate) {
             console.log(candidate)
-            wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp)
+            //wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp)
+            wsMessage.sendCandidate(candidate.candidate)
+            console.log(new Date(), 'hello-----------', candidate.candidate)
             // Trickle ICEはここで送信
         } else {
             // NOTE: 空のICE Candidateは収集終了の知らせ
@@ -65,12 +68,13 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         rtcPeerConnection.current.addEventListener('icecandidate', onIcecandidate)
         rtcPeerConnection.current.addEventListener('negotiationneeded', onNegotiationneeded)
         rtcPeerConnection.current.addEventListener('iceconnectionstatechange', onIceConnectionstatechange)
-        rtcPeerConnection.current.addTrack(
-            localStream.current!.getVideoTracks()[0],
+        localStream.current!.getTracks().forEach(
+            track => rtcPeerConnection.current.addTrack(track, localStream.current!)
         )
     }
 
     const setICECandidate = (iceCandidate: RTCIceCandidate) => {
+        console.log(new Date(), 'add ICE candidate')
         rtcPeerConnection.current.addIceCandidate(iceCandidate).catch(
             e => {
                 console.log(e)
