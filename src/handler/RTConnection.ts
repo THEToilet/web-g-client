@@ -17,9 +17,17 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
         rtcPeerConnection.current = new RTCPeerConnection(pcConfig)
 
         console.log(new Date(), 'make')
+        /*
+        rtcPeerConnection.current.addEventListener('track',onTrack)
+        rtcPeerConnection.current.addEventListener('icecandidate',)
+        rtcPeerConnection.current.addEventListener('negotiationneeded',)
+        rtcPeerConnection.current.addEventListener('iceconnectionstatechange',)
+
+         */
 
         // NOTE: 相手のMediaStreamTrackの受信
         rtcPeerConnection.current.ontrack = ({track, streams}) => {
+            //const onTrack = (track: MediaStreamTrack, streams: readonly MediaStream[]) => {
             track.onunmute = () => {
                 if (remoteVideoRef.current!.srcObject) return;
                 remoteVideoRef.current!.srcObject = streams[0]
@@ -34,7 +42,9 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
                 // Trickle ICEはここで送信
             } else {
                 // NOTE: 空のICE Candidateは収集終了の知らせ
-                wsMessage.sendCandidate(candidate!.toJSON().candidate!, destinationUserID)
+                // XXX: candidateはヌルなので何も送られない
+                //wsMessage.sendCandidate(candidate!.toJSON().candidate!, destinationUserID)
+                wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp, destinationUserID)
             }
         }
 
