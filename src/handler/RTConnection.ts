@@ -2,73 +2,72 @@
 // REFERENCE: https://qiita.com/yusuke84/items/43a20e3b6c78ae9a8f6c
 // REFERENCE: https://www.w3.org/TR/webrtc/#simple-peer-to-peer-example
 
-import React, {useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {WSMessages} from "./wsMessages";
 import {useSelector} from "react-redux";
 import {getP2PStatus} from "../store/selector";
 
-const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages) => {
+const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages) => {
     const rtcPeerConnection = useRef<RTCPeerConnection>(null!)
 
     const {destinationUserID} = useSelector(getP2PStatus)
 
-    const makeRTCPeerConnection = (isOffer: boolean) => {
+    // NOTE: 相手のMediaStreamTrackの受信
+    //rtcPeerConnection.current.ontrack = ({track, streams}) => {
+    //const onTrack = (track: any, streams: any) => {
+    const onTrack = async (e: any) => {
+        console.log(new Date(), 'ontrack-------------------------------------------------------------------------------------', e)
+        /*
+        e.onunmute().onunmute = async () => {
+            if (remoteVideoRef.current!.srcObject) return;
+            remoteVideoRef.current!.srcObject = e.streams[0]
+            await remoteVideoRef.current!.play()
+        }
+         */
+        remoteVideoRef.current!.srcObject = e.streams[0]
+        await remoteVideoRef.current?.play()
+    }
+
+    // NOTE: Vanilla ICE
+    //rtcPeerConnection.current.onicecandidate = ({candidate}) => {
+    const onIcecandidate = (candidate: any) => {
+        console.log(new Date(), 'candidate', 'woooooooooooooooooooooo')
+        if (candidate) {
+            console.log(candidate)
+            wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp)
+            // Trickle ICEはここで送信
+        } else {
+            // NOTE: 空のICE Candidateは収集終了の知らせ
+            //wsMessage.sendCandidate(candidate!.toJSON().candidate!, destinationUserID)
+            //wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp, destinationUserID)
+        }
+    }
+
+    //rtcPeerConnection.current.onnegotiationneeded = async () => {
+    const onNegotiationneeded = async () => {
+        console.log("negotiationneeded")
+        try {
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //rtcPeerConnection.current.oniceconnectionstatechange = () => {
+    const onIceConnectionstatechange = () => {
+        console.log(new Date(), 'ice status has changed', rtcPeerConnection.current.iceConnectionState)
+    }
+
+    const makeRTCPeerConnection = () => {
         const pcConfig = {"iceServers": []}
         rtcPeerConnection.current = new RTCPeerConnection(pcConfig)
-
         console.log(new Date(), 'make')
-        /*
-        rtcPeerConnection.current.addEventListener('track',onTrack)
-        rtcPeerConnection.current.addEventListener('icecandidate',)
-        rtcPeerConnection.current.addEventListener('negotiationneeded',)
-        rtcPeerConnection.current.addEventListener('iceconnectionstatechange',)
-
-         */
-
-        // NOTE: 相手のMediaStreamTrackの受信
-        rtcPeerConnection.current.ontrack = ({track, streams}) => {
-            //const onTrack = (track: MediaStreamTrack, streams: readonly MediaStream[]) => {
-            track.onunmute = () => {
-                if (remoteVideoRef.current!.srcObject) return;
-                remoteVideoRef.current!.srcObject = streams[0]
-            }
-        }
-
-        // NOTE: Vanilla ICE
-        rtcPeerConnection.current.onicecandidate = ({candidate}) => {
-            console.log(new Date(), 'candidate', 'woooooooooooooooooooooo')
-            if (candidate) {
-                console.log(candidate)
-                // Trickle ICEはここで送信
-            } else {
-                // NOTE: 空のICE Candidateは収集終了の知らせ
-                // XXX: candidateはヌルなので何も送られない
-                //wsMessage.sendCandidate(candidate!.toJSON().candidate!, destinationUserID)
-                wsMessage.sendCandidate(rtcPeerConnection.current.localDescription!.sdp, destinationUserID)
-            }
-        }
-
-        rtcPeerConnection.current.onnegotiationneeded = async () => {
-            console.log("negotiationneeded")
-            try {
-                /*
-                if (isOffer) {
-                    const offer = await rtcPeerConnection.current.createOffer()
-                    await rtcPeerConnection.current.setLocalDescription(offer)
-                    // send SDP
-                    console.log(new Date(), 'isOffer')
-                    wsMessage.sendOffer("", "")
-                }
-                 */
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        rtcPeerConnection.current.oniceconnectionstatechange = () => {
-            console.log(new Date(), rtcPeerConnection.current.iceConnectionState)
-        }
-
+        rtcPeerConnection.current.addEventListener('track', onTrack)
+        rtcPeerConnection.current.addEventListener('icecandidate', onIcecandidate)
+        rtcPeerConnection.current.addEventListener('negotiationneeded', onNegotiationneeded)
+        rtcPeerConnection.current.addEventListener('iceconnectionstatechange', onIceConnectionstatechange)
+        rtcPeerConnection.current.addTrack(
+            localStream.current!.getVideoTracks()[0],
+        )
     }
 
     const setICECandidate = (iceCandidate: RTCIceCandidate) => {
@@ -81,19 +80,20 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
 
     // NOTE: 相手からのOffer要請を登録する自分はAnswer側
     const setOffer = async (sdp: string, destination: string) => {
-        makeRTCPeerConnection(false)
+        makeRTCPeerConnection()
         await rtcPeerConnection.current.setRemoteDescription({type: 'offer', sdp: sdp}).catch(
             e => {
                 console.log(e)
             }
         )
-        await sendAnswer(destination)
+        await makeAnswer(destination)
     }
 
-    const sendAnswer = async (destination: string) => {
+    const makeAnswer = async (destination: string) => {
         const answer = await rtcPeerConnection.current.createAnswer()
         await rtcPeerConnection.current.setLocalDescription(answer)
         // NOTE: undefined許容型
+        console.log(new Date(), '-----sendAnswer--------', answer.type)
         wsMessage.sendAnswer(answer.sdp!, destination)
     }
 
@@ -103,11 +103,12 @@ const RTConnection = (remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessa
     }
 
     const connect = async (userID: string) => {
-        makeRTCPeerConnection(true)
-        const offer = await rtcPeerConnection.current.createOffer()
-        await rtcPeerConnection.current.setLocalDescription(offer)
+        makeRTCPeerConnection()
+        const sdp = await rtcPeerConnection.current.createOffer()
+        console.log(new Date(), 'sdp', sdp)
+        await rtcPeerConnection.current.setLocalDescription(sdp)
         // NOTE: Send SDP
-        wsMessage.sendOffer(offer.sdp!, userID)
+        wsMessage.sendOffer(sdp.sdp!, userID)
         console.log(new Date(), '-----------------------------------connect-----------------')
     }
 

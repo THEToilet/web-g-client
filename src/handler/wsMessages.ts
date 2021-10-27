@@ -101,11 +101,10 @@ export class WSMessages {
         this.sendMessage(JSON.stringify(message))
     }
 
-    sendCandidate(ice: string, destinationUserID: string) {
+    sendCandidate(ice: string) {
         const message: IceCandidateRequest = {
             type: 'ice',
             ice: ice,
-            destination: destinationUserID
         }
         this.sendMessage(JSON.stringify(message))
     }
