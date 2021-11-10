@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.js": "/web-g-client/static/js/main.b12e3f0c.chunk.js",
+    "main.js.map": "/web-g-client/static/js/main.b12e3f0c.chunk.js.map",
+    "runtime-main.js": "/web-g-client/static/js/runtime-main.2e8d1e69.js",
+    "runtime-main.js.map": "/web-g-client/static/js/runtime-main.2e8d1e69.js.map",
+    "static/css/2.da98c186.chunk.css": "/web-g-client/static/css/2.da98c186.chunk.css",
+    "static/js/2.ea2406cb.chunk.js": "/web-g-client/static/js/2.ea2406cb.chunk.js",
+    "static/js/2.ea2406cb.chunk.js.map": "/web-g-client/static/js/2.ea2406cb.chunk.js.map",
+    "index.html": "/web-g-client/index.html",
+    "static/css/2.da98c186.chunk.css.map": "/web-g-client/static/css/2.da98c186.chunk.css.map",
+    "static/js/2.ea2406cb.chunk.js.LICENSE.txt": "/web-g-client/static/js/2.ea2406cb.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2e8d1e69.js",
+    "static/css/2.da98c186.chunk.css",
+    "static/js/2.ea2406cb.chunk.js",
+    "static/js/main.b12e3f0c.chunk.js"
+  ]
+}
