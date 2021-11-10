@@ -53,7 +53,8 @@ const useWebSocket = () => {
 
     const connect = () => {
         console.log("connecting....")
-        socketRef.current = new WebSocket("ws://127.0.0.1:8080/signaling")
+        //socketRef.current = new WebSocket("ws://127.0.0.1:8080/signaling")
+        socketRef.current = new WebSocket("wss://118.27.20.107:8080/signaling")
         socketRef.current.addEventListener('open', onOpen)
         socketRef.current.addEventListener('message', onMessage)
         socketRef.current.addEventListener('error', onError)
