@@ -50,7 +50,8 @@ function App() {
                     <link rel="" href="https://web-g"/>
                 </Helmet>
                 <HeaderBar/>
-                {isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)}
+                {/*isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)*/}
+                <OpenStreetMaps/>
                 <button onClick={changeMap}>Change map</button>
                 <button onClick={async () => connect(destination)}>Connect</button>
                 <textarea value={destination} onChange={handleChange}/>
