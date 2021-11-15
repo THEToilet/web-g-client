@@ -33,7 +33,6 @@
     "web-vitals": "^1.0.1",
     "why-did-you-update": "^1.0.8"
   },
-  "homepage": "https://thetoilet.github.io/web-g-client",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
