@@ -53,8 +53,7 @@ const useWebSocket = () => {
 
     const connect = () => {
         console.log("connecting....")
-        //socketRef.current = new WebSocket("ws://127.0.0.1:8080/signaling")
-        socketRef.current = new WebSocket("wss://118.27.20.107:8080/signaling")
+        socketRef.current = new WebSocket(String(process.env.REACT_APP_SERVER))
         socketRef.current.addEventListener('open', onOpen)
         socketRef.current.addEventListener('message', onMessage)
         socketRef.current.addEventListener('error', onError)
@@ -63,7 +62,7 @@ const useWebSocket = () => {
 
     useEffect(() => {
         connect()
-        // NOTE: 依存配列にconnectを入れるとレンダーするたびにscoketが作られるので注意
+        // NOTE: 依存配列にconnectを入れるとレンダーするたびにsocketが作られるので注意
     }, [])
 
     // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co

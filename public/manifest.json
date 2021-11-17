@@ -5,7 +5,7 @@
   "background_color": "#2196f3",
   "display": "standalone",
   "scope": "/",
-  "start_url": "https://wonderful-noether-025e49.netlify.app/",
+  "start_url": "https://web-g-client.netlify.app/",
   "icons" : [
     {
       "src": "./logo192.png",

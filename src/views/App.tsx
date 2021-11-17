@@ -26,7 +26,7 @@ function App() {
     const [message, sendMessage] = useWebSocket()
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect,sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
 
     // TODO:　後で場所変更させる
@@ -37,7 +37,7 @@ function App() {
         setIsMapGoogle(!isMapGoogle)
     }
 
-    const handleChange = (event : any) => {
+    const handleChange = (event: any) => {
         setDestination(event.target.value)
     }
 
@@ -51,8 +51,8 @@ function App() {
                 </Helmet>
                 <HeaderBar/>
                 {/*isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)*/}
-                <OpenStreetMaps/>
-                <button onClick={changeMap}>Change map</button>
+                {/*<button onClick={changeMap}> Change map</button>*/}
+                <OpenStreetMaps connect={connect}/>
                 <button onClick={async () => connect(destination)}>Connect</button>
                 <textarea value={destination} onChange={handleChange}/>
                 <OperationPanel/>

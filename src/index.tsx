@@ -3,19 +3,26 @@ import ReactDOM from 'react-dom';
 import App from './views/App';
 import {Provider} from 'react-redux'
 import {store} from './store'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
 // NOTE: 再レンダーしているとこを教えてくれる
-import { whyDidYouUpdate } from 'why-did-you-update'
+import {whyDidYouUpdate} from 'why-did-you-update'
 
 // NOTE: PWA用
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals';
+import VideoChat from "./views/VideoChat";
 
 whyDidYouUpdate(React)
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <App/>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<App/>}/>
+                    <Route path="/video" element={<VideoChat/>}/>
+                </Routes>
+            </BrowserRouter>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')
