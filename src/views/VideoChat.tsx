@@ -1,13 +1,13 @@
 import React, {useRef} from "react";
 import Video from "../components/Video";
-import useUserMedia from "../hooks/useUserMedia";
+import {TextField, Paper, Container, Box} from "@mui/material";
 
 const VideoChat = () => {
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
-    const localMessageRef = useRef<HTMLTextAreaElement>(null)
-    const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
+    const localMessageRef = useRef<HTMLDivElement>(null)
+    const remoteMessageRef = useRef<HTMLDivElement>(null)
     const localStream = useRef<MediaStream>()
 
     const startVideo = () => {
@@ -25,10 +25,15 @@ const VideoChat = () => {
     return (
         <>
             <h2>Hello!!!!!!!!!</h2>
-            <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
-            <textarea readOnly={true} ref={remoteMessageRef}/>
-            <textarea ref={localMessageRef}/>
-            <button onClick={startVideo}>Start Video</button>
+            <Container fixed>
+                <Box sx={{bgcolor: '#ffffff', height: '100vh'}}>
+                    <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
+                    <TextField inputProps={{readOnly: true}} multiline rows={10} ref={remoteMessageRef}/>
+                    <TextField ref={localMessageRef}/>
+                    <button onClick={startVideo}>Start Video</button>
+                    <Paper elevation={3}/>
+                </Box>
+            </Container>
         </>
     )
 }

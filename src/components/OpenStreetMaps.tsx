@@ -13,6 +13,7 @@ import {getGSignalingStatus} from "../store/selector";
 import {UserInfo} from "../types/domain";
 import OpenMarker from "./OpenMarker";
 import {userInfo} from "os";
+import {useEffect, useRef, useState} from "react";
 
 // NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
@@ -36,14 +37,24 @@ const OpenStreetMaps = (props: any) => {
 
     const position = new LatLng(geoLocation.latitude, geoLocation.longitude)
 
+    const [update, setUpdate] = useState<Boolean>(false)
+
+
     // REFERENCE: https://stackoverflow.com/questions/64665827/react-leaflet-center-attribute-does-not-change-when-the-center-state-changes
     function ChangeView(center: any, zoom: any) {
         const map = useMap();
         // XXX: center.centerとは。。。
         // NOTE: center.center center.zoomみたいになっている
         //map.setView(center.center, map.getZoom())
-        map.setView([35.943250, 139.621090], map.getZoom())
+        if (update) {
+            map.setView([geoLocation.latitude, geoLocation.longitude], 18)
+            setUpdate(false)
+        }
         return null
+    }
+
+    const updateMap = () => {
+       setUpdate(true)
     }
 
     return (
@@ -60,6 +71,7 @@ const OpenStreetMaps = (props: any) => {
                 {/* 自端末 */}
                 <OpenMarker position={position} userInfo={userInfo} connect={props.connect}/>
             </MapContainer>
+            <button onClick={updateMap}>UpdateMap</button>
         </>
     )
 }

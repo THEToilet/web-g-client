@@ -4,8 +4,8 @@ const PopupInfo = (props: any) => {
             {/*console.log(props.userInfo)*/}
             {
                 props.userInfo !== undefined && (
-                    (props.userInfo.userID) + '\n' +
-                    (props.userInfo.geoLocation.latitude) + '\n' +
+                    (props.userInfo.userID) + `\n` +
+                    (props.userInfo.geoLocation.latitude) + `\n` +
                     (props.userInfo.geoLocation.longitude)
                 )
             }
