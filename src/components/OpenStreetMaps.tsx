@@ -12,6 +12,7 @@ import {useSelector} from "react-redux";
 import {getGSignalingStatus} from "../store/selector";
 import {UserInfo} from "../types/domain";
 import OpenMarker from "./OpenMarker";
+import {userInfo} from "os";
 
 // NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
@@ -20,19 +21,19 @@ let DefaultIcon = Leaflet.icon({
 });
 Leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-const OpenStreetMaps = () => {
+const OpenStreetMaps = (props: any) => {
     //const position = new LatLng(51.505, -0.09)
     // ラジアンから経度緯度へ
     //const position = new LatLng(35.943250 * Math.PI / 180, 139.621090 * Math.PI / 180)
-
-    //const [position, setPosition] = useState<LatLng>(new LatLng(0, 0))
 
     const {surroundingUserList, userInfo: {geoLocation}} = useSelector(getGSignalingStatus)
 
     const Markers = surroundingUserList.map((userInfo: UserInfo) => {
         return <OpenMarker key={userInfo.userID}
-                           position={new LatLng(userInfo.geoLocation.latitude, userInfo.geoLocation.longitude)}/>
+                           position={new LatLng(userInfo.geoLocation.latitude, userInfo.geoLocation.longitude)}
+                           userInfo={userInfo} connect={props.connect}/>
     })
+
     const position = new LatLng(geoLocation.latitude, geoLocation.longitude)
 
     // REFERENCE: https://stackoverflow.com/questions/64665827/react-leaflet-center-attribute-does-not-change-when-the-center-state-changes
@@ -54,12 +55,10 @@ const OpenStreetMaps = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <Circle center={position} radius={100}/>
+                {/* 他の端末 */}
                 {Markers}
-                <Marker position={position}>
-                    <Popup>
-                        hello
-                    </Popup>
-                </Marker>
+                {/* 自端末 */}
+                <OpenMarker position={position} userInfo={userInfo} connect={props.connect}/>
             </MapContainer>
         </>
     )

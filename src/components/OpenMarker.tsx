@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {useState} from "react";
 import {Popup, Marker} from "react-leaflet";
+import PopupInfo from "./PopupInfo";
 
 // https://levelup.gitconnected.com/reactjs-google-maps-with-custom-marker-ece0c7d184c4
 const Mark = styled.div`
@@ -27,8 +27,12 @@ const OpenMarker = (props: any) => {
     return (
         <Marker position={props.position}
                 title={name}>
+            {/*console.log(props.userInfo)*/}
             <Popup>
-                unko
+                {props.userInfo !== undefined && (
+                    <PopupInfo userInfo={props.userInfo} connect={props.connect}/>
+                )
+                }
             </Popup>
         </Marker>
     )

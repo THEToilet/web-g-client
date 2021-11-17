@@ -33,14 +33,8 @@ function App() {
     const [isMapGoogle, setIsMapGoogle] = useState<boolean>(true)
     const [destination, setDestination] = useState<string>('setDestination')
 
-    const [isRefreshingMap, setIsRefreshingMap] = useState<boolean>(false)
-
     const changeMap = () => {
         setIsMapGoogle(!isMapGoogle)
-    }
-
-    const refresh = () => {
-        setIsRefreshingMap(!isRefreshingMap)
     }
 
     const handleChange = (event: any) => {
@@ -57,12 +51,12 @@ function App() {
                 </Helmet>
                 <HeaderBar/>
                 {/*isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)*/}
-                {/*<button onClick={changeMap}>Change map</button>*/}
-                <OpenStreetMaps/>
+                {/*<button onClick={changeMap}> Change map</button>*/}
+                <OpenStreetMaps connect={connect}/>
                 <button onClick={async () => connect(destination)}>Connect</button>
                 <textarea value={destination} onChange={handleChange}/>
                 <OperationPanel/>
-                {/*<Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>*/}
+                <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
                 <textarea readOnly={true} ref={remoteMessageRef}/>
                 <textarea ref={localMessageRef}/>
                 <button onClick={sendDataChanelMessage}>SendDataChannel</button>
