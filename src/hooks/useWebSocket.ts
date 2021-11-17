@@ -53,7 +53,7 @@ const useWebSocket = () => {
 
     const connect = () => {
         console.log("connecting....")
-        socketRef.current = new WebSocket("wss://" + process.env.REACT_APP_SERVER)
+        socketRef.current = new WebSocket(String(process.env.REACT_APP_SERVER))
         socketRef.current.addEventListener('open', onOpen)
         socketRef.current.addEventListener('message', onMessage)
         socketRef.current.addEventListener('error', onError)

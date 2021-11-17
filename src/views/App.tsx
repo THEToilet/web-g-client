@@ -26,18 +26,24 @@ function App() {
     const [message, sendMessage] = useWebSocket()
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect,sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
 
     // TODO:　後で場所変更させる
     const [isMapGoogle, setIsMapGoogle] = useState<boolean>(true)
     const [destination, setDestination] = useState<string>('setDestination')
 
+    const [isRefreshingMap, setIsRefreshingMap] = useState<boolean>(false)
+
     const changeMap = () => {
         setIsMapGoogle(!isMapGoogle)
     }
 
-    const handleChange = (event : any) => {
+    const refresh = () => {
+        setIsRefreshingMap(!isRefreshingMap)
+    }
+
+    const handleChange = (event: any) => {
         setDestination(event.target.value)
     }
 
@@ -51,12 +57,12 @@ function App() {
                 </Helmet>
                 <HeaderBar/>
                 {/*isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)*/}
+                {/*<button onClick={changeMap}>Change map</button>*/}
                 <OpenStreetMaps/>
-                <button onClick={changeMap}>Change map</button>
                 <button onClick={async () => connect(destination)}>Connect</button>
                 <textarea value={destination} onChange={handleChange}/>
                 <OperationPanel/>
-                <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
+                {/*<Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>*/}
                 <textarea readOnly={true} ref={remoteMessageRef}/>
                 <textarea ref={localMessageRef}/>
                 <button onClick={sendDataChanelMessage}>SendDataChannel</button>
