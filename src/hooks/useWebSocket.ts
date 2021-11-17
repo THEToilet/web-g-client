@@ -62,7 +62,7 @@ const useWebSocket = () => {
 
     useEffect(() => {
         connect()
-        // NOTE: 依存配列にconnectを入れるとレンダーするたびにscoketが作られるので注意
+        // NOTE: 依存配列にconnectを入れるとレンダーするたびにsocketが作られるので注意
     }, [])
 
     // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
