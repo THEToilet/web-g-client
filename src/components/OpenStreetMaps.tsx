@@ -14,6 +14,7 @@ import {UserInfo} from "../types/domain";
 import OpenMarker from "./OpenMarker";
 import {userInfo} from "os";
 import {useEffect, useRef, useState} from "react";
+import styled from "styled-components";
 
 // NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
@@ -26,6 +27,25 @@ const OpenStreetMaps = (props: any) => {
     //const position = new LatLng(51.505, -0.09)
     // ラジアンから経度緯度へ
     //const position = new LatLng(35.943250 * Math.PI / 180, 139.621090 * Math.PI / 180)
+
+    // https://levelup.gitconnected.com/reactjs-google-maps-with-custom-marker-ece0c7d184c4
+    const Mark = styled.div`
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      background-color: #000;
+      border: 2px solid #fff;
+      border-radius: 100%;
+      user-select: none;
+      transform: translate(-50%, -50%);
+
+      &:hover {
+        z-index: 1;
+      }
+
+    `;
 
     const {surroundingUserList, userInfo: {geoLocation}} = useSelector(getGSignalingStatus)
 
@@ -54,7 +74,7 @@ const OpenStreetMaps = (props: any) => {
     }
 
     const updateMap = () => {
-       setUpdate(true)
+        setUpdate(true)
     }
 
     return (
@@ -65,7 +85,7 @@ const OpenStreetMaps = (props: any) => {
                     attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Circle center={position} radius={100}/>
+                <Circle center={position} radius={100000}/>
                 {/* 他の端末 */}
                 {Markers}
                 {/* 自端末 */}

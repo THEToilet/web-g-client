@@ -3,6 +3,7 @@ import Video from "../components/Video";
 import {TextField, Paper, Container, Box} from "@mui/material";
 
 const VideoChat = () => {
+    /*
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
@@ -34,6 +35,12 @@ const VideoChat = () => {
                     <Paper elevation={3}/>
                 </Box>
             </Container>
+        </>
+    )
+     */
+    // XXX: App側のVideoと競合しちゃうのでコメントアウト
+    return (
+        <>
         </>
     )
 }
