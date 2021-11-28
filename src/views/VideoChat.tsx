@@ -1,6 +1,11 @@
 import React, {useRef} from "react";
 import Video from "../components/Video";
 import {TextField, Paper, Container, Box} from "@mui/material";
+import {HelmetProvider} from "react-helmet-async";
+import Helm from "../components/Helmet";
+import HeaderBar from "../components/HeaderBar";
+import OpenStreetMaps from "../components/OpenStreetMaps";
+import OperationPanel from "../components/OperationPanel";
 
 const VideoChat = () => {
     /*
@@ -41,6 +46,10 @@ const VideoChat = () => {
     // XXX: App側のVideoと競合しちゃうのでコメントアウト
     return (
         <>
+            <HelmetProvider>
+                <Helm/>
+                <HeaderBar/>
+            </HelmetProvider>
         </>
     )
 }

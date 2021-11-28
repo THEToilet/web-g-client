@@ -1,10 +1,10 @@
 import {Helmet, HelmetProvider} from 'react-helmet-async'
 import {useRef, useState} from "react";
+import {createTheme} from '@mui/material/styles';
 
 import useGeoLocationStatus from "../hooks/useGeoLocation"
 import useWebSocket from "../hooks/useWebSocket"
 import HeaderBar from "../components/HeaderBar"
-import GoogleMaps from "../components/GoogleMaps";
 import useConnection from "../hooks/useConnection";
 import OperationPanel from "../components/OperationPanel"
 import Video from "../components/Video";
@@ -12,6 +12,7 @@ import OpenStreetMaps from "../components/OpenStreetMaps";
 import {WSMessages} from "../handler/wsMessages";
 import useUserMedia from "../hooks/useUserMedia";
 import RTConnection from "../handler/RTConnection";
+import Helm from "../components/Helmet";
 
 function App() {
     const localVideoRef = useRef<HTMLVideoElement>(null)
@@ -44,11 +45,7 @@ function App() {
     return (
         <div className="App" style={{textAlign: "center"}}>
             <HelmetProvider>
-                <Helmet>
-                    <meta charSet="utf-8"/>
-                    <title>web-g</title>
-                    <link rel="" href="https://web-g"/>
-                </Helmet>
+                <Helm/>
                 <HeaderBar/>
                 {/*isMapGoogle ? (<GoogleMaps connect={connect}/>) : (<OpenStreetMaps/>)*/}
                 {/*<button onClick={changeMap}> Change map</button>*/}

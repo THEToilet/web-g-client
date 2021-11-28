@@ -7,13 +7,13 @@ import Typography from "@mui/material/Typography";
 const HeaderBar = () => {
     return (
         <Box sx={{flexGrow: 1}}>
-            <AppBar position="static">
+            <AppBar position="static" color="primary">
                 <Toolbar>
                     <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
-                        aria-label="g-client"
+                        aria-label="web-g-client"
                         sx={{mr: 2}}
                     >
                     </IconButton>

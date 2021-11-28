@@ -12,17 +12,42 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals';
 import VideoChat from "./views/VideoChat";
 
+// MUI用
+import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {grey, teal} from "@mui/material/colors";
+import Welcome from "./views/Welcome";
+
 whyDidYouUpdate(React)
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            light: grey[200],
+            main: grey[500],
+            dark: grey[700],
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#f44336',
+            dark: '#ba000d',
+            contrastText: '#000',
+        },
+    },
+});
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<App/>}/>
-                    <Route path="/video" element={<VideoChat/>}/>
-                </Routes>
-            </BrowserRouter>
+            <ThemeProvider theme={theme}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Welcome/>}/>
+                        <Route path="/app" element={<App/>}/>
+                        <Route path="/video" element={<VideoChat/>}/>
+                    </Routes>
+                </BrowserRouter>
+            </ThemeProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')
