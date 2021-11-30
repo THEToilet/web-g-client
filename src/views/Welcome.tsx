@@ -18,22 +18,23 @@ const Welcome = () => {
             <HelmetProvider>
                 <Helm/>
                 <HeaderBar/>
-                <Container component="main" maxWidth="xs">
+                <Container component="main" sx={{width: '40%', px: '30%', pb: 10}}>
                     <CssBaseline/>
-                    <Paper elevation={8} sx={{my: {xs: 30, md: 10}, p: {xs: 50, md: 20}}}>
+                    <Paper elevation={8} sx={{mt: 20, mx: 10}}>
                         <Box
                             sx={{
-                                marginTop: 0,
+                                mx: 20,
+                                my: 10,
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                             }}
                         >
-                            <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                            <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
                                 G
                             </Avatar>
                             <Typography component="h1" variant="h5">
-                                Start
+                                G-Client
                             </Typography>
                             <Box component="form" noValidate sx={{mt: 3}}>
                                 <Grid container spacing={2}>
@@ -45,6 +46,7 @@ const Welcome = () => {
                                             label="Your name"
                                             name="name"
                                             autoComplete="name"
+                                            variant="standard"
                                         />
                                     </Grid>
                                 </Grid>

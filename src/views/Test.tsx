@@ -1,54 +1,15 @@
-import React, {useRef} from "react";
-import Video from "../components/Video";
-import {TextField, Paper, Container, Box} from "@mui/material";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
-import OpenStreetMaps from "../components/OpenStreetMaps";
-import OperationPanel from "../components/OperationPanel";
+import {Box, Container, Paper, TextField} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import React from "react";
 
-const VideoChat = () => {
-    /*
-    const localVideoRef = useRef<HTMLVideoElement>(null)
-    const remoteVideoRef = useRef<HTMLVideoElement>(null)
-
-    const localMessageRef = useRef<HTMLDivElement>(null)
-    const remoteMessageRef = useRef<HTMLDivElement>(null)
-    const localStream = useRef<MediaStream>()
-
-    const startVideo = () => {
-        navigator.mediaDevices.getUserMedia({audio: false, video: true}).then(
-            (stream) => {
-                localVideoRef.current!.srcObject = stream
-                localStream.current = stream
-            }
-        ).catch((error) => {
-                console.log(error)
-            }
-        )
-    }
-
-    return (
-        <>
-            <h2>Hello!!!!!!!!!</h2>
-            <Container fixed>
-                <Box sx={{bgcolor: '#ffffff', height: '100vh'}}>
-                    <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
-                    <TextField inputProps={{readOnly: true}} multiline rows={10} ref={remoteMessageRef}/>
-                    <TextField ref={localMessageRef}/>
-                    <button onClick={startVideo}>Start Video</button>
-                    <Paper elevation={3}/>
-                </Box>
-            </Container>
-        </>
-    )
-     */
-    // XXX: App側のVideoと競合しちゃうのでコメントアウト
+const Test = () => {
     return (
         <>
             <div style={{textAlign: "center"}}>
@@ -141,36 +102,11 @@ const VideoChat = () => {
                                 </Box>
                             </Paper>
                         </Box>
-                        <Container sx={{pt: 10}}>
-                            <Paper>
-                                <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center'}}>
-                                    <Box sx={{}}>
-                                        <Button variant="contained" color="success">
-                                            Success
-                                        </Button>
-                                    </Box>
-                                    <Box sx={{}}>
-                                        <Button variant="contained" color="success">
-                                            Success
-                                        </Button>
-                                    </Box>
-                                    <Box sx={{}}>
-                                        <Button variant="contained" color="success">
-                                            Success
-                                        </Button>
-                                    </Box>
-                                    <Box sx={{}}>
-                                        <Button variant="contained" color="success">
-                                            Success
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            </Paper>
-                        </Container>
                     </Container>
                 </HelmetProvider>
             </div>
         </>
     )
 }
-export default VideoChat
+
+export default Test;
