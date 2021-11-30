@@ -16,7 +16,6 @@ import {userInfo} from "os";
 import {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 // NOTE: marker setting
