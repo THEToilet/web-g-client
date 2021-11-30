@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {useDispatch} from "react-redux";
 import {setUserName} from '../store/slices/gSignalingStatus'
+import useGeoLocationStatus from "../hooks/useGeoLocation";
 
 const Welcome = () => {
     const [userName, setUN] = useState('')
@@ -28,6 +29,26 @@ const Welcome = () => {
     const handleChange = (e: any) => {
         setUN(() => e.target.value)
     }
+
+    useEffect(() => {
+        // REFERENCE: https://developer.mozilla.org/ja/docs/Web/API/MediaDevices/enumerateDevices
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+            console.log("enumerateDevices() not supported.");
+            return;
+        }
+        // List cameras and microphones.
+
+        navigator.mediaDevices.enumerateDevices()
+            .then(function (devices) {
+                devices.forEach(function (device) {
+                    console.log(device.kind + ": " + device.label +
+                        " id = " + device.deviceId);
+                });
+            })
+            .catch(function (err) {
+                console.log(err.name + ": " + err.message);
+            });
+    }, [])
 
     return (
         <div style={{textAlign: "center"}}>
