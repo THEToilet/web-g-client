@@ -22,14 +22,13 @@ const Test = () => {
                 <HelmetProvider>
                     <Helm/>
                     <HeaderBar/>
-                    <Container component="main" sx={{pb: 10}}>
+                    <Container component="main" sx={{pb: 10, display: 'flex'}}>
                         <CssBaseline/>
-                        <Box sx={{display: 'flex'}}>
-                            <Paper elevation={8} sx={{mt: 20, float: 'left'}}>
+                        <Box sx={{mt: 5, float: 'left'}}>
+                            <Paper elevation={8} sx={{float: 'left'}}>
                                 <Box
                                     sx={{
                                         mx: 50,
-                                        my: 10,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
@@ -38,12 +37,13 @@ const Test = () => {
                                 </Box>
                                 <OpenStreetMaps/>
                             </Paper>
-                            <Paper elevation={8} sx={{mt: 20, mx: 10, float: 'left'}}>
+                        </Box>
+                        <Box sx={{mt: 5, float: 'left'}}>
+                            <Paper elevation={8} sx={{mx: 10, float: 'left'}}>
                                 <Box
                                     sx={{
-                                        pt: 40,
-                                        mt: 20,
-                                        mx: 20,
+                                        pt: 20,
+                                        pb: 20,
                                         my: 10,
                                         display: 'flex',
                                         flexDirection: 'column',

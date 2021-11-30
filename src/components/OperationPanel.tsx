@@ -9,7 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
-import {useRef} from "react";
+import React, {useRef} from "react";
+import {Box, Typography} from "@mui/material";
 
 const OperationPanel = () => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
@@ -34,15 +35,31 @@ const OperationPanel = () => {
     }
 
     return (
-        <div style={{}}>
-            <div>{userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}</div>
+        <Box>
+            <Typography variant="h5" gutterBottom component="div">
+                h3. Heading
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom component="div">
+                {/*"userID : " + userID*/}
+                userID : 123d-3145-f3de-3423-7685-2134
+            </Typography>
+            <Typography variant="h5" gutterBottom component="div">
+                {userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}
+            </Typography>
             <div>{"surroundingUserList size :" + surroundingUserList.length}</div>
-            <div>{"userID : " + userID}</div>
-            <FormControl sx={{m: 1, minWidth: 80}}>
-                <TextField inputRef={searchDistanceFiledRef} id={'search-distance'} label={"SearchDistance"}
-                           defaultValue={searchDistance}/>
-            </FormControl>
-            <Button variant='contained' onClick={handleSearchDistanceChange}>SetDistance</Button>
+            <Box sx={{mx: 10}}>
+                <Typography variant="subtitle2" gutterBottom component="div">
+                    now Search Distance : 100
+                </Typography>
+                <Box sx={{display: 'flex'}}>
+                    <FormControl sx={{m: 1, minWidth: 10}}>
+                        <TextField inputRef={searchDistanceFiledRef} id={'search-distance'} label={"SearchDistance"}
+                                   variant="standard"
+                                   defaultValue={searchDistance}/>
+                    </FormControl>
+                    <Button variant='contained' onClick={handleSearchDistanceChange}>Change</Button>
+                </Box>
+            </Box>
             <FormControl sx={{m: 1, minWidth: 200}}>
                 <InputLabel id="demo-simple-select-autowidth-label">SearchType</InputLabel>
                 <Select
@@ -57,7 +74,7 @@ const OperationPanel = () => {
                     <MenuItem value='dynamic'>Dynamic Search</MenuItem>
                 </Select>
             </FormControl>
-        </div>
+        </Box>
     )
 }
 export default OperationPanel
