@@ -16,6 +16,7 @@ import VideoChat from "./views/VideoChat";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {grey, teal} from "@mui/material/colors";
 import Welcome from "./views/Welcome";
+import Test from "./views/Test";
 
 whyDidYouUpdate(React)
 
@@ -44,6 +45,7 @@ ReactDOM.render(
                     <Routes>
                         <Route path="/" element={<Welcome/>}/>
                         <Route path="/app" element={<App/>}/>
+                        <Route path="/test" element={<Test/>}/>
                         <Route path="/video" element={<VideoChat/>}/>
                     </Routes>
                 </BrowserRouter>

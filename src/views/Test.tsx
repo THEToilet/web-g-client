@@ -7,9 +7,15 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import React from "react";
+import React, {useState} from "react";
+import OpenStreetMaps from "../components/OpenStreetMaps";
+import OperationPanel from "../components/OperationPanel";
 
 const Test = () => {
+    const [destination, setDestination] = useState<string>('setDestination')
+    const handleChange = (event: any) => {
+        setDestination(event.target.value)
+    }
     return (
         <>
             <div style={{textAlign: "center"}}>
@@ -22,47 +28,21 @@ const Test = () => {
                             <Paper elevation={8} sx={{mt: 20, float: 'left'}}>
                                 <Box
                                     sx={{
-                                        mx: 20,
+                                        mx: 50,
                                         my: 10,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
-                                        G
-                                    </Avatar>
-                                    <Typography component="h1" variant="h5">
-                                        G-Client
-                                    </Typography>
-                                    <Box component="form" noValidate sx={{mt: 3}}>
-                                        <Grid container spacing={2}>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    required
-                                                    fullWidth
-                                                    id="name"
-                                                    label="Your name"
-                                                    name="name"
-                                                    autoComplete="name"
-                                                    variant="standard"
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                        <Button
-                                            type="submit"
-                                            fullWidth
-                                            variant="contained"
-                                            sx={{mt: 3, mb: 2}}
-                                        >
-                                            advance
-                                        </Button>
-                                    </Box>
                                 </Box>
+                                <OpenStreetMaps/>
                             </Paper>
                             <Paper elevation={8} sx={{mt: 20, mx: 10, float: 'left'}}>
                                 <Box
                                     sx={{
+                                        pt: 40,
+                                        mt: 20,
                                         mx: 20,
                                         my: 10,
                                         display: 'flex',
@@ -70,35 +50,7 @@ const Test = () => {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
-                                        G
-                                    </Avatar>
-                                    <Typography component="h1" variant="h5">
-                                        G-Client
-                                    </Typography>
-                                    <Box component="form" noValidate sx={{mt: 3}}>
-                                        <Grid container spacing={2}>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    required
-                                                    fullWidth
-                                                    id="name"
-                                                    label="Your name"
-                                                    name="name"
-                                                    autoComplete="name"
-                                                    variant="standard"
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                        <Button
-                                            type="submit"
-                                            fullWidth
-                                            variant="contained"
-                                            sx={{mt: 3, mb: 2}}
-                                        >
-                                            advance
-                                        </Button>
-                                    </Box>
+                                    <OperationPanel/>
                                 </Box>
                             </Paper>
                         </Box>
