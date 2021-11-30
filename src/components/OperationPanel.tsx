@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import React, {useRef} from "react";
-import {Box, Typography} from "@mui/material";
+import {Box, List, ListItem, ListItemText, ListSubheader, NativeSelect, Typography} from "@mui/material";
 
 const OperationPanel = () => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
@@ -19,7 +19,7 @@ const OperationPanel = () => {
     const {userInfo, surroundingUserList, userID} = useSelector(getGSignalingStatus)
     const dispatch = useDispatch()
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChange = (event: any) => {
         if (event.target.value === 'static') {
             dispatch(setStaticSearch())
         } else {
@@ -35,21 +35,21 @@ const OperationPanel = () => {
     }
 
     return (
-        <Box>
+        <Box sx={{px: 10}}>
             <Typography variant="h5" gutterBottom component="div">
-                h3. Heading
+                User Name
             </Typography>
             <Typography variant="subtitle1" gutterBottom component="div">
                 {/*"userID : " + userID*/}
-                userID : 123d-3145-f3de-3423-7685-2134
+                123d-3145-f3de-3423-7685-2134
             </Typography>
             <Typography variant="h5" gutterBottom component="div">
-                {userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}
+                {/*userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude*/}
+                123.434 , 123.455
             </Typography>
-            <div>{"surroundingUserList size :" + surroundingUserList.length}</div>
-            <Box sx={{mx: 10}}>
+            <Box sx={{}}>
                 <Typography variant="subtitle2" gutterBottom component="div">
-                    now Search Distance : 100
+                    Search Distance : 100
                 </Typography>
                 <Box sx={{display: 'flex'}}>
                     <FormControl sx={{m: 1, minWidth: 10}}>
@@ -61,19 +61,43 @@ const OperationPanel = () => {
                 </Box>
             </Box>
             <FormControl sx={{m: 1, minWidth: 200}}>
-                <InputLabel id="demo-simple-select-autowidth-label">SearchType</InputLabel>
-                <Select
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    value={'static'}
-                    onChange={handleChange}
-                    autoWidth
-                    label={searchType}
+                <NativeSelect
+                    id="select"
+                    onClick={handleChange}
                 >
-                    <MenuItem value='static'>Static Search</MenuItem>
-                    <MenuItem value='dynamic'>Dynamic Search</MenuItem>
-                </Select>
+                    <option value='static'>Static Search</option>
+                    <option value='dynamic'>Dynamic Search</option>
+                </NativeSelect>
             </FormControl>
+            <Typography variant="subtitle2" gutterBottom component="div" sx={{ml : 5}}>
+                {"SurroundingUserList size :" + surroundingUserList.length}
+            </Typography>
+            <Box>
+                <List
+                    sx={{
+                        width: '100%',
+                        maxWidth: 360,
+                        bgcolor: 'background.paper',
+                        position: 'relative',
+                        overflow: 'auto',
+                        maxHeight: 300,
+                        '& ul': {padding: 0},
+                    }}
+                    subheader={<li/>}
+                >
+                    {[0, 1, 2, 3, 4].map((sectionId) => (
+                        <li key={`section-${sectionId}`}>
+                            <ul>
+                                {[0, 1, 2].map((item) => (
+                                    <ListItem key={`item-${sectionId}-${item}`}>
+                                        <ListItemText primary={`Item ${item}`}/>
+                                    </ListItem>
+                                ))}
+                            </ul>
+                        </li>
+                    ))}
+                </List>
+            </Box>
         </Box>
     )
 }

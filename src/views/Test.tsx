@@ -42,9 +42,8 @@ const Test = () => {
                             <Paper elevation={8} sx={{mx: 10, float: 'left'}}>
                                 <Box
                                     sx={{
-                                        pt: 20,
-                                        pb: 20,
                                         my: 10,
+                                        py: 4,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',

@@ -17,6 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 // NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
@@ -93,8 +94,8 @@ const OpenStreetMaps = (props: any) => {
                 {/* 自端末 */}
                 <OpenMarker position={position} userInfo={userInfo} connect={props.connect}/>
             </MapContainer>
-            <Fab color="primary" aria-label="add" onClick={updateMap} sx={{zIndex: 1, pt:-10}}>
-                <AddIcon/>
+            <Fab color="secondary" aria-label="add" onClick={updateMap} sx={{zIndex: 10, pt:-10}}>
+                <LocationOnIcon/>
             </Fab>
         </>
     )
