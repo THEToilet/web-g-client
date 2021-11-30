@@ -9,7 +9,7 @@ import Leaflet from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import {useSelector} from "react-redux";
-import {getGSignalingStatus} from "../store/selector";
+import {getGSetting, getGSignalingStatus} from "../store/selector";
 import {UserInfo} from "../types/domain";
 import OpenMarker from "./OpenMarker";
 import {userInfo} from "os";
@@ -17,6 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import Fab from '@mui/material/Fab';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import useGeoLocationStatus from "../hooks/useGeoLocation";
 
 // NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
@@ -48,6 +49,8 @@ const OpenStreetMaps = (props: any) => {
       }
 
     `;
+
+    const {searchDistance} = useSelector(getGSetting)
 
     const {surroundingUserList, userInfo: {geoLocation}} = useSelector(getGSignalingStatus)
 
@@ -87,7 +90,7 @@ const OpenStreetMaps = (props: any) => {
                     attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Circle center={position} radius={100000}/>
+                <Circle center={position} radius={searchDistance}/>
                 {/* 他の端末 */}
                 {Markers}
                 {/* 自端末 */}
