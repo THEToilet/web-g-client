@@ -22,9 +22,9 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 
 const VideoChat = () => {
-    /*
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
+    /*
 
     const localMessageRef = useRef<HTMLDivElement>(null)
     const remoteMessageRef = useRef<HTMLDivElement>(null)
@@ -65,8 +65,8 @@ const VideoChat = () => {
                 <HeaderBar/>
                 <Container component="main" sx={{pb: 2}}>
                     <CssBaseline/>
-                    <Box sx={{display: 'flex'}}>
-                        <Paper elevation={8} sx={{mt: 20, float: 'left'}}>
+                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <Paper elevation={8} sx={{mt: 20}}>
                             <Box
                                 sx={{
                                     mx: 20,
@@ -79,35 +79,11 @@ const VideoChat = () => {
                                 <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
                                     G
                                 </Avatar>
-                                <Typography component="h1" variant="h5">
-                                    G-Client
-                                </Typography>
-                                <Box component="form" noValidate sx={{mt: 3}}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <TextField
-                                                required
-                                                fullWidth
-                                                id="name"
-                                                label="Your name"
-                                                name="name"
-                                                autoComplete="name"
-                                                variant="standard"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        sx={{mt: 3, mb: 2}}
-                                    >
-                                        advance
-                                    </Button>
-                                </Box>
+                                <video ref={localVideoRef} autoPlay={true}
+                                       style={{width: '320px', height: '240px', border: '5px solid black'}}/>
                             </Box>
                         </Paper>
-                        <Paper elevation={8} sx={{mt: 20, mx: 10, float: 'left'}}>
+                        <Paper elevation={8} sx={{mt: 20, mx: 10}}>
                             <Box
                                 sx={{
                                     mx: 20,
@@ -120,36 +96,12 @@ const VideoChat = () => {
                                 <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
                                     G
                                 </Avatar>
-                                <Typography component="h1" variant="h5">
-                                    G-Client
-                                </Typography>
-                                <Box component="form" noValidate sx={{mt: 3}}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <TextField
-                                                required
-                                                fullWidth
-                                                id="name"
-                                                label="Your name"
-                                                name="name"
-                                                autoComplete="name"
-                                                variant="standard"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        sx={{mt: 3, mb: 2}}
-                                    >
-                                        advance
-                                    </Button>
-                                </Box>
+                                <video ref={localVideoRef} autoPlay={true}
+                                       style={{width: '320px', height: '240px', border: '5px solid black'}}/>
                             </Box>
                         </Paper>
                     </Box>
-                    <Container sx={{pt: 10, pb: 5, width:'30%'}}>
+                    <Container sx={{pt: 10, pb: 5, width: '30%'}}>
                         <Paper>
                             <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center'}}>
                                 <Box sx={{}}>

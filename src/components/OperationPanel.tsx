@@ -1,15 +1,12 @@
+import React, {useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {getGSetting} from '../store/selector'
 import {getGSignalingStatus} from '../store/selector'
 import {setDynamicSearch, setSearchDistance, setStaticSearch} from '../store/slices/gSetting'
 import TextField from "@mui/material/TextField";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
-import React, {useRef} from "react";
 import {Box, List, ListItem, ListItemText, ListSubheader, NativeSelect, Typography} from "@mui/material";
 
 const OperationPanel = () => {
@@ -39,13 +36,12 @@ const OperationPanel = () => {
             <Typography variant="h5" gutterBottom component="div">
                 User Name
             </Typography>
-            <Typography variant="subtitle1" gutterBottom component="div">
+            <Typography variant="body1" gutterBottom component="div">
                 {/*"userID : " + userID*/}
                 123d-3145-f3de-3423-7685-2134
             </Typography>
-            <Typography variant="h5" gutterBottom component="div">
-                {/*userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude*/}
-                123.434 , 123.455
+            <Typography variant="body1" gutterBottom component="div">
+                {userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}
             </Typography>
             <Box sx={{}}>
                 <Typography variant="subtitle2" gutterBottom component="div">
@@ -69,14 +65,14 @@ const OperationPanel = () => {
                     <option value='dynamic'>Dynamic Search</option>
                 </NativeSelect>
             </FormControl>
-            <Typography variant="subtitle2" gutterBottom component="div" sx={{ml : 5}}>
+            <Typography variant="subtitle2" gutterBottom component="div" sx={{ml: 5}}>
                 {"SurroundingUserList size :" + surroundingUserList.length}
             </Typography>
             <Box>
                 <List
                     sx={{
                         width: '100%',
-                        maxWidth: 360,
+                        maxWidth: 400,
                         bgcolor: 'background.paper',
                         position: 'relative',
                         overflow: 'auto',
@@ -90,7 +86,21 @@ const OperationPanel = () => {
                             <ul>
                                 {[0, 1, 2].map((item) => (
                                     <ListItem key={`item-${sectionId}-${item}`}>
-                                        <ListItemText primary={`Item ${item}`}/>
+                                        {/*<ListItemText primary={`Item ${item}`}/>*/}
+                                        <ListItemText primary={`User`}
+                                                      secondary={
+                                                          <>
+                                                              <Typography
+                                                                  sx={{display: 'inline'}}
+                                                                  component="span"
+                                                                  variant="body2"
+                                                                  color="text.primary"
+                                                              >
+                                                                  1234-1234-1231-1231-1232-1231
+                                                              </Typography>
+                                                              {"1234.5345 , 124334. 2341"}
+                                                          </>
+                                                      }/>
                                         <Button>Connect</Button>
                                     </ListItem>
                                 ))}
