@@ -91,6 +91,7 @@ const OperationPanel = () => {
                                 {[0, 1, 2].map((item) => (
                                     <ListItem key={`item-${sectionId}-${item}`}>
                                         <ListItemText primary={`Item ${item}`}/>
+                                        <Button>Connect</Button>
                                     </ListItem>
                                 ))}
                             </ul>

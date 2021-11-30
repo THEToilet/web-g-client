@@ -12,6 +12,14 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Chat from "../components/Chat";
+import IconButton from "@mui/material/IconButton";
+import CancelIcon from "@mui/icons-material/Cancel";
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 
 const VideoChat = () => {
     /*
@@ -141,28 +149,28 @@ const VideoChat = () => {
                             </Box>
                         </Paper>
                     </Box>
-                    <Container sx={{pt: 10, pb: 5}}>
+                    <Container sx={{pt: 10, pb: 5, width:'30%'}}>
                         <Paper>
                             <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center'}}>
                                 <Box sx={{}}>
-                                    <Button variant="contained" color="success">
-                                        Success
-                                    </Button>
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                        <ChatBubbleIcon/>
+                                    </IconButton>
                                 </Box>
                                 <Box sx={{}}>
-                                    <Button variant="contained" color="success">
-                                        Success
-                                    </Button>
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                        <MicIcon/>
+                                    </IconButton>
                                 </Box>
                                 <Box sx={{}}>
-                                    <Button variant="contained" color="success">
-                                        Success
-                                    </Button>
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                        <VolumeUpIcon/>
+                                    </IconButton>
                                 </Box>
                                 <Box sx={{}}>
-                                    <Button variant="contained" color="success">
-                                        Success
-                                    </Button>
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                        <PhoneDisabledIcon/>
+                                    </IconButton>
                                 </Box>
                             </Box>
                         </Paper>

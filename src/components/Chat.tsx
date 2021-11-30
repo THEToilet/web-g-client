@@ -1,17 +1,24 @@
-import {Box, Button, Container, List, ListItem, ListItemText, Paper, TextField} from "@mui/material";
+import {Box, Button, Container, List, ListItem, ListItemText, Paper, TextField, Typography} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import React, {useRef} from "react";
-import Fab from "@mui/material/Fab";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import IconButton from '@mui/material/IconButton';
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const Chat = () => {
     return (
-        <Container sx={{textAlign: 'center'}}>
+        <Container sx={{textAlign: 'center', width: '50%'}}>
             <Paper elevation={8} sx={{}}>
-                <Box sx={{pb: 2}}>
-                    <Fab color="secondary" aria-label="add">
-                        <LocationOnIcon/>
-                    </Fab>
+                <Box sx={{display: 'flex', width: 'auto'}}>
+                    <Box sx={{px : 15}}>
+                        <Typography component="div" variant="h5">
+                            Chat
+                        </Typography>
+                    </Box>
+                    <Box sx={{px : 15}}>
+                        <IconButton color="primary" aria-label="upload picture" component="span">
+                            <CancelIcon/>
+                        </IconButton>
+                    </Box>
                 </Box>
                 <Box sx={{mx: 'auto'}}>
                     <List
@@ -41,15 +48,15 @@ const Chat = () => {
                 <Box>
                     <TextField
                         id="standard-multiline-static"
-                        label="message"
                         multiline
-                        defaultValue="Default Value"
+                        placeholder="message"
+                        defaultValue=""
                         variant="standard"
                     />
                     {/*<button>SendDataChannel</button>*/}
-                    <Button variant="contained" endIcon={<SendIcon/>}>
-                        Send
-                    </Button>
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                        <SendIcon/>
+                    </IconButton>
                 </Box>
             </Paper>
         </Container>
