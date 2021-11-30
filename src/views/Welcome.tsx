@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
@@ -11,8 +11,24 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import {useDispatch} from "react-redux";
+import {setUserName} from '../store/slices/gSignalingStatus'
 
 const Welcome = () => {
+    const [userName, setUN] = useState('')
+    const dispatch = useDispatch()
+
+    const submitName = async () => {
+        if (userName !== '') {
+            dispatch(setUserName(userName))
+            window.location.href = '/test'
+        }
+    }
+
+    const handleChange = (e: any) => {
+        setUN(() => e.target.value)
+    }
+
     return (
         <div style={{textAlign: "center"}}>
             <HelmetProvider>
@@ -47,13 +63,14 @@ const Welcome = () => {
                                             name="name"
                                             autoComplete="name"
                                             variant="standard"
+                                            onChange={handleChange}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Button
-                                    type="submit"
                                     fullWidth
                                     variant="contained"
+                                    onClick={submitName}
                                     sx={{mt: 3, mb: 2}}
                                 >
                                     advance

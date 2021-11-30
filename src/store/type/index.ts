@@ -26,6 +26,7 @@ export type GSettingStatus = {
 
 export type GSignalingState = {
     userInfo: UserInfo;
+    userName: string;
     surroundingUserList: UserInfo[];
     isRegister: boolean;
     userID: string;

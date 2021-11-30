@@ -4,12 +4,13 @@ import {GeoLocation, UserInfo} from '../../types/domain'
 
 export const initialState: GSignalingState = {
     userInfo: {
-        userID : '',
+        userID: '',
         geoLocation: {
             latitude: 0,
             longitude: 0,
         },
     },
+    userName: "",
     surroundingUserList: [],
     isRegister: false,
     userID: "",
@@ -35,13 +36,17 @@ const gSignalingStatusSlice = createSlice({
         setUserID: (state, {payload}: PayloadAction<string>) => {
             state.userID = payload
         },
+        setUserName: (state, {payload}: PayloadAction<string>) => {
+            state.userName = payload
+        },
     },
 })
 export const {
     setUserInfoGeoLocation,
     setSurroundingUserList,
     setIsRegister,
-    setUserID
+    setUserID,
+    setUserName
 } = gSignalingStatusSlice.actions;
 
 export default gSignalingStatusSlice.reducer
