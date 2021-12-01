@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
@@ -11,25 +11,26 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import {useNavigate} from 'react-router-dom';
 import {useDispatch} from "react-redux";
 import {setUserName} from '../store/slices/gSignalingStatus'
-import useGeoLocationStatus from "../hooks/useGeoLocation";
 import useUserMediaList from "../hooks/useUserNediaList";
 
 const Welcome = () => {
     const [userName, setUN] = useState('')
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const submitName = async () => {
         if (userName !== '') {
             console.log(userName)
-            dispatch(setUserName(userName))
-            window.location.href = '/test'
+            navigate('/test')
         }
     }
 
     const handleChange = (e: any) => {
         setUN(() => e.target.value)
+        dispatch(setUserName(e.target.value))
     }
 
     useUserMediaList()

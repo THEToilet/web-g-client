@@ -51,7 +51,9 @@ const OperationPanel = () => {
                     <FormControl sx={{m: 1, minWidth: 10}}>
                         <TextField inputRef={searchDistanceFiledRef} id={'search-distance'} label={"SearchDistance"}
                                    variant="standard"
-                                   defaultValue={searchDistance}/>
+                                   defaultValue={searchDistance}
+                                   inputProps={{inputMode: 'numeric', pattern: '[0-9]*'}}
+                        />
                     </FormControl>
                     <Button variant='contained' onClick={handleSearchDistanceChange}>Change</Button>
                 </Box>

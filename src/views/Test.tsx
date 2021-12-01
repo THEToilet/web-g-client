@@ -1,13 +1,9 @@
+import React from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
-import {Box, Container, Paper, TextField} from "@mui/material";
+import {Box, Container, Paper} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import React, {useState} from "react";
 import OpenStreetMaps from "../components/OpenStreetMaps";
 import OperationPanel from "../components/OperationPanel";
 import useGeoLocationStatus from "../hooks/useGeoLocation";
@@ -15,10 +11,6 @@ import useGeoLocationStatus from "../hooks/useGeoLocation";
 const Test = () => {
     useGeoLocationStatus()
 
-    const [destination, setDestination] = useState<string>('setDestination')
-    const handleChange = (event: any) => {
-        setDestination(event.target.value)
-    }
     return (
         <>
             <div style={{textAlign: "center"}}>

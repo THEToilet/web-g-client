@@ -10,10 +10,10 @@ export const initialState: GSignalingState = {
             longitude: 0,
         },
     },
-    userName: "",
+    userName: '',
     surroundingUserList: [],
     isRegister: false,
-    userID: "",
+    userID: '',
 }
 
 const gSignalingStatusSlice = createSlice({
@@ -36,6 +36,7 @@ const gSignalingStatusSlice = createSlice({
         setUserID: (state, {payload}: PayloadAction<string>) => {
             state.userID = payload
         },
+
         setUserName: (state, {payload}: PayloadAction<string>) => {
             state.userName = payload
         },

@@ -1,6 +1,5 @@
-import {Helmet, HelmetProvider} from 'react-helmet-async'
+import {HelmetProvider} from 'react-helmet-async'
 import {useRef, useState} from "react";
-import {createTheme} from '@mui/material/styles';
 
 import useGeoLocationStatus from "../hooks/useGeoLocation"
 import useWebSocket from "../hooks/useWebSocket"
