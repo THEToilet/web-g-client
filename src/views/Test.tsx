@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
@@ -7,9 +7,27 @@ import CssBaseline from "@mui/material/CssBaseline";
 import OpenStreetMaps from "../components/OpenStreetMaps";
 import OperationPanel from "../components/OperationPanel";
 import useGeoLocationStatus from "../hooks/useGeoLocation";
+import useWebSocket from "../hooks/useWebSocket";
+import {WSMessages} from "../handler/wsMessages";
+import RTConnection from "../handler/RTConnection";
+import useConnection from "../hooks/useConnection";
+import useUserMedia from "../hooks/useUserMedia";
 
 const Test = () => {
+    const localVideoRef = useRef<HTMLVideoElement>(null)
+    const remoteVideoRef = useRef<HTMLVideoElement>(null)
+
+    const localMessageRef = useRef<HTMLTextAreaElement>(null)
+    const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
+
     useGeoLocationStatus()
+
+    const stream = useUserMedia(localVideoRef)
+    const [message, sendMessage] = useWebSocket()
+    const wsMessage = new WSMessages(sendMessage)
+    // NOTE: WebRTC関連処理
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
 
     return (
         <>

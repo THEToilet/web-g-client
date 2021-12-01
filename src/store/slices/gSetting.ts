@@ -2,8 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {GSettingStatus} from '../type'
 
 export const initialState: GSettingStatus = {
-    searchDistance : 1000,
-    searchType : "STATIC",
+    searchDistance: 100,
+    searchType: "STATIC",
 }
 
 const gSettingSlice = createSlice({

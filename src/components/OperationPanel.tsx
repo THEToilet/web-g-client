@@ -8,13 +8,16 @@ import TextField from "@mui/material/TextField";
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import {Box, List, ListItem, ListItemText, ListSubheader, NativeSelect, Typography} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 const OperationPanel = () => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
 
     const {searchDistance, searchType} = useSelector(getGSetting)
-    const {userInfo, surroundingUserList, userID} = useSelector(getGSignalingStatus)
+    const {userInfo, surroundingUserList, userID, userName} = useSelector(getGSignalingStatus)
     const dispatch = useDispatch()
+
+    const navigate = useNavigate();
 
     const handleChange = (event: any) => {
         if (event.target.value === 'static') {
@@ -31,21 +34,28 @@ const OperationPanel = () => {
         }
     }
 
+    const transitionVideo = async () => {
+        console.log('transitionVideo')
+        navigate('/video')
+    }
+
     return (
         <Box sx={{px: 10}}>
             <Typography variant="h5" gutterBottom component="div">
-                User Name
+                {userName}
+                {/*User Name*/}
             </Typography>
             <Typography variant="body1" gutterBottom component="div">
-                {/*"userID : " + userID*/}
-                123d-3145-f3de-3423-7685-2134
+                {userID}
+                {/*123d-3145-f3de-3423-7685-2134*/}
             </Typography>
             <Typography variant="body1" gutterBottom component="div">
                 {userInfo.geoLocation.latitude + " , " + userInfo.geoLocation.longitude}
             </Typography>
             <Box sx={{}}>
                 <Typography variant="subtitle2" gutterBottom component="div">
-                    Search Distance : 100
+                    {/*Search Distance : 100*/}
+                    {'Search Distance : ' + searchDistance}
                 </Typography>
                 <Box sx={{display: 'flex'}}>
                     <FormControl sx={{m: 1, minWidth: 10}}>
@@ -83,29 +93,26 @@ const OperationPanel = () => {
                     }}
                     subheader={<li/>}
                 >
-                    {[0, 1, 2, 3, 4].map((sectionId) => (
-                        <li key={`section-${sectionId}`}>
+                    {surroundingUserList.map((userInfo) => (
+                        <li key={`section-${userInfo.userID}`}>
                             <ul>
-                                {[0, 1, 2].map((item) => (
-                                    <ListItem key={`item-${sectionId}-${item}`}>
-                                        {/*<ListItemText primary={`Item ${item}`}/>*/}
-                                        <ListItemText primary={`User`}
-                                                      secondary={
-                                                          <>
-                                                              <Typography
-                                                                  sx={{display: 'inline'}}
-                                                                  component="span"
-                                                                  variant="body2"
-                                                                  color="text.primary"
-                                                              >
-                                                                  1234-1234-1231-1231-1232-1231
-                                                              </Typography>
-                                                              {"1234.5345 , 124334. 2341"}
-                                                          </>
-                                                      }/>
-                                        <Button>Connect</Button>
-                                    </ListItem>
-                                ))}
+                                <ListItem key={`item-${userInfo.userID}-${userInfo}`}>
+                                    <ListItemText primary={`User`}
+                                                  secondary={
+                                                      <>
+                                                          <Typography
+                                                              sx={{display: 'inline'}}
+                                                              component="span"
+                                                              variant="body2"
+                                                              color="text.primary"
+                                                          >
+                                                              {userInfo.userID}
+                                                          </Typography>
+                                                          {userInfo.geoLocation.latitude + ' , ' + userInfo.geoLocation.longitude}
+                                                      </>
+                                                  }/>
+                                    <Button onClick={transitionVideo}>Connect</Button>
+                                </ListItem>
                             </ul>
                         </li>
                     ))}

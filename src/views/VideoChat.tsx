@@ -71,6 +71,8 @@ const VideoChat = () => {
     // XXX: App側のVideoと競合しちゃうのでコメントアウト
 
     const [state, setState] = React.useState<boolean>(false);
+    const [localVideoState, setLocalVideoState] = React.useState<boolean>(true);
+    const [remoteVideoState, setRemoteVideoState] = React.useState<boolean>(true);
 
     const toggleChat = (open: boolean) => () => {
         setState(open);
@@ -94,11 +96,14 @@ const VideoChat = () => {
                                     alignItems: 'center',
                                 }}
                             >
-                                <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
-                                    G
-                                </Avatar>
-                                <video ref={localVideoRef} autoPlay={true}
-                                       style={{width: '320px', height: '240px', border: '5px solid black'}}/>
+                                {localVideoState ?
+                                    (<video ref={localVideoRef} autoPlay={true}
+                                            style={{width: '320px', height: '240px', border: '5px solid black'}}/>)
+                                    :
+                                    (<Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
+                                        G
+                                    </Avatar>)
+                                }
                             </Box>
                         </Paper>
                         <Paper elevation={8} sx={{mt: 20, mx: 10}}>
@@ -111,11 +116,14 @@ const VideoChat = () => {
                                     alignItems: 'center',
                                 }}
                             >
-                                <Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
-                                    G
-                                </Avatar>
-                                <video ref={localVideoRef} autoPlay={true}
-                                       style={{width: '320px', height: '240px', border: '5px solid black'}}/>
+                                {remoteVideoState ?
+                                    (<video ref={remoteVideoRef} autoPlay={true}
+                                            style={{width: '320px', height: '240px', border: '5px solid black'}}/>)
+                                    :
+                                    (<Avatar sx={{m: 1, bgcolor: 'primary.dark'}}>
+                                        G
+                                    </Avatar>)
+                                }
                             </Box>
                         </Paper>
                     </Box>
