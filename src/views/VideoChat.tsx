@@ -72,42 +72,15 @@ const VideoChat = () => {
 
     const [state, setState] = React.useState<boolean>(false);
 
-    const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-        if (
-            event &&
-            event.type === 'keydown' &&
-            ((event as React.KeyboardEvent).key === 'Tab' ||
-                (event as React.KeyboardEvent).key === 'Shift')
-        ) {
-            return;
-        }
+    const toggleChat = (open: boolean) => () => {
         setState(open);
     };
-
-    const list = () => (
-        <Box
-            sx={{width: 250}}
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-        >
-            <Chat/>
-        </Box>
-    );
 
     return (
         <div style={{textAlign: "center"}}>
             <HelmetProvider>
                 <Helm/>
                 <HeaderBar/>
-                <SwipeableDrawer
-                    anchor={'left'}
-                    open={state}
-                    onClose={toggleDrawer(false)}
-                    onOpen={toggleDrawer(true)}
-                >
-                    {list}
-                </SwipeableDrawer>
                 <Container component="main" sx={{pb: 2}}>
                     <CssBaseline/>
                     <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -151,7 +124,7 @@ const VideoChat = () => {
                             <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center'}}>
                                 <Box sx={{}}>
                                     <IconButton color="primary" aria-label="upload picture" component="span"
-                                                onClick={toggleDrawer(true)}>
+                                                onClick={toggleChat(true)}>
                                         <ChatBubbleIcon/>
                                     </IconButton>
                                 </Box>
@@ -173,7 +146,8 @@ const VideoChat = () => {
                             </Box>
                         </Paper>
                     </Container>
-                    <Chat/>
+                    {state ? (
+                        <Chat toggleChat={toggleChat}/>) : (<></>)}
                 </Container>
             </HelmetProvider>
         </div>

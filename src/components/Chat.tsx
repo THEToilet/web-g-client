@@ -4,18 +4,19 @@ import React, {useRef} from "react";
 import IconButton from '@mui/material/IconButton';
 import CancelIcon from "@mui/icons-material/Cancel";
 
-const Chat = () => {
+const Chat = (props: any) => {
     return (
         <Container sx={{textAlign: 'center', width: '50%'}}>
             <Paper elevation={8} sx={{}}>
                 <Box sx={{display: 'flex', width: 'auto'}}>
-                    <Box sx={{px : 15}}>
+                    <Box sx={{px: 15}}>
                         <Typography component="div" variant="h5">
                             Chat
                         </Typography>
                     </Box>
-                    <Box sx={{px : 15}}>
-                        <IconButton color="primary" aria-label="upload picture" component="span">
+                    <Box sx={{px: 15}}>
+                        <IconButton color="primary" aria-label="upload picture" component="span"
+                                    onClick={props.toggleChat(false)}>
                             <CancelIcon/>
                         </IconButton>
                     </Box>

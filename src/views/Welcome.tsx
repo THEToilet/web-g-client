@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import {useDispatch} from "react-redux";
 import {setUserName} from '../store/slices/gSignalingStatus'
 import useGeoLocationStatus from "../hooks/useGeoLocation";
+import useUserMediaList from "../hooks/useUserNediaList";
 
 const Welcome = () => {
     const [userName, setUN] = useState('')
@@ -21,6 +22,7 @@ const Welcome = () => {
 
     const submitName = async () => {
         if (userName !== '') {
+            console.log(userName)
             dispatch(setUserName(userName))
             window.location.href = '/test'
         }
@@ -30,25 +32,7 @@ const Welcome = () => {
         setUN(() => e.target.value)
     }
 
-    useEffect(() => {
-        // REFERENCE: https://developer.mozilla.org/ja/docs/Web/API/MediaDevices/enumerateDevices
-        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-            console.log("enumerateDevices() not supported.");
-            return;
-        }
-        // List cameras and microphones.
-
-        navigator.mediaDevices.enumerateDevices()
-            .then(function (devices) {
-                devices.forEach(function (device) {
-                    console.log(device.kind + ": " + device.label +
-                        " id = " + device.deviceId);
-                });
-            })
-            .catch(function (err) {
-                console.log(err.name + ": " + err.message);
-            });
-    }, [])
+    useUserMediaList()
 
     return (
         <div style={{textAlign: "center"}}>
