@@ -1,6 +1,17 @@
 import React, {useRef} from "react";
 import Video from "../components/Video";
-import {TextField, Paper, Container, Box} from "@mui/material";
+import {
+    TextField,
+    Paper,
+    Container,
+    Box,
+    ListItem,
+    ListItemIcon,
+    Divider,
+    ListItemText,
+    List,
+    SwipeableDrawer
+} from "@mui/material";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
@@ -58,11 +69,45 @@ const VideoChat = () => {
     )
      */
     // XXX: App側のVideoと競合しちゃうのでコメントアウト
+
+    const [state, setState] = React.useState<boolean>(false);
+
+    const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+            event &&
+            event.type === 'keydown' &&
+            ((event as React.KeyboardEvent).key === 'Tab' ||
+                (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+            return;
+        }
+        setState(open);
+    };
+
+    const list = () => (
+        <Box
+            sx={{width: 250}}
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+        >
+            <Chat/>
+        </Box>
+    );
+
     return (
         <div style={{textAlign: "center"}}>
             <HelmetProvider>
                 <Helm/>
                 <HeaderBar/>
+                <SwipeableDrawer
+                    anchor={'left'}
+                    open={state}
+                    onClose={toggleDrawer(false)}
+                    onOpen={toggleDrawer(true)}
+                >
+                    {list}
+                </SwipeableDrawer>
                 <Container component="main" sx={{pb: 2}}>
                     <CssBaseline/>
                     <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -105,7 +150,8 @@ const VideoChat = () => {
                         <Paper>
                             <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center'}}>
                                 <Box sx={{}}>
-                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <IconButton color="primary" aria-label="upload picture" component="span"
+                                                onClick={toggleDrawer(true)}>
                                         <ChatBubbleIcon/>
                                     </IconButton>
                                 </Box>
