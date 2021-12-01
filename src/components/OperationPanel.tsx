@@ -1,9 +1,10 @@
 import React, {useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
-import {getGSetting} from '../store/selector'
+import {getGSetting, getP2PStatus} from '../store/selector'
 import {getGSignalingStatus} from '../store/selector'
 import {setDynamicSearch, setSearchDistance, setStaticSearch} from '../store/slices/gSetting'
+import {setDestinationUserID} from '../store/slices/p2pStatus'
 import TextField from "@mui/material/TextField";
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
@@ -34,7 +35,8 @@ const OperationPanel = () => {
         }
     }
 
-    const transitionVideo = async () => {
+    const transitionVideo = async (e :any) => {
+        dispatch(setDestinationUserID(e.currentTarget.getAttribute('data-userID')))
         console.log('transitionVideo')
         navigate('/video')
     }
@@ -111,7 +113,7 @@ const OperationPanel = () => {
                                                           {userInfo.geoLocation.latitude + ' , ' + userInfo.geoLocation.longitude}
                                                       </>
                                                   }/>
-                                    <Button onClick={transitionVideo}>Connect</Button>
+                                    <Button onClick={transitionVideo} data-userID={userInfo.userID}>Connect</Button>
                                 </ListItem>
                             </ul>
                         </li>
