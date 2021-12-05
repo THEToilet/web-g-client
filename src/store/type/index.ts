@@ -19,6 +19,11 @@ export type SearchType =
     | 'DYNAMIC'
     | 'STATIC';
 
+export type Message = {
+    userID: string
+    body: string
+}
+
 export type GSettingStatus = {
     searchDistance: number;
     searchType: SearchType;
@@ -34,4 +39,5 @@ export type GSignalingState = {
 
 export type P2PState = {
     destinationUserID: string
+    messageList: Message[]
 }

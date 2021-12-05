@@ -35,7 +35,7 @@ const OperationPanel = () => {
         }
     }
 
-    const transitionVideo = async (e :any) => {
+    const transitionVideo = async (e: any) => {
         dispatch(setDestinationUserID(e.currentTarget.getAttribute('data-userID')))
         console.log('transitionVideo')
         navigate('/video')
@@ -48,7 +48,7 @@ const OperationPanel = () => {
                 {/*User Name*/}
             </Typography>
             <Typography variant="body1" gutterBottom component="div">
-                {userID}
+                {userID === '' ? ('Unregister') : (userID)}
                 {/*123d-3145-f3de-3423-7685-2134*/}
             </Typography>
             <Typography variant="body1" gutterBottom component="div">

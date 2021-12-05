@@ -1,8 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {P2PState} from '../type'
+import {Message, P2PState} from '../type'
 
 export const initialState: P2PState = {
-    destinationUserID: ''
+    destinationUserID: '',
+    messageList: []
 }
 
 const p2pStatusSlice = createSlice({
@@ -13,10 +14,16 @@ const p2pStatusSlice = createSlice({
         setDestinationUserID: (state, {payload}: PayloadAction<string>) => {
             state.destinationUserID = payload
         },
+
+        setMessageList: (state, {payload}: PayloadAction<Message[]>) => {
+            state.messageList = payload
+        },
+
     },
 })
 export const {
-    setDestinationUserID
+    setDestinationUserID,
+    setMessageList
 } = p2pStatusSlice.actions;
 
 export default p2pStatusSlice.reducer

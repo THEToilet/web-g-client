@@ -31,21 +31,27 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import {useSelector} from "react-redux";
+import {getGSetting, getGSignalingStatus, getP2PStatus} from "../store/selector";
+import useUserMedia from "../hooks/useUserMedia";
+import useGeoLocationStatus from "../hooks/useGeoLocation";
+import useWebSocket from "../hooks/useWebSocket";
+import {WSMessages} from "../handler/wsMessages";
+import RTConnection from "../handler/RTConnection";
+import useConnection from "../hooks/useConnection";
 
 const VideoChat = () => {
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
-    /*
 
-    const localMessageRef = useRef<HTMLDivElement>(null)
-    const remoteMessageRef = useRef<HTMLDivElement>(null)
-    const localStream = useRef<MediaStream>()
+    const localMessageRef = useRef<HTMLTextAreaElement>(null)
+    const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
 
     const startVideo = () => {
         navigator.mediaDevices.getUserMedia({audio: false, video: true}).then(
             (stream) => {
                 localVideoRef.current!.srcObject = stream
-                localStream.current = stream
+                //localStream.current = stream
             }
         ).catch((error) => {
                 console.log(error)
@@ -53,26 +59,20 @@ const VideoChat = () => {
         )
     }
 
-    return (
-        <>
-            <h2>Hello!!!!!!!!!</h2>
-            <Container fixed>
-                <Box sx={{bgcolor: '#ffffff', height: '100vh'}}>
-                    <Video localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
-                    <TextField inputProps={{readOnly: true}} multiline rows={10} ref={remoteMessageRef}/>
-                    <TextField ref={localMessageRef}/>
-                    <button onClick={startVideo}>Start Video</button>
-                    <Paper elevation={3}/>
-                </Box>
-            </Container>
-        </>
-    )
-     */
-    // XXX: App側のVideoと競合しちゃうのでコメントアウト
+    useGeoLocationStatus()
+
+    const stream = useUserMedia(localVideoRef)
+    const [message, sendMessage] = useWebSocket()
+    const wsMessage = new WSMessages(sendMessage)
+    // NOTE: WebRTC関連処理
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
 
     const [state, setState] = React.useState<boolean>(false);
     const [localVideoState, setLocalVideoState] = React.useState<boolean>(true);
     const [remoteVideoState, setRemoteVideoState] = React.useState<boolean>(true);
+
+    const {destinationUserID} = useSelector(getP2PStatus)
 
     const toggleChat = (open: boolean) => () => {
         setState(open);
@@ -85,6 +85,11 @@ const VideoChat = () => {
                 <HeaderBar/>
                 <Container component="main" sx={{pb: 2}}>
                     <CssBaseline/>
+                    <Box>
+                        <Typography variant="h5" gutterBottom component="div">
+                            {destinationUserID}
+                        </Typography>
+                    </Box>
                     <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                         <Paper elevation={8} sx={{mt: 20}}>
                             <Box
