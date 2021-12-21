@@ -34,6 +34,7 @@ const gSignalingStatusSlice = createSlice({
         },
 
         setUserID: (state, {payload}: PayloadAction<string>) => {
+            state.userInfo.userID = payload
             state.userID = payload
         },
 

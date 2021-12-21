@@ -13,11 +13,9 @@ import {getGSetting, getGSignalingStatus} from "../store/selector";
 import {UserInfo} from "../types/domain";
 import OpenMarker from "./OpenMarker";
 import {userInfo} from "os";
-import {useEffect, useRef, useState} from "react";
-import styled from "styled-components";
+import {useState} from "react";
 import Fab from '@mui/material/Fab';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import useGeoLocationStatus from "../hooks/useGeoLocation";
 
 // NOTE: marker setting
 let DefaultIcon = Leaflet.icon({
@@ -31,6 +29,7 @@ const OpenStreetMaps = (props: any) => {
     // ラジアンから経度緯度へ
     //const position = new LatLng(35.943250 * Math.PI / 180, 139.621090 * Math.PI / 180)
 
+    /*
     // https://levelup.gitconnected.com/reactjs-google-maps-with-custom-marker-ece0c7d184c4
     const Mark = styled.div`
       position: absolute;
@@ -49,6 +48,8 @@ const OpenStreetMaps = (props: any) => {
       }
 
     `;
+
+     */
 
     const {searchDistance} = useSelector(getGSetting)
 
@@ -96,7 +97,7 @@ const OpenStreetMaps = (props: any) => {
                 {/* 自端末 */}
                 <OpenMarker position={position} userInfo={userInfo} connect={props.connect}/>
             </MapContainer>
-            <Fab color="secondary" aria-label="add" onClick={updateMap} sx={{zIndex: 10, pt:-10}}>
+            <Fab color="secondary" aria-label="add" onClick={updateMap} sx={{zIndex: 10, pt: -10}}>
                 <LocationOnIcon/>
             </Fab>
         </>

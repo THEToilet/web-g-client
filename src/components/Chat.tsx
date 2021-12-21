@@ -1,6 +1,6 @@
-import {Box, Button, Container, List, ListItem, ListItemText, Paper, TextField, Typography} from "@mui/material";
+import {Box, Container, List, ListItem, ListItemText, Paper, TextField, Typography} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
-import React, {useRef} from "react";
+import React from "react";
 import IconButton from '@mui/material/IconButton';
 import CancelIcon from "@mui/icons-material/Cancel";
 

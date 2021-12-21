@@ -1,27 +1,15 @@
 import React, {useRef} from "react";
-import Video from "../components/Video";
 import {
-    TextField,
     Paper,
     Container,
     Box,
-    ListItem,
-    ListItemIcon,
-    Divider,
-    ListItemText,
-    List,
-    SwipeableDrawer
 } from "@mui/material";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
-import OpenStreetMaps from "../components/OpenStreetMaps";
-import OperationPanel from "../components/OperationPanel";
 import CssBaseline from "@mui/material/CssBaseline";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import Chat from "../components/Chat";
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -32,7 +20,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import {useSelector} from "react-redux";
-import {getGSetting, getGSignalingStatus, getP2PStatus} from "../store/selector";
+import {getP2PStatus} from "../store/selector";
 import useUserMedia from "../hooks/useUserMedia";
 import useGeoLocationStatus from "../hooks/useGeoLocation";
 import useWebSocket from "../hooks/useWebSocket";

@@ -1,7 +1,7 @@
-import styled from "styled-components";
 import {Popup, Marker} from "react-leaflet";
 import PopupInfo from "./PopupInfo";
 
+/*
 // https://levelup.gitconnected.com/reactjs-google-maps-with-custom-marker-ece0c7d184c4
 const Mark = styled.div`
   position: absolute;
@@ -20,6 +20,7 @@ const Mark = styled.div`
   }
 
 `;
+ */
 
 /*<div><Pin style={{backgroundColor:color}} title={name}/><Pulse/></div>*/
 const OpenMarker = (props: any) => {
