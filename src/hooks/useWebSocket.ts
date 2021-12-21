@@ -1,6 +1,6 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
-const useWebSocket = () => {
+const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: string; key: string }[]>) => {
 
     const [message, setMessage] = useState<string>("")
     const socketRef = useRef<WebSocket>(null!)
@@ -24,6 +24,13 @@ const useWebSocket = () => {
 
     const onMessage = (event: any) => {
         setMessage(event.data)
+        csvDataRef.current.push({'time': new Date().toDateString(), value: event.data, key: 'onMessage'})
+        csvDataRef.current.push({'time': new Date().toDateString(), value: event.data.length, key: 'onMessage length'})
+        csvDataRef.current.push({
+            'time': new Date().toDateString(),
+            value: encodeURIComponent(event.data.toString()).replace(/%../g, "x").length.toString(),
+            key: 'onMessage bytes'
+        })
     }
 
     const onError = (error: any) => {
@@ -70,7 +77,21 @@ const useWebSocket = () => {
         waitForConnection(() => {
             try {
                 socketRef.current.send(String(message))
-                console.log(new Date(), 'message : ', message)
+                csvDataRef.current.push({
+                    'time': new Date().toDateString(),
+                    value: String(message),
+                    key: 'sendMessage' + message
+                })
+                csvDataRef.current.push({
+                    'time': new Date().toDateString(),
+                    value: String(message.length),
+                    key: 'sendMessage length'
+                })
+                csvDataRef.current.push({
+                    'time': new Date().toDateString(),
+                    value: encodeURIComponent(message.toString()).replace(/%../g, "x").length.toString(),
+                    key: 'sendMessage bytes'
+                })
             } catch (e) {
                 console.error(e)
             }

@@ -14,7 +14,7 @@ import VideoChat from "./views/VideoChat";
 
 // MUI用
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {grey, teal} from "@mui/material/colors";
+import {grey} from "@mui/material/colors";
 import Welcome from "./views/Welcome";
 import Test from "./views/Test";
 

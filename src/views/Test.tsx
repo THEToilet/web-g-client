@@ -2,7 +2,7 @@ import React, {useRef} from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
-import {Box, Container, Paper} from "@mui/material";
+import {Box, Button, Container, Paper} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import OpenStreetMaps from "../components/OpenStreetMaps";
 import OperationPanel from "../components/OperationPanel";
@@ -12,6 +12,7 @@ import {WSMessages} from "../handler/wsMessages";
 import RTConnection from "../handler/RTConnection";
 import useConnection from "../hooks/useConnection";
 import useUserMedia from "../hooks/useUserMedia";
+import {CSVLink} from "react-csv";
 
 const Test = () => {
     const localVideoRef = useRef<HTMLVideoElement>(null)
@@ -20,14 +21,19 @@ const Test = () => {
     const localMessageRef = useRef<HTMLTextAreaElement>(null)
     const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
 
+    const csvDataRef = useRef<{time: string; value: string; key: string }[]>([
+        {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
+    ])
+
     useGeoLocationStatus()
 
     const stream = useUserMedia(localVideoRef)
-    const [message, sendMessage] = useWebSocket()
+    const [message, sendMessage] = useWebSocket(csvDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
+
 
     return (
         <>
@@ -64,6 +70,9 @@ const Test = () => {
                                 >
                                     <OperationPanel/>
                                 </Box>
+                                <Button>
+                                    <CSVLink data={csvDataRef.current}>Download csv</CSVLink>
+                                </Button>
                             </Paper>
                         </Box>
                     </Container>

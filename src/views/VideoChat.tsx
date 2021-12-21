@@ -59,10 +59,14 @@ const VideoChat = () => {
         )
     }
 
+    const csvDataRef = useRef<{time: string; value: string; key: string }[]>([
+        {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
+    ])
+
     useGeoLocationStatus()
 
     const stream = useUserMedia(localVideoRef)
-    const [message, sendMessage] = useWebSocket()
+    const [message, sendMessage] = useWebSocket(csvDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)

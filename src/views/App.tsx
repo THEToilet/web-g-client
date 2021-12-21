@@ -22,8 +22,13 @@ function App() {
 
     const stream = useUserMedia(localVideoRef)
     useGeoLocationStatus()
+
+    const csvDataRef = useRef<{time: string; value: string; key: string }[]>([
+        {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
+    ])
+
     // NOTE: WebSocket接続
-    const [message, sendMessage] = useWebSocket()
+    const [message, sendMessage] = useWebSocket(csvDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
@@ -33,9 +38,11 @@ function App() {
     const [isMapGoogle, setIsMapGoogle] = useState<boolean>(true)
     const [destination, setDestination] = useState<string>('setDestination')
 
+    /*
     const changeMap = () => {
         setIsMapGoogle(!isMapGoogle)
     }
+     */
 
     const handleChange = (event: any) => {
         setDestination(event.target.value)
