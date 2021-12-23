@@ -35,6 +35,7 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: 
 
     const onError = (error: any) => {
         console.error("WebSocket error: ", error)
+        csvDataRef.current.push({'time': new Date().toLocaleString('ja-JP-u-ca-japanese'), value: error, key: 'onError'})
         socketRef.current.close()
     }
 
