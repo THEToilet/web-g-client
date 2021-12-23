@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {setIsRegister, setSurroundingUserList, setUserID} from '../store/slices/gSignalingStatus'
 import {setDestinationUserID} from '../store/slices/p2pStatus'
@@ -15,7 +15,7 @@ import {
 } from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
 
-const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void) => {
+const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void, csvDataRef: React.MutableRefObject<{ time: string; value: string; key: string }[]>) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
@@ -55,6 +55,11 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     // NOTE: 検索方式にかかわらず返ってくるのは近隣のユーザリスト
                     console.log(new Date(), ': search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
+                    csvDataRef.current.push({
+                        'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
+                        value: String(searchResponse),
+                        key: 'userInfoListSize ' + searchResponse.surroundingUserList.length
+                    })
                     dispatch(setSurroundingUserList(searchResponse.surroundingUserList))
                     break
                 case 'delete':

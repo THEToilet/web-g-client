@@ -13,6 +13,7 @@ import RTConnection from "../handler/RTConnection";
 import useConnection from "../hooks/useConnection";
 import useUserMedia from "../hooks/useUserMedia";
 import {CSVLink} from "react-csv";
+import useRandomWayPoint from "../hooks/useRandomWayPoint";
 
 const Test = () => {
     const localVideoRef = useRef<HTMLVideoElement>(null)
@@ -25,14 +26,16 @@ const Test = () => {
         {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
     ])
 
-    useGeoLocationStatus()
+    // NOTE: 実際の現在地を使うか、
+    //useGeoLocationStatus()
+    useRandomWayPoint(csvDataRef)
 
     const stream = useUserMedia(localVideoRef)
     const [message, sendMessage] = useWebSocket(csvDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
-    useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect)
+    useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, csvDataRef)
 
 
     return (

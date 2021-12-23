@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch} from "react-redux";
 import {setUserName} from '../store/slices/gSignalingStatus'
-import useUserMediaList from "../hooks/useUserNediaList";
+import useUserMediaList from "../hooks/useUserMediaList";
 
 const Welcome = () => {
     const [userName, setUN] = useState('')

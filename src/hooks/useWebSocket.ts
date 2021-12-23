@@ -24,10 +24,10 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: 
 
     const onMessage = (event: any) => {
         setMessage(event.data)
-        csvDataRef.current.push({'time': new Date().toDateString(), value: event.data, key: 'onMessage'})
-        csvDataRef.current.push({'time': new Date().toDateString(), value: event.data.length, key: 'onMessage length'})
+        csvDataRef.current.push({'time': new Date().toLocaleString('ja-JP-u-ca-japanese'), value: event.data , key: 'onMessage'})
+        csvDataRef.current.push({'time': new Date().toLocaleString('ja-JP-u-ca-japanese'), value: event.data.length, key: 'onMessage length'})
         csvDataRef.current.push({
-            'time': new Date().toDateString(),
+            'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
             value: encodeURIComponent(event.data.toString()).replace(/%../g, "x").length.toString(),
             key: 'onMessage bytes'
         })
@@ -78,17 +78,17 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: 
             try {
                 socketRef.current.send(String(message))
                 csvDataRef.current.push({
-                    'time': new Date().toDateString(),
+                    'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
                     value: String(message),
                     key: 'sendMessage' + message
                 })
                 csvDataRef.current.push({
-                    'time': new Date().toDateString(),
+                    'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
                     value: String(message.length),
                     key: 'sendMessage length'
                 })
                 csvDataRef.current.push({
-                    'time': new Date().toDateString(),
+                    'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
                     value: encodeURIComponent(message.toString()).replace(/%../g, "x").length.toString(),
                     key: 'sendMessage bytes'
                 })
