@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {HelmetProvider} from "react-helmet-async";
 import Helm from "../components/Helmet";
 import HeaderBar from "../components/HeaderBar";
@@ -12,7 +12,7 @@ import {WSMessages} from "../handler/wsMessages";
 import RTConnection from "../handler/RTConnection";
 import useConnection from "../hooks/useConnection";
 import useUserMedia from "../hooks/useUserMedia";
-import {CSVLink} from "react-csv";
+//import {CSVLink} from "react-csv";
 import useRandomWayPoint from "../hooks/useRandomWayPoint";
 
 const Test = () => {
@@ -22,9 +22,22 @@ const Test = () => {
     const localMessageRef = useRef<HTMLTextAreaElement>(null)
     const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
 
-    const csvDataRef = useRef<{time: string; value: string; key: string }[]>([
+    /*
+    useEffect(() => {
+        // REFERENCE :https://stackoverflow.com/questions/19846078/how-to-read-from-chromes-console-in-javascript
+        console.stdlog = console.log.bind(console)
+        console.logs = []
+        console.log = () => {
+            console.logs.push
+        }
+    },[])
+     */
+
+    const csvDataRef = useRef<{ time: string; value: string; key: string }[]>([
         {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
     ])
+
+    const downloadLinkRef = useRef<HTMLAnchorElement>(null)
 
     // NOTE: 実際の現在地を使うか、
     //useGeoLocationStatus()
@@ -36,6 +49,16 @@ const Test = () => {
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, csvDataRef)
+
+    const downloadLog = () => {
+        const data = new Blob([JSON.stringify(csvDataRef.current)], {type: 'text/plain'})
+        downloadLinkRef.current!.href = window.URL.createObjectURL(data)
+        const nowTime = new Date()
+        console.log(nowTime.getFullYear())
+        console.log(nowTime.getMonth() + 1)
+        downloadLinkRef.current!.setAttribute('download', nowTime.getFullYear() + (nowTime.getMonth() + 1).toString() + nowTime.getDate() + '-' + nowTime.getHours() + nowTime.getMinutes() + '.log')
+        //downloadLinkRef.current!.click()
+    }
 
 
     return (
@@ -73,8 +96,9 @@ const Test = () => {
                                 >
                                     <OperationPanel/>
                                 </Box>
-                                <Button>
-                                    <CSVLink data={csvDataRef.current}>Download csv</CSVLink>
+                                <Button onClick={downloadLog}>
+                                    {/*<CSVLink data={csvDataRef.current}>Download csv</CSVLink>}*/}
+                                    <a ref={downloadLinkRef}>DownloadLog</a>
                                 </Button>
                             </Paper>
                         </Box>
