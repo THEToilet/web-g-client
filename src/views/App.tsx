@@ -23,7 +23,7 @@ function App() {
     const stream = useUserMedia(localVideoRef)
     useGeoLocationStatus()
 
-    const csvDataRef = useRef<{ time: string; value: string; key: string }[]>([
+    const csvDataRef = useRef<{ }[]>([
         {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
     ])
 

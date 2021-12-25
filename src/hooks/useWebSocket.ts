@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
+import {stringify} from "querystring";
 
-const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: string; key: string }[]>) => {
+const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {
 
     const [message, setMessage] = useState<string>("")
     const socketRef = useRef<WebSocket>(null!)
@@ -24,18 +25,26 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: 
 
     const onMessage = (event: any) => {
         setMessage(event.data)
-        csvDataRef.current.push({'time': new Date().toLocaleString('ja-JP-u-ca-japanese'), value: event.data , key: 'onMessage'})
-        csvDataRef.current.push({'time': new Date().toLocaleString('ja-JP-u-ca-japanese'), value: event.data.length, key: 'onMessage length'})
+        let nowTime = new Date()
         csvDataRef.current.push({
-            'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
-            value: encodeURIComponent(event.data.toString()).replace(/%../g, "x").length.toString(),
-            key: 'onMessage bytes'
+            time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+            length: event.data.length,
+            rawData: event.data,
+            byteSize: new Blob([event.data]).size,
+            message: 'ON-MESSAGE-EVENT-DATA'
         })
     }
 
     const onError = (error: any) => {
         console.error("WebSocket error: ", error)
-        csvDataRef.current.push({'time': new Date().toLocaleString('ja-JP-u-ca-japanese'), value: error, key: 'onError'})
+        let nowTime = new Date()
+        csvDataRef.current.push({
+            time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+            length: error.length,
+            rawData: error,
+            byteSize: new Blob([error]).size,
+            message: 'ON-ERROR'
+        })
         socketRef.current.close()
     }
 
@@ -74,24 +83,17 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{ time: string; value: 
     }, [])
 
     // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
-    const sendMessage = async (message: String) => {
+    const sendMessage = async (message: string) => {
         waitForConnection(() => {
             try {
-                socketRef.current.send(String(message))
+                socketRef.current.send(message)
+                let nowTime = new Date()
                 csvDataRef.current.push({
-                    'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
-                    value: String(message),
-                    key: 'sendMessage' + message
-                })
-                csvDataRef.current.push({
-                    'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
-                    value: String(message.length),
-                    key: 'sendMessage length'
-                })
-                csvDataRef.current.push({
-                    'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
-                    value: encodeURIComponent(message.toString()).replace(/%../g, "x").length.toString(),
-                    key: 'sendMessage bytes'
+                    time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                    length: message.length,
+                    rawData: message,
+                    byteSize: new Blob([(message)]).size,
+                    message: 'ON-SEND-MESSAGE'
                 })
             } catch (e) {
                 console.error(e)

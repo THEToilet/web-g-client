@@ -15,7 +15,7 @@ import {
 } from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
 
-const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void, csvDataRef: React.MutableRefObject<{ time: string; value: string; key: string }[]>) => {
+const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void, csvDataRef: React.MutableRefObject<{}[]>) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
 
     const {isRegister, userInfo} = useSelector(getGSignalingStatus)
@@ -35,6 +35,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 console.error("message is undefined")
                 return;
             }
+            let nowTime = new Date()
             switch (messageType.type) {
                 case 'ping':
                     console.log(new Date(), ': ping')
@@ -45,6 +46,11 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     const registerResponse: RegisterResponse = JSON.parse(rawMessage) as RegisterResponse
                     dispatch(setIsRegister())
                     dispatch(setUserID(registerResponse.userID))
+                    csvDataRef.current.push({
+                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        userID: registerResponse.userID,
+                        message: 'ON-REGISTER-MESSAGE'
+                    })
                     break
                 case 'update':
                     console.log(new Date(), ': update')
@@ -56,9 +62,10 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
                     csvDataRef.current.push({
-                        'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
-                        value: String(searchResponse),
-                        key: 'userInfoListSize ' + searchResponse.surroundingUserList.length
+                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        searchUserInfoListSize: searchResponse.surroundingUserList.length,
+                        surroundingUserInfoList: searchResponse.surroundingUserList,
+                        message: 'ON-SEARCH-MESSAGE'
                     })
                     dispatch(setSurroundingUserList(searchResponse.surroundingUserList))
                     break
@@ -91,7 +98,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     const iceCandidate: IceCandidateRequest = JSON.parse(rawMessage) as IceCandidateRequest
                     console.log(iceCandidate.ice)
                     // REFERENCE: https://mebee.info/2020/10/30/post-20771/
-                    const t : RTCIceCandidate = JSON.parse(JSON.stringify(iceCandidate.ice)) as RTCIceCandidate
+                    const t: RTCIceCandidate = JSON.parse(JSON.stringify(iceCandidate.ice)) as RTCIceCandidate
                     console.log(t)
                     const ice = new RTCIceCandidate(t)
                     setICECandidate(ice)

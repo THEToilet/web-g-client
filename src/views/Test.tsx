@@ -33,9 +33,7 @@ const Test = () => {
     },[])
      */
 
-    const csvDataRef = useRef<{ time: string; value: string; key: string }[]>([
-        {"key": "csv", "value": "output", "time": "2021-11-12-12:00"}
-    ])
+    const csvDataRef = useRef<{}[]>([])
 
     const downloadLinkRef = useRef<HTMLAnchorElement>(null)
 
@@ -56,7 +54,7 @@ const Test = () => {
         const nowTime = new Date()
         console.log(nowTime.getFullYear())
         console.log(nowTime.getMonth() + 1)
-        downloadLinkRef.current!.setAttribute('download', nowTime.getFullYear() + (nowTime.getMonth() + 1).toString() + nowTime.getDate() + '-' + nowTime.getHours() + nowTime.getMinutes() + '.log')
+        downloadLinkRef.current!.setAttribute('download', nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2) + '.log')
         //downloadLinkRef.current!.click()
     }
 

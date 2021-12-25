@@ -3,7 +3,7 @@ import {GeoLocation} from '../types/domain'
 import {setUserInfoGeoLocation} from '../store/slices/gSignalingStatus'
 import {useDispatch} from "react-redux";
 
-const useRandomWayPoint = (csvDataRef: React.MutableRefObject<{ time: string; value: string; key: string }[]>) => {
+const useRandomWayPoint = (csvDataRef: React.MutableRefObject<{}[]>) => {
 
     const walkIntervalRef = useRef<NodeJS.Timeout>()
 
@@ -44,10 +44,12 @@ const useRandomWayPoint = (csvDataRef: React.MutableRefObject<{ time: string; va
         newGeoLocation.longitude = Math.max(Math.min(newGeoLocation.longitude, highGeo.longitude), lowGeo.longitude)
 
         dispatch(setUserInfoGeoLocation(newGeoLocation))
+        let nowTime = new Date()
         csvDataRef.current.push({
-            'time': new Date().toLocaleString('ja-JP-u-ca-japanese'),
-            value: String(newGeoLocation),
-            key: 'geoLocation ' + newGeoLocation.latitude + ' ' + newGeoLocation.longitude
+            time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+            geoLocation: newGeoLocation,
+            stopTime: stopTime,
+            message: 'ON-GEOLOCATION-CHANGE'
         })
         walkIntervalRef.current = setTimeout(() => walk(), stopTime * 1000)
     }
