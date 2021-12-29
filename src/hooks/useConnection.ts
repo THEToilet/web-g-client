@@ -40,6 +40,11 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 case 'ping':
                     console.log(new Date(), ': ping')
                     wsMessage.sendPong()
+                    csvDataRef.current.push({
+                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        userID: userInfo.userID,
+                        message: 'ON-PING-MESSAGE'
+                    })
                     break
                 case 'register':
                     console.log(new Date(), ': registered')
@@ -56,6 +61,11 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': update')
                     const updateResponse: UpdateResponse = JSON.parse(rawMessage) as UpdateResponse
                     console.log(new Date(), updateResponse)
+                    csvDataRef.current.push({
+                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        userID: userInfo.userID,
+                        message: 'ON-UPDATE-MESSAGE'
+                    })
                     break
                 case 'search':
                     // NOTE: 検索方式にかかわらず返ってくるのは近隣のユーザリスト
@@ -73,6 +83,11 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': delete')
                     const deleteResponse: DeleteResponse = JSON.parse(rawMessage) as DeleteResponse
                     console.log(new Date(), deleteResponse)
+                    csvDataRef.current.push({
+                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        userID: userInfo.userID,
+                        message: 'ON-DELETE-MESSAGE'
+                    })
                     break
                 case 'offer':
                     console.log(new Date(), ': offer')
