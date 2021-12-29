@@ -18,7 +18,7 @@ export class WSMessages {
         const message: PongRequest = {
             type: 'pong'
         }
-        this.sendMessage(JSON.stringify(message))
+        this.sendMessage(JSON.stringify(message), "SEND-PONG")
     }
 
     sendRegister(userInfo: UserInfo) {
@@ -29,7 +29,7 @@ export class WSMessages {
                 longitude: userInfo.geoLocation.longitude,
             },
         }
-        this.sendMessage(JSON.stringify(message))
+        this.sendMessage(JSON.stringify(message), "SEND-REGISTER")
     }
 
     sendUpdate(userInfo: UserInfo) {
@@ -37,7 +37,7 @@ export class WSMessages {
             type: 'update',
             userInfo: userInfo,
         }
-        this.sendMessage(JSON.stringify(message))
+        this.sendMessage(JSON.stringify(message), "SEND-UPDATE")
     }
 
     sendStaticSearch(geoLocation: GeoLocation, searchDistance: number) {
@@ -47,7 +47,7 @@ export class WSMessages {
             searchDistance: searchDistance,
             geoLocation: geoLocation,
         }
-        this.sendMessage(JSON.stringify(message))
+        this.sendMessage(JSON.stringify(message), "SEND-STATIC-SEARCH")
     }
 
     sendDynamicSearch(geoLocation: GeoLocation, searchDistance: number) {
@@ -57,19 +57,19 @@ export class WSMessages {
             searchDistance: searchDistance,
             geoLocation: geoLocation,
         }
-        this.sendMessage(JSON.stringify(message))
+        this.sendMessage(JSON.stringify(message), "SEND-DYNAMIC-SEARCH")
     }
 
     sendDelete() {
         const message: DeleteRequest = {
             type: 'delete',
         }
-        this.sendMessage(JSON.stringify(message))
+        this.sendMessage(JSON.stringify(message), "SEND-DELETE")
     }
 
     sendSend() {
         const message: SendRequest = {
-            type: 'delete',
+            type: 'send',
             message: 'test'
         }
         this.sendMessage(JSON.stringify(message))

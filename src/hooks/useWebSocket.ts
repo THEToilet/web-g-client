@@ -83,16 +83,17 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {
     }, [])
 
     // REFERENCE: https://stackoverflow.com/questions/23051416/uncaught-invalidstateerror-failed-to-execute-send-on-websocket-still-in-co
-    const sendMessage = async (message: string) => {
+    const sendMessage = async (message: string, type: string) => {
         waitForConnection(() => {
             try {
                 socketRef.current.send(message)
                 let nowTime = new Date()
                 csvDataRef.current.push({
-                    time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                    time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
                     length: message.length,
                     rawData: message,
                     byteSize: new Blob([(message)]).size,
+                    type: type,
                     message: 'ON-SEND-MESSAGE'
                 })
             } catch (e) {
