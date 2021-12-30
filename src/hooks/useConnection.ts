@@ -72,7 +72,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
                         searchUserInfoListSize: searchResponse.surroundingUserList.length,
                         surroundingUserInfoList: searchResponse.surroundingUserList,
                         message: 'ON-SEARCH-MESSAGE'
