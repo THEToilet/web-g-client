@@ -41,7 +41,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': ping')
                     wsMessage.sendPong()
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
                         userID: userInfo.userID,
                         message: 'ON-PING-MESSAGE'
                     })
@@ -52,7 +52,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     dispatch(setIsRegister())
                     dispatch(setUserID(registerResponse.userID))
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
                         userID: registerResponse.userID,
                         message: 'ON-REGISTER-MESSAGE'
                     })
@@ -62,7 +62,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     const updateResponse: UpdateResponse = JSON.parse(rawMessage) as UpdateResponse
                     console.log(new Date(), updateResponse)
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
                         userID: userInfo.userID,
                         message: 'ON-UPDATE-MESSAGE'
                     })
@@ -84,7 +84,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     const deleteResponse: DeleteResponse = JSON.parse(rawMessage) as DeleteResponse
                     console.log(new Date(), deleteResponse)
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
                         userID: userInfo.userID,
                         message: 'ON-DELETE-MESSAGE'
                     })
