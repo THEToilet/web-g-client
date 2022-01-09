@@ -12,44 +12,50 @@ import RTConnection from "../handler/RTConnection";
 import useConnection from "../hooks/useConnection";
 import useUserMedia from "../hooks/useUserMedia";
 import useRandomWayPoint from "../hooks/useRandomWayPoint";
+import timeFormatter from "../shared/utils/timeFormatter";
 
 const Test = () => {
+    // NOTE: 移動
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
+    // NOTE: 移動
     const localMessageRef = useRef<HTMLTextAreaElement>(null)
     const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
 
+    // NOTE: ログデータ保存場所
     const logDataRef = useRef<{}[]>([])
 
-    const downloadLinkRef = useRef<HTMLAnchorElement>(null)
+    const logDownloadLinkRef = useRef<HTMLAnchorElement>(null)
 
     // NOTE: 実際の現在地を使う
     // useGeoLocationStatus()
     // NOTE: ダミーデータを使う
     useRandomWayPoint(logDataRef)
 
+    // NOTE: 移動
     const stream = useUserMedia(localVideoRef)
+
+    // NOTE: 上位に移動
     const [message, sendMessage] = useWebSocket(logDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
     const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, logDataRef)
 
+    console.log(timeFormatter(new Date()))
+
     const downloadLog = () => {
         const data = new Blob([JSON.stringify(logDataRef.current)], {type: 'text/plain'})
-        downloadLinkRef.current!.href = window.URL.createObjectURL(data)
-        const nowTime = new Date()
-        console.log(nowTime.getFullYear())
-        console.log(nowTime.getMonth() + 1)
-        downloadLinkRef.current!.setAttribute('download', nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2) + '.log')
+        logDownloadLinkRef.current!.href = window.URL.createObjectURL(data)
+        const filename = timeFormatter(new Date()) + '.log'
+        logDownloadLinkRef.current!.setAttribute('download', filename)
     }
 
     const fileChange = (event: any) => {
         const fileList = event.target.files;
         console.log(fileList);
     }
-
 
     return (
         <>
@@ -88,7 +94,7 @@ const Test = () => {
                                 </Box>
                                 <input type="file" id="file-selector" multiple onChange={fileChange}/>
                                 <Button onClick={downloadLog}>
-                                    <a ref={downloadLinkRef}>DownloadLog</a>
+                                    <a ref={logDownloadLinkRef}>DownloadLog</a>
                                 </Button>
                             </Paper>
                         </Box>

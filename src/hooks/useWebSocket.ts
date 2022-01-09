@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {stringify} from "querystring";
+import timeFormatter from "../shared/utils/timeFormatter";
 
 const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {
 
@@ -25,9 +26,8 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {
 
     const onMessage = (event: any) => {
         setMessage(event.data)
-        let nowTime = new Date()
         csvDataRef.current.push({
-            time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+            time: timeFormatter(new Date()),
             length: event.data.length,
             rawData: event.data,
             byteSize: new Blob([event.data]).size,
@@ -37,9 +37,8 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {
 
     const onError = (error: any) => {
         console.error("WebSocket error: ", error)
-        let nowTime = new Date()
         csvDataRef.current.push({
-            time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+            time: timeFormatter(new Date()),
             length: error.length,
             rawData: error,
             byteSize: new Blob([error]).size,
@@ -87,9 +86,8 @@ const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {
         waitForConnection(() => {
             try {
                 socketRef.current.send(message)
-                let nowTime = new Date()
                 csvDataRef.current.push({
-                    time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
+                    time: timeFormatter(new Date()),
                     length: message.length,
                     rawData: message,
                     byteSize: new Blob([(message)]).size,

@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {GeoLocation} from '../types/domain'
 import {setUserInfoGeoLocation} from '../store/slices/gSignalingStatus'
 import {useDispatch} from "react-redux";
+import timeFormatter from "../shared/utils/timeFormatter";
 
 const useRandomWayPoint = (csvDataRef: React.MutableRefObject<{}[]>) => {
 
@@ -44,9 +45,8 @@ const useRandomWayPoint = (csvDataRef: React.MutableRefObject<{}[]>) => {
         newGeoLocation.longitude = Math.max(Math.min(newGeoLocation.longitude, highGeo.longitude), lowGeo.longitude)
 
         dispatch(setUserInfoGeoLocation(newGeoLocation))
-        let nowTime = new Date()
         csvDataRef.current.push({
-            time: nowTime.getFullYear() + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ('00' + nowTime.getMinutes()).slice(-2) + ('00' + nowTime.getSeconds()).slice(-2),
+            time: timeFormatter(new Date()),
             geoLocation: newGeoLocation,
             stopTime: stopTime,
             message: 'ON-GEOLOCATION-CHANGE'

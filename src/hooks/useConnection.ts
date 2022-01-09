@@ -14,6 +14,7 @@ import {
     UpdateResponse
 } from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
+import timeFormatter from "../shared/utils/timeFormatter";
 
 const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void, csvDataRef: React.MutableRefObject<{}[]>) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
@@ -35,13 +36,12 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 console.error("message is undefined")
                 return;
             }
-            let nowTime = new Date()
             switch (messageType.type) {
                 case 'ping':
                     console.log(new Date(), ': ping')
                     wsMessage.sendPong()
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
+                        time: timeFormatter(new Date()),
                         userID: userInfo.userID,
                         message: 'ON-PING-MESSAGE'
                     })
@@ -52,7 +52,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     dispatch(setIsRegister())
                     dispatch(setUserID(registerResponse.userID))
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
+                        time: timeFormatter(new Date()),
                         userID: registerResponse.userID,
                         message: 'ON-REGISTER-MESSAGE'
                     })
@@ -62,7 +62,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     const updateResponse: UpdateResponse = JSON.parse(rawMessage) as UpdateResponse
                     console.log(new Date(), updateResponse)
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
+                        time: timeFormatter(new Date()),
                         userID: userInfo.userID,
                         message: 'ON-UPDATE-MESSAGE'
                     })
@@ -72,7 +72,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     console.log(new Date(), ': search')
                     const searchResponse: SearchResponse = JSON.parse(rawMessage) as SearchResponse
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
+                        time: timeFormatter(new Date()),
                         searchUserInfoListSize: searchResponse.surroundingUserList.length,
                         surroundingUserInfoList: searchResponse.surroundingUserList,
                         message: 'ON-SEARCH-MESSAGE'
@@ -84,7 +84,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                     const deleteResponse: DeleteResponse = JSON.parse(rawMessage) as DeleteResponse
                     console.log(new Date(), deleteResponse)
                     csvDataRef.current.push({
-                        time: nowTime.getFullYear() + '-' + ('00' + (nowTime.getMonth() + 1).toString()).slice(-2) + '-' + ('00' + nowTime.getDate()).slice(-2) + '-' + ('00' + nowTime.getHours()).slice(-2) + ':' + ('00' + nowTime.getMinutes()).slice(-2) + ':' + ('00' + nowTime.getSeconds()).slice(-2) + '.' + ('000' + nowTime.getMilliseconds()).slice(-3),
+                        time: timeFormatter(new Date()),
                         userID: userInfo.userID,
                         message: 'ON-DELETE-MESSAGE'
                     })
