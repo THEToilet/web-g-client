@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from "react";
-import {stringify} from "querystring";
 import timeFormatter from "../shared/utils/timeFormatter";
 
 const useWebSocket = (csvDataRef: React.MutableRefObject<{}[]>) => {

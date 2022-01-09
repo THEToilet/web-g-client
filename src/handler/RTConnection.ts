@@ -49,7 +49,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         console.log(new Date(), 'ice status has changed', rtcPeerConnection.current.iceConnectionState)
     }
 
-    const onDataChannel = (evt : any) => {
+    const onDataChannel = (evt: any) => {
         evt.channel.addEventListener('open', onOpen)
         evt.channel.addEventListener('message', onMessage)
         evt.channel.addEventListener('close', onClose)
@@ -62,7 +62,9 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     }
 
     const onMessage = (e: any) => {
-        remoteMessageRef.current!.value = ' < ' + e.data + '\n' + remoteMessageRef.current!.value
+        // remoteMessageRef.current!.value = ' < ' + e.data + '\n' + remoteMessageRef.current!.value
+        console.log(e.data)
+
     }
 
     const onClose = () => {
@@ -156,7 +158,16 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         rtcDataChannel.current.send(message)
     }
 
-    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage] as const
+    const sendDateChanelFIle = (file: Blob) => {
+        if (!rtcPeerConnection.current || rtcPeerConnection.current.connectionState !== 'connected') {
+            console.error('rtcPeerConnection is null')
+            return
+        }
+        rtcDataChannel.current.send(file)
+    }
+
+
+    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle] as const
 }
 
 export default RTConnection

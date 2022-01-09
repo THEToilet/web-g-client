@@ -15,11 +15,11 @@ import useRandomWayPoint from "../hooks/useRandomWayPoint";
 import timeFormatter from "../shared/utils/timeFormatter";
 
 const Test = () => {
-    // NOTE: 移動
+    // NOTE: ビデオオブジェクト
     const localVideoRef = useRef<HTMLVideoElement>(null)
     const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
-    // NOTE: 移動
+    // NOTE: チャットオブジェクト
     const localMessageRef = useRef<HTMLTextAreaElement>(null)
     const remoteMessageRef = useRef<HTMLTextAreaElement>(null)
 
@@ -27,6 +27,8 @@ const Test = () => {
     const logDataRef = useRef<{}[]>([])
 
     const logDownloadLinkRef = useRef<HTMLAnchorElement>(null)
+
+    const fileDataRef = useRef<Blob>()
 
     // NOTE: 実際の現在地を使う
     // useGeoLocationStatus()
@@ -40,10 +42,8 @@ const Test = () => {
     const [message, sendMessage] = useWebSocket(logDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, logDataRef)
-
-    console.log(timeFormatter(new Date()))
 
     const downloadLog = () => {
         const data = new Blob([JSON.stringify(logDataRef.current)], {type: 'text/plain'})
@@ -55,6 +55,11 @@ const Test = () => {
     const fileChange = (event: any) => {
         const fileList = event.target.files;
         console.log(fileList);
+        fileDataRef.current = new Blob([fileList], {type: 'text/plain'})
+    }
+
+    const sendFile = () => {
+        sendDataChanelFile(fileDataRef.current!)
     }
 
     return (
@@ -95,6 +100,9 @@ const Test = () => {
                                 <input type="file" id="file-selector" multiple onChange={fileChange}/>
                                 <Button onClick={downloadLog}>
                                     <a ref={logDownloadLinkRef}>DownloadLog</a>
+                                </Button>
+                                <Button onClick={sendFile}>
+                                    SEND FILE
                                 </Button>
                             </Paper>
                         </Box>
