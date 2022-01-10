@@ -65,6 +65,11 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         // remoteMessageRef.current!.value = ' < ' + e.data + '\n' + remoteMessageRef.current!.value
         console.log(e.data)
 
+        // ファイル保存
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(new Blob([e.data], {type: 'text/plain'}));
+        link.download = 'file';
+        link.click();
     }
 
     const onClose = () => {
@@ -85,9 +90,12 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         rtcPeerConnection.current.addEventListener('negotiationneeded', onNegotiationneeded)
         rtcPeerConnection.current.addEventListener('iceconnectionstatechange', onIceConnectionstatechange)
         rtcPeerConnection.current.addEventListener('datachannel', onDataChannel)
+        // XXX: データチャネルだけつかいたいのでコメントアウトする
+        /*
         localStream.current!.getTracks().forEach(
             track => rtcPeerConnection.current.addTrack(track, localStream.current!)
         )
+         */
 
         // NOTE: DataChannel
         // TODO: datachannelOptionについて調べる
@@ -158,12 +166,12 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         rtcDataChannel.current.send(message)
     }
 
-    const sendDateChanelFIle = (file: Blob) => {
+    const sendDateChanelFIle = async (file: Blob) => {
         if (!rtcPeerConnection.current || rtcPeerConnection.current.connectionState !== 'connected') {
             console.error('rtcPeerConnection is null')
             return
         }
-        rtcDataChannel.current.send(file)
+        rtcDataChannel.current.send(await file.text())
     }
 
 

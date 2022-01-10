@@ -140,16 +140,21 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
                 wsMessage.sendUpdate(userInfo)
             }
         }, 5000);
+        return () => {
+            clearTimeout(timeoutUpdate);
+        };
+    }, [isRegister])
+
+    useEffect(() => {
         const timeoutSearch = setInterval(() => {
             if (isRegister) {
                 wsMessage.sendStaticSearch(userInfo.geoLocation, searchDistance)
             }
         }, 5000);
         return () => {
-            clearTimeout(timeoutUpdate);
             clearTimeout(timeoutSearch);
-        };
-    }, [isRegister])
+        }
+    }, [isRegister, searchDistance])
 
 
     useEffect(() => {

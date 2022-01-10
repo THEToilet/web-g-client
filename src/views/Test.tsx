@@ -55,11 +55,17 @@ const Test = () => {
     const fileChange = (event: any) => {
         const fileList = event.target.files;
         console.log(fileList);
-        fileDataRef.current = new Blob([fileList], {type: 'text/plain'})
+        console.log(typeof fileList);
+        console.log(fileList[0])
+        fileDataRef.current = new Blob([fileList[0]], {type: 'text/plain'})
     }
 
     const sendFile = () => {
-        sendDataChanelFile(fileDataRef.current!)
+        sendDataChanelFile(fileDataRef.current!).catch(
+            e => {
+                console.error(e)
+            }
+        )
     }
 
     return (
@@ -81,7 +87,7 @@ const Test = () => {
                                     }}
                                 >
                                 </Box>
-                                <OpenStreetMaps/>
+                                <OpenStreetMaps props={connect}/>
                             </Paper>
                         </Box>
                         <Box sx={{mt: 5, float: 'left'}}>
@@ -95,7 +101,7 @@ const Test = () => {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <OperationPanel/>
+                                    <OperationPanel props={connect}/>
                                 </Box>
                                 <input type="file" id="file-selector" multiple onChange={fileChange}/>
                                 <Button onClick={downloadLog}>

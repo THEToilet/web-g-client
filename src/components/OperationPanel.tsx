@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import {Box, List, ListItem, ListItemText, ListSubheader, NativeSelect, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
-const OperationPanel = () => {
+const OperationPanel = (props: any) => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
 
     const {searchDistance, searchType} = useSelector(getGSetting)
@@ -113,7 +113,10 @@ const OperationPanel = () => {
                                                           {userInfo.geoLocation.latitude + ' , ' + userInfo.geoLocation.longitude}
                                                       </>
                                                   }/>
-                                    <Button onClick={transitionVideo} data-userID={userInfo.userID}>Connect</Button>
+                                    {/*<Button onClick={transitionVideo} data-userID={userInfo.userID}>Connect</Button>*/}
+                                    {console.log(props)}
+                                    <Button onClick={async () => props.props(userInfo.userID)}
+                                            data-userID={userInfo.userID}>Connect</Button>
                                 </ListItem>
                             </ul>
                         </li>
