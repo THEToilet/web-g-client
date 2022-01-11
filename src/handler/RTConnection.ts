@@ -91,7 +91,8 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 const blob = new Blob([arrayBuffer])
                 logDataRef.current.push({
                     time: timeFormatter(new Date()),
-                    message: 'DATA-CHANNEL-EOF-RECEIVE'
+                    message: 'DATA-CHANNEL-EOF-RECEIVE',
+                    fileName: rtcDataChannel.current.label
                 })
                 downloadFile(blob, rtcDataChannel.current.label)
                 rtcDataChannel.current.close()
@@ -230,7 +231,8 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
             fileDataChannel.current.send(END_OF_FILE)
             logDataRef.current.push({
                 time: timeFormatter(new Date()),
-                message: 'FILE-SEND-END'
+                message: 'FILE-SEND-END',
+                fileName: channelLabel
             })
         }
 
@@ -242,6 +244,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 time: timeFormatter(new Date()),
                 message: 'FILE-DATA-CHANNEL-ERROR',
                 error: e,
+                fileName: channelLabel
             })
             console.error(e)
         }
@@ -257,7 +260,8 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         link.remove()
         logDataRef.current.push({
             time: timeFormatter(new Date()),
-            message: 'FILE-DOWNLOAD'
+            message: 'FILE-DOWNLOAD',
+            fileName: fileName
         })
     }
 
