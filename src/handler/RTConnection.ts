@@ -10,8 +10,15 @@ import {getP2PStatus} from "../store/selector";
 const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>) => {
     const rtcPeerConnection = useRef<RTCPeerConnection>(null!)
     const rtcDataChannel = useRef<RTCDataChannel>(null!)
+    const fileDataChannel = useRef<RTCDataChannel>(null!)
 
     const {destinationUserID} = useSelector(getP2PStatus)
+
+    // NOTE: 64KB
+    const MAX_CHUNK_SIZE = 65535
+    //const MAX_CHUNK_SIZE = 16384
+
+    const END_OF_FILE = 'EOF'
 
     // NOTE: 相手のMediaStreamTrackの受信
     const onTrack = async (e: any) => {
@@ -55,21 +62,35 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         evt.channel.addEventListener('close', onClose)
         evt.channel.addEventListener('error', onError)
         rtcDataChannel.current = evt.channel
+        // NOTE: ChromeとFireFoxに対応させる
+        rtcDataChannel.current.binaryType = 'arraybuffer'
     }
 
     // NOTE: --------dataChannel--------------------
     const onOpen = () => {
     }
 
-    const onMessage = (e: any) => {
-        // remoteMessageRef.current!.value = ' < ' + e.data + '\n' + remoteMessageRef.current!.value
-        console.log(e.data)
+    const receivedBuffers: any = []
 
-        // ファイル保存
-        let link = document.createElement('a');
-        link.href = window.URL.createObjectURL(new Blob([e.data], {type: 'text/plain'}));
-        link.download = 'file';
-        link.click();
+    const onMessage = (e: any) => {
+        console.log(e.data)
+        try {
+            if (e.data !== END_OF_FILE) {
+                receivedBuffers.push(e.data)
+            } else {
+                const arrayBuffer = receivedBuffers.reduce((acc: any, arrayBuffer: any) => {
+                    const tmp = new Uint8Array(acc.byteLength + arrayBuffer.byteLength)
+                    tmp.set(new Uint8Array(acc), 0)
+                    tmp.set(new Uint8Array(arrayBuffer), acc.byteLength)
+                    return tmp;
+                }, new Uint8Array())
+                const blob = new Blob([arrayBuffer])
+                downloadFile(blob, rtcDataChannel.current.label)
+                rtcDataChannel.current.close()
+            }
+        } catch (err) {
+            console.log('File transfer failed')
+        }
     }
 
     const onClose = () => {
@@ -174,8 +195,43 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         rtcDataChannel.current.send(await file.text())
     }
 
+    // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
 
-    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle] as const
+    const shareFile = (file: File) => {
+        const channelLabel = file.name
+        fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel)
+        // NOTE: FireFoxとChromeのどっちにも対応させるため
+        fileDataChannel.current.binaryType = 'arraybuffer'
+
+        fileDataChannel.current.onopen = async () => {
+            const arrayBuffer = await file.arrayBuffer()
+            for (let i = 0; i < arrayBuffer.byteLength; i += MAX_CHUNK_SIZE) {
+                console.log(i)
+                fileDataChannel.current.send(arrayBuffer.slice(i, i + MAX_CHUNK_SIZE))
+            }
+            fileDataChannel.current.send(END_OF_FILE)
+        }
+
+        fileDataChannel.current.onclose = () => {
+        }
+
+        fileDataChannel.current.onerror = (e: any) => {
+            console.error(e)
+        }
+    }
+
+    const downloadFile = (file: Blob, fileName: string) => {
+        console.log('--------------------------')
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(file);
+        link.href = url
+        link.download = fileName
+        link.click()
+        window.URL.revokeObjectURL(url)
+        link.remove()
+    }
+
+    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle, shareFile] as const
 }
 
 export default RTConnection

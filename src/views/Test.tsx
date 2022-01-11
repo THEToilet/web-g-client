@@ -28,7 +28,7 @@ const Test = () => {
 
     const logDownloadLinkRef = useRef<HTMLAnchorElement>(null)
 
-    const fileDataRef = useRef<Blob>()
+    const fileDataRef = useRef<File>()
 
     // NOTE: 実際の現在地を使う
     // useGeoLocationStatus()
@@ -42,7 +42,7 @@ const Test = () => {
     const [message, sendMessage] = useWebSocket(logDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile, shareFIle] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, logDataRef)
 
     const downloadLog = () => {
@@ -57,15 +57,13 @@ const Test = () => {
         console.log(fileList);
         console.log(typeof fileList);
         console.log(fileList[0])
-        fileDataRef.current = new Blob([fileList[0]], {type: 'text/plain'})
+        fileDataRef.current = fileList[0]
     }
 
     const sendFile = () => {
-        sendDataChanelFile(fileDataRef.current!).catch(
-            e => {
-                console.error(e)
-            }
-        )
+        if (fileDataRef.current) {
+            shareFIle(fileDataRef.current)
+        }
     }
 
     return (
