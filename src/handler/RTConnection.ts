@@ -238,6 +238,11 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         }
 
         fileDataChannel.current.onerror = (e: any) => {
+            logDataRef.current.push({
+                time: timeFormatter(new Date()),
+                message: 'FILE-DATA-CHANNEL-ERROR',
+                error: e,
+            })
             console.error(e)
         }
     }
