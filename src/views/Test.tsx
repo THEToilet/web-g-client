@@ -13,6 +13,7 @@ import useConnection from "../hooks/useConnection";
 import useUserMedia from "../hooks/useUserMedia";
 import useRandomWayPoint from "../hooks/useRandomWayPoint";
 import timeFormatter from "../shared/utils/timeFormatter";
+import useSpecifiedLocation from "../hooks/useSpecifiedLocation";
 
 const Test = () => {
     // NOTE: ビデオオブジェクト
@@ -33,7 +34,9 @@ const Test = () => {
     // NOTE: 実際の現在地を使う
     // useGeoLocationStatus()
     // NOTE: ダミーデータを使う
-    useRandomWayPoint(logDataRef)
+    // useRandomWayPoint(logDataRef)
+    // NOTE: 移動しない
+    useSpecifiedLocation(logDataRef)
 
     // NOTE: 移動
     const stream = useUserMedia(localVideoRef)
