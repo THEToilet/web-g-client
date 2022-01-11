@@ -57,7 +57,7 @@ const VideoChat = () => {
     const [message, sendMessage] = useWebSocket(csvDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef, logDataRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, csvDataRef)
 
     const [state, setState] = React.useState<boolean>(false);

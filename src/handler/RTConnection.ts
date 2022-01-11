@@ -6,8 +6,9 @@ import React, {useRef} from "react";
 import {WSMessages} from "./wsMessages";
 import {useSelector} from "react-redux";
 import {getP2PStatus} from "../store/selector";
+import timeFormatter from "../shared/utils/timeFormatter";
 
-const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>) => {
+const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>, logDataRef: React.MutableRefObject<{}[]>) => {
     const rtcPeerConnection = useRef<RTCPeerConnection>(null!)
     const rtcDataChannel = useRef<RTCDataChannel>(null!)
     const fileDataChannel = useRef<RTCDataChannel>(null!)
@@ -85,6 +86,10 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                     return tmp;
                 }, new Uint8Array())
                 const blob = new Blob([arrayBuffer])
+                logDataRef.current.push({
+                    time: timeFormatter(new Date()),
+                    message: 'DATA-CHANNEL-EOF-RECEIVE'
+                })
                 downloadFile(blob, rtcDataChannel.current.label)
                 rtcDataChannel.current.close()
             }
@@ -203,6 +208,11 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         // NOTE: FireFoxとChromeのどっちにも対応させるため
         fileDataChannel.current.binaryType = 'arraybuffer'
 
+        logDataRef.current.push({
+            time: timeFormatter(new Date()),
+            message: 'FILE-SEND-START'
+        })
+
         fileDataChannel.current.onopen = async () => {
             const arrayBuffer = await file.arrayBuffer()
             for (let i = 0; i < arrayBuffer.byteLength; i += MAX_CHUNK_SIZE) {
@@ -210,6 +220,10 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 fileDataChannel.current.send(arrayBuffer.slice(i, i + MAX_CHUNK_SIZE))
             }
             fileDataChannel.current.send(END_OF_FILE)
+            logDataRef.current.push({
+                time: timeFormatter(new Date()),
+                message: 'FILE-SEND-END'
+            })
         }
 
         fileDataChannel.current.onclose = () => {
@@ -221,7 +235,6 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     }
 
     const downloadFile = (file: Blob, fileName: string) => {
-        console.log('--------------------------')
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(file);
         link.href = url
@@ -229,6 +242,10 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         link.click()
         window.URL.revokeObjectURL(url)
         link.remove()
+        logDataRef.current.push({
+            time: timeFormatter(new Date()),
+            message: 'FILE-DOWNLOAD'
+        })
     }
 
     return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle, shareFile] as const

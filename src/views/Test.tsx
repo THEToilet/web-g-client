@@ -42,7 +42,7 @@ const Test = () => {
     const [message, sendMessage] = useWebSocket(logDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile, shareFIle] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile, shareFIle] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef, logDataRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, logDataRef)
 
     const downloadLog = () => {
