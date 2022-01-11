@@ -4,11 +4,14 @@
 
 import React, {useRef} from "react";
 import {WSMessages} from "./wsMessages";
-import {useSelector} from "react-redux";
-import {getP2PStatus} from "../store/selector";
+import {useDispatch, useSelector} from "react-redux";
+import {getGSetting, getGSignalingStatus, getP2PStatus} from "../store/selector";
+import {setConnected, setConnectedUser} from '../store/slices/gSignalingStatus'
 import timeFormatter from "../shared/utils/timeFormatter";
 
 const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>, logDataRef: React.MutableRefObject<{}[]>) => {
+    const dispatch = useDispatch()
+
     const rtcPeerConnection = useRef<RTCPeerConnection>(null!)
     const rtcDataChannel = useRef<RTCDataChannel>(null!)
     const fileDataChannel = useRef<RTCDataChannel>(null!)
@@ -150,6 +153,8 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
             }
         )
         await makeAnswer(destination)
+        dispatch(setConnected(true))
+        dispatch(setConnectedUser(destination))
     }
 
     const makeAnswer = async (destination: string) => {
@@ -173,6 +178,9 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         // NOTE: Send SDP
         wsMessage.sendOffer(sdp.sdp!, userID)
         console.log(new Date(), '-----------------------------------connect-----------------')
+        dispatch(setConnectedUser(userID))
+        // XXX: ここに置くのは望ましくない
+        dispatch(setConnected(true))
     }
 
     const disconnect = () => {
@@ -202,7 +210,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
     // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
 
-    const shareFile = (file: File) => {
+    const shareFile = async (file: File) => {
         const channelLabel = file.name
         fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel)
         // NOTE: FireFoxとChromeのどっちにも対応させるため

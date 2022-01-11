@@ -15,7 +15,14 @@ const OperationPanel = (props: any) => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
 
     const {searchDistance, searchType} = useSelector(getGSetting)
-    const {userInfo, surroundingUserList, userID, userName} = useSelector(getGSignalingStatus)
+    const {
+        userInfo,
+        surroundingUserList,
+        userID,
+        userName,
+        connectedUser,
+        isConnected
+    } = useSelector(getGSignalingStatus)
     const dispatch = useDispatch()
 
     const navigate = useNavigate();
@@ -79,6 +86,15 @@ const OperationPanel = (props: any) => {
                     <option value='dynamic'>Dynamic Search</option>
                 </NativeSelect>
             </FormControl>
+            <Typography variant="subtitle2" gutterBottom component="div">
+                {'Connected User'}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom component="div">
+                {connectedUser}
+            </Typography>
+            <Typography variant="body2" gutterBottom component="div">
+                {isConnected ? 'Connected' : 'Not Connected'}
+            </Typography>
             <Typography variant="subtitle2" gutterBottom component="div" sx={{ml: 5}}>
                 {"SurroundingUserList size :" + surroundingUserList.length}
             </Typography>

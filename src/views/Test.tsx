@@ -65,7 +65,7 @@ const Test = () => {
 
     const sendFile = () => {
         if (fileDataRef.current) {
-            shareFIle(fileDataRef.current)
+            shareFIle(fileDataRef.current).then(r => console.log(r))
         }
     }
 

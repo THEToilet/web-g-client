@@ -35,6 +35,8 @@ export type GSignalingState = {
     surroundingUserList: UserInfo[];
     isRegister: boolean;
     userID: string;
+    isConnected: boolean,
+    connectedUser: string,
 }
 
 export type P2PState = {

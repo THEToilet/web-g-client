@@ -14,6 +14,8 @@ export const initialState: GSignalingState = {
     surroundingUserList: [],
     isRegister: false,
     userID: '',
+    isConnected: false,
+    connectedUser: '',
 }
 
 const gSignalingStatusSlice = createSlice({
@@ -41,6 +43,14 @@ const gSignalingStatusSlice = createSlice({
         setUserName: (state, {payload}: PayloadAction<string>) => {
             state.userName = payload
         },
+
+        setConnected: (state, {payload}: PayloadAction<boolean>) => {
+            state.isConnected = payload
+        },
+
+        setConnectedUser: (state, {payload}: PayloadAction<string>) => {
+            state.connectedUser = payload
+        },
     },
 })
 export const {
@@ -48,7 +58,9 @@ export const {
     setSurroundingUserList,
     setIsRegister,
     setUserID,
-    setUserName
+    setUserName,
+    setConnected,
+    setConnectedUser,
 } = gSignalingStatusSlice.actions;
 
 export default gSignalingStatusSlice.reducer
