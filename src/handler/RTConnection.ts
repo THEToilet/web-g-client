@@ -81,6 +81,11 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         try {
             if (e.data !== END_OF_FILE) {
                 receivedBuffers.push(e.data)
+                logDataRef.current.push({
+                    time: timeFormatter(new Date()),
+                    message: 'DATA-CHANNEL-DATA-RECEIVE',
+                    fileName: rtcDataChannel.current.label
+                })
             } else {
                 const arrayBuffer = receivedBuffers.reduce((acc: any, arrayBuffer: any) => {
                     const tmp = new Uint8Array(acc.byteLength + arrayBuffer.byteLength)
@@ -112,7 +117,21 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
     const makeRTCPeerConnection = () => {
         // TODO: TURNを考える
-        const pcConfig = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]}
+        const pcConfig = {
+            "iceServers": [
+                {"urls": "stun:stun.l.google.com:19302"},
+                {
+                    "urls": "turn:v118-27-20-107.tkzi.static.cnode.io:5349",
+                    "username": 'test',
+                    "credential": "pass"
+                },
+                {
+                    "urls": "turn:v118-27-20-107.tkzi.static.cnode.io:3478",
+                    "username": 'test',
+                    "credential": "pass"
+                }
+            ]
+        }
         rtcPeerConnection.current = new RTCPeerConnection(pcConfig)
         console.log(new Date(), 'make')
         rtcPeerConnection.current.addEventListener('track', onTrack)
@@ -232,7 +251,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
             logDataRef.current.push({
                 time: timeFormatter(new Date()),
                 message: 'FILE-SEND-END',
-                fileName: channelLabel
+                fileName: fileDataChannel.current.label
             })
         }
 
@@ -244,7 +263,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 time: timeFormatter(new Date()),
                 message: 'FILE-DATA-CHANNEL-ERROR',
                 error: e,
-                fileName: channelLabel
+                fileName: fileDataChannel.current.label
             })
             console.error(e)
         }
