@@ -232,7 +232,14 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
     const shareFile = async (file: File) => {
         const channelLabel = file.name
-        fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel)
+        fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
+            // NOTE: 順序保証
+            ordered: true,
+            // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
+            maxRetransmits: undefined,
+            // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
+            maxPacketLifeTime: undefined
+        })
         // NOTE: FireFoxとChromeのどっちにも対応させるため
         fileDataChannel.current.binaryType = 'arraybuffer'
 
