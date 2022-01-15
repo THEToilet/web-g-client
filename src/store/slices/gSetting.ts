@@ -4,7 +4,7 @@ import {GSettingStatus} from '../type'
 export const initialState: GSettingStatus = {
     searchDistance: 100,
     searchType: "STATIC",
-    dataChannelType: 'UDP'
+    dataChannelType: 'TCP'
 }
 
 const gSettingSlice = createSlice({

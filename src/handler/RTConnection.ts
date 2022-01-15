@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getGSetting, getGSignalingStatus, getP2PStatus} from "../store/selector";
 import {setConnected, setConnectedUser} from '../store/slices/gSignalingStatus'
 import timeFormatter from "../shared/utils/timeFormatter";
+import * as buffer from "buffer";
 
 const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>, logDataRef: React.MutableRefObject<{}[]>) => {
     const dispatch = useDispatch()
@@ -82,11 +83,22 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         try {
             if (e.data !== END_OF_FILE) {
                 receivedBuffers.push(e.data)
+                let recData = new TextDecoder().decode(new Uint8Array(e.data))
                 logDataRef.current.push({
                     time: timeFormatter(new Date()),
                     message: 'DATA-CHANNEL-DATA-RECEIVE',
                     fileName: rtcDataChannel.current.label,
-                    data: e.data
+                    data: recData,
+                    dataJson: JSON.parse(recData),
+                    dataLength: (Array.from(new Uint8Array(e.data))).length,
+                })
+                console.log({
+                    time: timeFormatter(new Date()),
+                    message: 'DATA-CHANNEL-DATA-RECEIVE',
+                    fileName: rtcDataChannel.current.label,
+                    data: recData,
+                    dataJson: JSON.parse(recData),
+                    dataLength: (Array.from(new Uint8Array(e.data))).length,
                 })
             } else {
                 const arrayBuffer = receivedBuffers.reduce((acc: any, arrayBuffer: any) => {
@@ -296,16 +308,17 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
     // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
     const exprP2P = async (file: File, times: number) => {
-        const channelLabel = file.name
+        const channelLabel = file.name + '-' + times + '-' + dataChannelType
 
         if (dataChannelType === 'TCP') {
             fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
                 // NOTE: 順序保証
                 ordered: true,
+                // NOTE: maxRetransmitsとmaxPacketLifeTimeはどっちかしか設定できない
                 // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
-                maxRetransmits: undefined,
+                //maxRetransmits: undefined,
                 // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
-                maxPacketLifeTime: undefined
+                //maxPacketLifeTime: undefined
             })
         } else {
             fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
@@ -314,7 +327,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
                 maxRetransmits: 0,
                 // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
-                maxPacketLifeTime: 0
+                //maxPacketLifeTime: 0
             })
         }
         // NOTE: FireFoxとChromeのどっちにも対応させるため
@@ -322,20 +335,53 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
 
         logDataRef.current.push({
             time: timeFormatter(new Date()),
-            message: 'FILE-SEND-START'
+            message: 'FILE-SEND-START',
+            type: dataChannelType,
+            fileName: fileDataChannel.current.label,
+            times: times
         })
 
         fileDataChannel.current.onopen = async () => {
-            const arrayBuffer = await file.arrayBuffer()
+            const fileText = await file.text()
             for (let i = 0; i < times; i++) {
                 console.log(i)
-                fileDataChannel.current.send(arrayBuffer)
+                let sendData = {
+                    fileArrayBuffer: fileText,
+                    time: timeFormatter(new Date()),
+                }
+                //let sendDataArrayBuffer = new Uint8Array(JSON.parse(JSON.stringify(sendData))).buffer
+                let sendDataArrayBuffer = new TextEncoder().encode(JSON.stringify(sendData));
+                // JSON to ArrayBuffer
+                fileDataChannel.current.send(sendDataArrayBuffer)
+                // REFERENCE: https://scrapbox.io/nwtgck/JavaScript%E3%81%A7_String_%E2%87%84_Uint8Array_%E7%9B%B8%E4%BA%92%E5%A4%89%E6%8F%9B
+                logDataRef.current.push({
+                    time: timeFormatter(new Date()),
+                    message: 'FILE-SENDING',
+                    fileName: fileDataChannel.current.label,
+                    iterTimes: i,
+                    type: dataChannelType,
+                    sendData: sendData,
+                    sendDataArrayBuffer: sendDataArrayBuffer,
+                    sendDataArrayBufferSize: sendDataArrayBuffer.byteLength
+                })
+                console.log({
+                    time: timeFormatter(new Date()),
+                    message: 'FILE-SENDING',
+                    fileName: fileDataChannel.current.label,
+                    iterTimes: i,
+                    type: dataChannelType,
+                    sendData: sendData,
+                    sendDataArrayBuffer: sendDataArrayBuffer,
+                    jsonStringfy: JSON.stringify(sendData)
+                })
             }
             fileDataChannel.current.send(END_OF_FILE)
             logDataRef.current.push({
                 time: timeFormatter(new Date()),
                 message: 'FILE-SEND-END',
-                fileName: fileDataChannel.current.label
+                fileName: fileDataChannel.current.label,
+                type: dataChannelType,
+                times: times
             })
         }
 
@@ -352,7 +398,6 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
             console.error(e)
         }
     }
-
 
     return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle, shareFile, exprP2P] as const
 }
