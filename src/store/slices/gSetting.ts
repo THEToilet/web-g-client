@@ -34,6 +34,6 @@ const gSettingSlice = createSlice({
     },
 })
 
-export const {setSearchDistance, setDynamicSearch, setStaticSearch} = gSettingSlice.actions;
+export const {setSearchDistance, setDynamicSearch, setStaticSearch, setTCPMode, setUDPMode} = gSettingSlice.actions;
 
 export default gSettingSlice.reducer

@@ -17,6 +17,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     const fileDataChannel = useRef<RTCDataChannel>(null!)
 
     const {destinationUserID} = useSelector(getP2PStatus)
+    const {dataChannelType} = useSelector(getGSetting)
 
     // NOTE: 64KB
     const MAX_CHUNK_SIZE = 65535
@@ -232,6 +233,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
     const shareFile = async (file: File) => {
         const channelLabel = file.name
+
         fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
             // NOTE: 順序保証
             ordered: true,
@@ -240,6 +242,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
             // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
             maxPacketLifeTime: undefined
         })
+
         // NOTE: FireFoxとChromeのどっちにも対応させるため
         fileDataChannel.current.binaryType = 'arraybuffer'
 
@@ -294,14 +297,26 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
     const exprP2P = async (file: File, times: number) => {
         const channelLabel = file.name
-        fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
-            // NOTE: 順序保証
-            ordered: true,
-            // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
-            maxRetransmits: undefined,
-            // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
-            maxPacketLifeTime: undefined
-        })
+
+        if (dataChannelType === 'TCP') {
+            fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
+                // NOTE: 順序保証
+                ordered: true,
+                // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
+                maxRetransmits: undefined,
+                // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
+                maxPacketLifeTime: undefined
+            })
+        } else {
+            fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
+                // NOTE: 順序保証
+                ordered: false,
+                // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
+                maxRetransmits: 0,
+                // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
+                maxPacketLifeTime: 0
+            })
+        }
         // NOTE: FireFoxとChromeのどっちにも対応させるため
         fileDataChannel.current.binaryType = 'arraybuffer'
 

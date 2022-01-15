@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {getGSetting, getP2PStatus} from '../store/selector'
 import {getGSignalingStatus} from '../store/selector'
-import {setDynamicSearch, setSearchDistance, setStaticSearch} from '../store/slices/gSetting'
+import {setDynamicSearch, setSearchDistance, setStaticSearch, setUDPMode, setTCPMode} from '../store/slices/gSetting'
 import {setDestinationUserID} from '../store/slices/p2pStatus'
 import TextField from "@mui/material/TextField";
 import FormControl from '@mui/material/FormControl';
@@ -14,7 +14,7 @@ import {useNavigate} from "react-router-dom";
 const OperationPanel = (props: any) => {
     const searchDistanceFiledRef = useRef<HTMLInputElement>()
 
-    const {searchDistance, searchType} = useSelector(getGSetting)
+    const {searchDistance, searchType, dataChannelType} = useSelector(getGSetting)
     const {
         userInfo,
         surroundingUserList,
@@ -32,6 +32,14 @@ const OperationPanel = (props: any) => {
             dispatch(setStaticSearch())
         } else {
             dispatch(setDynamicSearch())
+        }
+    };
+
+    const handleDataChannelChange = (event: any) => {
+        if (event.target.value === 'udp') {
+            dispatch(setUDPMode())
+        } else {
+            dispatch(setTCPMode())
         }
     };
 
@@ -84,6 +92,15 @@ const OperationPanel = (props: any) => {
                 >
                     <option value='static'>Static Search</option>
                     <option value='dynamic'>Dynamic Search</option>
+                </NativeSelect>
+            </FormControl>
+            <FormControl sx={{m: 1, minWidth: 200}}>
+                <NativeSelect
+                    id="select"
+                    onClick={handleDataChannelChange}
+                >
+                    <option value='tcp'>TCP</option>
+                    <option value='udp'>UDP</option>
                 </NativeSelect>
             </FormControl>
             <Typography variant="subtitle2" gutterBottom component="div">
