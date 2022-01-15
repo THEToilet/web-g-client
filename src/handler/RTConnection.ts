@@ -84,7 +84,8 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 logDataRef.current.push({
                     time: timeFormatter(new Date()),
                     message: 'DATA-CHANNEL-DATA-RECEIVE',
-                    fileName: rtcDataChannel.current.label
+                    fileName: rtcDataChannel.current.label,
+                    data: e.data
                 })
             } else {
                 const arrayBuffer = receivedBuffers.reduce((acc: any, arrayBuffer: any) => {
@@ -229,7 +230,6 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
     }
 
     // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
-
     const shareFile = async (file: File) => {
         const channelLabel = file.name
         fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
@@ -291,7 +291,55 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
         })
     }
 
-    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle, shareFile] as const
+    // REFERENCE: https://ichi.pro/de-tachaneru-o-kaishite-fuxairu-o-soshinsuru-webrtc-o-shiyoshita-bideo-tsuwa-suteppu-6-232611614401361
+    const exprP2P = async (file: File, times: number) => {
+        const channelLabel = file.name
+        fileDataChannel.current = rtcPeerConnection.current.createDataChannel(channelLabel, {
+            // NOTE: 順序保証
+            ordered: true,
+            // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送回数
+            maxRetransmits: undefined,
+            // NOTE: 信頼性がない場合，送信に失敗したメッセージの最大再送時間
+            maxPacketLifeTime: undefined
+        })
+        // NOTE: FireFoxとChromeのどっちにも対応させるため
+        fileDataChannel.current.binaryType = 'arraybuffer'
+
+        logDataRef.current.push({
+            time: timeFormatter(new Date()),
+            message: 'FILE-SEND-START'
+        })
+
+        fileDataChannel.current.onopen = async () => {
+            const arrayBuffer = await file.arrayBuffer()
+            for (let i = 0; i < times; i++) {
+                console.log(i)
+                fileDataChannel.current.send(arrayBuffer)
+            }
+            fileDataChannel.current.send(END_OF_FILE)
+            logDataRef.current.push({
+                time: timeFormatter(new Date()),
+                message: 'FILE-SEND-END',
+                fileName: fileDataChannel.current.label
+            })
+        }
+
+        fileDataChannel.current.onclose = () => {
+        }
+
+        fileDataChannel.current.onerror = (e: any) => {
+            logDataRef.current.push({
+                time: timeFormatter(new Date()),
+                message: 'FILE-DATA-CHANNEL-ERROR',
+                error: e,
+                fileName: fileDataChannel.current.label
+            })
+            console.error(e)
+        }
+    }
+
+
+    return [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDateChanelMessage, sendDateChanelFIle, shareFile, exprP2P] as const
 }
 
 export default RTConnection

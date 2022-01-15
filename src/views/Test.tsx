@@ -45,7 +45,7 @@ const Test = () => {
     const [message, sendMessage] = useWebSocket(logDataRef)
     const wsMessage = new WSMessages(sendMessage)
     // NOTE: WebRTC関連処理
-    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile, shareFIle] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef, logDataRef)
+    const [setICECandidate, setOffer, setAnswer, connect, disconnect, sendDataChanelMessage, sendDataChanelFile, shareFIle, exprP2P] = RTConnection(stream, localVideoRef, remoteVideoRef, wsMessage, localMessageRef, remoteMessageRef, logDataRef)
     useConnection(message, wsMessage, setICECandidate, setOffer, setAnswer, disconnect, logDataRef)
 
     const downloadLog = () => {
@@ -66,6 +66,26 @@ const Test = () => {
     const sendFile = () => {
         if (fileDataRef.current) {
             shareFIle(fileDataRef.current).then(r => console.log(r))
+        }
+    }
+    const ex1 = () => {
+        if (fileDataRef.current) {
+            exprP2P(fileDataRef.current, 1).then(r => console.log(r))
+        }
+    }
+    const ex10 = () => {
+        if (fileDataRef.current) {
+            exprP2P(fileDataRef.current, 10).then(r => console.log(r))
+        }
+    }
+    const ex100 = () => {
+        if (fileDataRef.current) {
+            exprP2P(fileDataRef.current, 100).then(r => console.log(r))
+        }
+    }
+    const ex1000 = () => {
+        if (fileDataRef.current) {
+            exprP2P(fileDataRef.current, 1000).then(r => console.log(r))
         }
     }
 
@@ -110,6 +130,18 @@ const Test = () => {
                                 </Button>
                                 <Button onClick={sendFile}>
                                     SEND FILE
+                                </Button>
+                                <Button onClick={ex1}>
+                                    expr1
+                                </Button>
+                                <Button onClick={ex10}>
+                                    expr10
+                                </Button>
+                                <Button onClick={ex100}>
+                                    expr100
+                                </Button>
+                                <Button onClick={ex1000}>
+                                   expr1000
                                 </Button>
                             </Paper>
                         </Box>

@@ -19,6 +19,10 @@ export type SearchType =
     | 'DYNAMIC'
     | 'STATIC';
 
+export type DataChannelType =
+    | 'UDP'
+    | 'TCP';
+
 export type Message = {
     userID: string
     body: string
@@ -27,6 +31,7 @@ export type Message = {
 export type GSettingStatus = {
     searchDistance: number;
     searchType: SearchType;
+    dataChannelType: DataChannelType;
 }
 
 export type GSignalingState = {
