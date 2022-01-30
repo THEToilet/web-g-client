@@ -9,6 +9,7 @@ import {getGSetting, getGSignalingStatus, getP2PStatus} from "../store/selector"
 import {setConnected, setConnectedUser} from '../store/slices/gSignalingStatus'
 import timeFormatter from "../shared/utils/timeFormatter";
 import * as buffer from "buffer";
+import uuid from 'uuid'
 
 const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefined>, localVideoRef: React.RefObject<HTMLVideoElement>, remoteVideoRef: React.RefObject<HTMLVideoElement>, wsMessage: WSMessages, localMessageRef: React.RefObject<HTMLTextAreaElement>, remoteMessageRef: React.RefObject<HTMLTextAreaElement>, logDataRef: React.MutableRefObject<{}[]>) => {
     const dispatch = useDispatch()
@@ -347,7 +348,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                 console.log(i)
                 let sendData = {
                     fileArrayBuffer: fileText,
-                    time: timeFormatter(new Date()),
+                    id: uuid.v4(),
                 }
                 //let sendDataArrayBuffer = new Uint8Array(JSON.parse(JSON.stringify(sendData))).buffer
                 let sendDataArrayBuffer = new TextEncoder().encode(JSON.stringify(sendData));

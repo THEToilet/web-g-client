@@ -5,6 +5,7 @@ export type SearchResponse = {
     type: string
     message: string
     surroundingUserList: UserInfo[]
+    responseID: string
 }
 
 export type RegisterResponse = {
@@ -52,6 +53,7 @@ export type SearchRequest = {
     searchType: string
     searchDistance: number
     geoLocation: GeoLocation
+    requestID: string
 }
 
 export type DeleteRequest = {

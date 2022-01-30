@@ -40,22 +40,24 @@ export class WSMessages {
         this.sendMessage(JSON.stringify(message), "SEND-UPDATE")
     }
 
-    sendStaticSearch(geoLocation: GeoLocation, searchDistance: number) {
+    sendStaticSearch(geoLocation: GeoLocation, searchDistance: number, id: string) {
         const message: SearchRequest = {
             type: 'search',
             searchType: 'static',
             searchDistance: searchDistance,
             geoLocation: geoLocation,
+            requestID: id
         }
         this.sendMessage(JSON.stringify(message), "SEND-STATIC-SEARCH")
     }
 
-    sendDynamicSearch(geoLocation: GeoLocation, searchDistance: number) {
+    sendDynamicSearch(geoLocation: GeoLocation, searchDistance: number, id: string) {
         const message: SearchRequest = {
             type: 'search',
             searchType: 'dynamic',
             searchDistance: searchDistance,
             geoLocation: geoLocation,
+            requestID: id,
         }
         this.sendMessage(JSON.stringify(message), "SEND-DYNAMIC-SEARCH")
     }
