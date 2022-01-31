@@ -362,6 +362,7 @@ const RTConnection = (localStream: React.MutableRefObject<MediaStream | undefine
                     iterTimes: i,
                     type: dataChannelType,
                     sendData: sendData,
+                    sendingID: sendData.id,
                     sendDataArrayBuffer: sendDataArrayBuffer,
                     sendDataArrayBufferSize: sendDataArrayBuffer.byteLength
                 })
