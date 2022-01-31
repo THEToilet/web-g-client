@@ -34,9 +34,9 @@ const Test = () => {
     // NOTE: 実際の現在地を使う
     // useGeoLocationStatus()
     // NOTE: ダミーデータを使う
-    // useRandomWayPoint(logDataRef)
+    useRandomWayPoint(logDataRef)
     // NOTE: 移動しない
-    useSpecifiedLocation(logDataRef)
+    //useSpecifiedLocation(logDataRef)
 
     // NOTE: 移動
     const stream = useUserMedia(localVideoRef)
