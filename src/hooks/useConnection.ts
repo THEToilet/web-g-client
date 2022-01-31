@@ -15,7 +15,7 @@ import {
 } from "../types/api";
 import {WSMessages} from "../handler/wsMessages";
 import timeFormatter from "../shared/utils/timeFormatter";
-import uuid from 'uuid'
+import {v4 as uuidv4} from 'uuid'
 
 const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidate: (iceCandidate: RTCIceCandidate) => void, setOffer: (sdp: string, destination: string) => Promise<void>, setAnswer: (sdp: string) => Promise<void>, disconnect: () => void, csvDataRef: React.MutableRefObject<{}[]>) => {
     const [isSendRegisterOnce, setIsRegisterOnce] = useState<boolean>(false)
@@ -150,7 +150,7 @@ const useConnection = (rawMessage: string, wsMessage: WSMessages, setICECandidat
     useEffect(() => {
         const timeoutSearch = setInterval(() => {
             if (isRegister) {
-                let requestID = uuid.v4()
+                let requestID = uuidv4()
                 wsMessage.sendStaticSearch(userInfo.geoLocation, searchDistance, requestID)
                 csvDataRef.current.push({
                     time: timeFormatter(new Date()),
